@@ -8,17 +8,17 @@ String readString;
 #include <Servo.h> 
 #include <SoftwareServo.h> 
 SoftwareServo a,b,c,d;  // create servo object to control a servo 
-static int aoff=-2;
+static int aoff=-6;
 static int boff=2;
 static int coff=4;
-static int doff=0;
+static int doff=-4;
 void setup() {
   
   Serial.begin(9600);
  
   
   a.attach(9);  //the pin for the servo control 
-
+delay(100);
     b.attach(10);
       c.attach(11);
         d.attach(12);
@@ -29,7 +29,7 @@ void setup() {
             d.write(65); //set initial servo position if desired
 //myservo.writeMicroseconds(1500);
 //myservo.writeMicroseconds(1500);
-  delay(4000);  
+  delay(8000);  
   Serial.println("servo-test-22-dual-input"); // so I can keep track of what is loaded
 
 
