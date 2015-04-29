@@ -1,46 +1,44 @@
-#include <VirtualWire.h>
-char *controller;
-int index = 0;
-void setup() {
-  vw_set_ptt_inverted(true); //
-  vw_set_tx_pin(12);
-  vw_setup(4000);// speed of data transfer Kbps
-  Serial.begin(9600);
-  
-  Serial.print("Initialization Completed");
-}
+#include<VirtualWire.h> 
 
-void loop(){
-doTransmission();
+int i=0;
+
+void setup()
+{
+Serial.begin(9600); 
+vw_setup(4000); 
+vw_set_tx_pin(12);
+vw_set_ptt_inverted(true);
+Serial.println("Initialized communication with python SM");
 
 }
-void getString()
+void Transmit()
+{
+  char cad[50];
+  i=0;
+  memset(cad,0,50);
+  //Serial.println(strlen(cad));
+if( Serial.available()> 0)
 {
   
-  index=0;
-  controller="";
-  while(Serial.available())   
-        controller[index++]= Serial.read(); 
   
-  
-  if(strlen(controller)>0)
-  {
-    controller[index]='\0';
-    for(int i=0;i<strlen(controller);i++)
-      Serial.print(controller[i]);
+  while(Serial.available()){
+    cad[i] = Serial.read(); 
+    i++;
+    delay(2);
   }
+ 
+}
+if(strlen(cad)>0)
+{
+vw_send((byte *)cad, strlen(cad));
+vw_wait_tx();
+Serial.println("Transmitted : " + String(cad));
+delay(400);
 }
 
-void doTransmission()
+}
+void loop()
 {
-  
-  getString();
-  if(strlen(controller) > 0 ) 
-  { 
-    for(int i=0;i<100;i++){
-    vw_send((uint8_t *)controller, strlen(controller));
-    vw_wait_tx(); // Wait until the whole message is gone
-    delay(1000);
-    }
-  }
+
+Transmit();
 }
