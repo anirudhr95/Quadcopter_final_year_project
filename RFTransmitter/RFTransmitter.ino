@@ -5,9 +5,10 @@ int i=0;
 void setup()
 {
 Serial.begin(9600); 
-vw_setup(4000); 
+vw_setup(2000); 
 vw_set_tx_pin(12);
 vw_set_ptt_inverted(true);
+delay(1000);
 Serial.println("Initialized communication with python SM");
 
 }
