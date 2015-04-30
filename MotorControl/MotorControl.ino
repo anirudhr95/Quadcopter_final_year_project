@@ -10,7 +10,7 @@ String readString;
 #include <SoftwareServo.h> 
 SoftwareServo a,b,c,d;  // create servo object to control a servo 
 static int aoff=-6;
-static int boff=2;
+static int boff=0;
 static int coff=4;
 static int doff=-4;
 String x = "";
@@ -23,16 +23,23 @@ void setup() {
 }
 void arm(){
   a.attach(9);  //the pin for the servo control 
+    a.write(65); //set initial servo position if desired
   b.attach(10);
+    b.write(65); //set initial servo position if desired
   c.attach(11);
+    c.write(65); //set initial servo position if desired
   d.attach(12);
-  delay(500);
+    d.write(65); //set initial servo position if desired
+    
   
   
-  a.write(65); //set initial servo position if desired
-  b.write(65); //set initial servo position if desired
-  c.write(65); //set initial servo position if desired
-  d.write(65); //set initial servo position if desired
+//
+//  delay(1000);
+//
+//    delay(1000);
+//
+//    delay(1000);
+
   
   delay(8000);  
   Serial.println("Arming Completed"); // so I can keep track of what is loaded

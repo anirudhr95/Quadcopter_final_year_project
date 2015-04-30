@@ -14,7 +14,7 @@ static int boff=2;
 static int coff=4;
 static int doff=-4;
 String x = "";
-//int speedRequested;
+int speedRequested;
 void setup() {
   
   Serial.begin(9600);
@@ -26,12 +26,15 @@ void arm(){
   b.attach(10);
   c.attach(11);
   d.attach(12);
-  delay(500);
+
   
   
   a.write(65); //set initial servo position if desired
+  delay(50);
   b.write(65); //set initial servo position if desired
+  delay(50);
   c.write(65); //set initial servo position if desired
+  delay(50);
   d.write(65); //set initial servo position if desired
   
   delay(8000);  
@@ -45,6 +48,7 @@ void initReceiver()
     
 
     vw_rx_start();       // Start the receiver PLL running
+    delay(1000);
     Serial.println("Receiver initialization Completed");
 }
 bool getInputs()
@@ -106,4 +110,4 @@ void loop() {
 //    readString=""; //empty for next input
 //  } 
 //  SoftwareServo::refresh();
-}
+//}
