@@ -1,18 +1,20 @@
-// zoomkat 10-22-11 serial servo test
-// type servo position 0 to 180 in serial monitor
-// or for writeMicroseconds, use a value like 1500
-// for IDE 0022 and later
-// Powering a servo from the arduino usually *DOES NOT WORK*.
+#include <Servo.h>
+
 
 String readString;
 //#include <Servo.h> 
-#include <VirtualWire.h>
-#include <SoftwareServo.h> 
-SoftwareServo a,b,c,d;  // create servo object to control a servo 
-static int aoff=-6;
-static int boff=0;
-static int coff=4;
-static int doff=-4;
+//#include <VirtualWire.h> 
+Servo a,b,c,d;  // create servo object to control a servo 
+
+#define aoff 0
+#define boff 0
+#define coff 0
+#define doff 0
+
+//static int aoff=-6;
+//static int boff=0;
+//static int coff=4;
+//static int doff=-4;
 String x = "";
 int speedRequested;
 void setup() {
@@ -22,71 +24,42 @@ void setup() {
    arm();
 }
 void arm(){
-  a.attach(9);  //the pin for the servo control 
-    a.write(65); //set initial servo position if desired
-  b.attach(10);
+  a.attach(5);  //the pin for the servo control 
+  a.write(65); //set initial servo position if desired    
+  b.attach(3);
     b.write(65); //set initial servo position if desired
-  c.attach(11);
+  c.attach(6);
     c.write(65); //set initial servo position if desired
-  d.attach(12);
-    d.write(65); //set initial servo position if desired
+  d.attach(10);
+  d.write(65); //set initial servo position if desired
+    delay(15);
     
+    
+    
+    
+    delay(1500);
+ 
   
   
-//
-//  delay(1000);
-//
-//    delay(1000);
-//
-//    delay(1000);
-
-  
-  delay(8000);  
   Serial.println("Arming Completed"); // so I can keep track of what is loaded
 }
-//void initReceiver()
-//{
-//    vw_set_ptt_inverted(true); // Required for DR3100
-//    vw_set_rx_pin(6);
-//    vw_setup(2000);  // Bits per sec
-//    
-//
-//    vw_rx_start();       // Start the receiver PLL running
-//    Serial.println("Receiver initialization Completed");
-//}
-//bool getInputs()
-//{ x="";
-//    uint8_t buf[VW_MAX_MESSAGE_LEN];
-//    uint8_t buflen = VW_MAX_MESSAGE_LEN;
-//
-//    if (vw_get_message(buf, &buflen)) // Non-blocking
-//    {
-//      for(int i=0;i<buflen;i++)
-//        x += char(buf[i]);
-//      Serial.println("Received Speed Request of " + String(x.toInt()));
-//      delay(20);
-//      
-//      return true;
-//    }
-//    delay(400);
-//    return false;
-//}
+
 void setSpeed(int n){
-        a.write(n + aoff);
-        b.write(n + boff);
-        c.write(n + coff);
-        d.write(n + doff);
+        a.write(n);
+        
+        b.write(n);
+        
+        c.write(n);
+        
+        d.write(n);
+        delay(15);
+        
         Serial.println("Speed set to " + String(n));
+        
 }
 void loop() {
-//  if(getInputs()){
-//    speedRequested = x.toInt();
-//    setSpeed(speedRequested);
-//  }
-//  SoftwareServo::refresh();
-//}
-
   
+//  
   while (Serial.available()) {
     char c = Serial.read();  //gets one byte from serial bufferaa
     
@@ -99,18 +72,8 @@ void loop() {
     int n = readString.toInt();  //convert readString into a number
     Serial.print("\nInput speed is :");
     Serial.print(n);
-  
-    // auto select appropriate value, copied from someone elses code.
-//if(n>0 && n<180){   
-      Serial.print("\nwriting Angle: ");
-      Serial.println(n);
-      a.write(n + aoff);
-            b.write(n + boff);
-                  c.write(n + coff);
-                        d.write(n + doff);
-//    }
-
+    setSpeed(n);
     readString=""; //empty for next input
   } 
-  SoftwareServo::refresh();
+  
 }
