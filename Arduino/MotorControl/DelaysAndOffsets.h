@@ -26,5 +26,6 @@
 #define motorDOffset 0
 #define motorARMDelay 1500
 #define motorARMSpeed 65
+#define motor_small_delay 15
 
 #endif /* DelaysAndOffsets_h */

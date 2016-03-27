@@ -10,6 +10,6 @@
 #define Delays_h
 
 //Ultrasound
-#define UltraDelayBetweenReads 200
+#define ultraDelayBetweenReads 200
 
 #endif /* Delays_h */
