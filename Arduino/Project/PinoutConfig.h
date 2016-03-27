@@ -13,28 +13,26 @@
 //A=Front, B= Back, C= Left, D= Right
 
 //Motors ( 4 Gnd, 4 Digital)
-#define motorAPin 3
-#define motorBPin 4
-#define motorCPin 5
-#define motorDPin 6
+#define motorAPin 9
+#define motorBPin 10
+#define motorCPin 11
+#define motorDPin 12
 
 //Ultrasound Sensors ( 4 Gnd, 4 VCC, 2 Dig each)
-#define ultraTrigPinA 10
-#define ultraTrigPinB 11
-#define ultraTrigPinC 12
-#define ultraTrigPinD 13
-#define ultraEchoPin 9
+#define ultraTrigPinA 3
+#define ultraTrigPinB 4
+#define ultraTrigPinC 5
+#define ultraTrigPinD 6`
+#define ultraEchoPin 13
 
 //Accelerometer ( 1 Gnd, 1 VCC, 1 Dig, 2 Analog)
 #define gyrointPin 2
 #define gyroSCLPin A5
 #define gyroSDAPin A4
 
-//Barometer (1 Gnd, 1 VCC, 2 Analog)
-//A4,A5 in Example.. Need to reconfigure in cpp
-#define baroSDAPin A2
-#define baroSCLPin A3
-
+//Barometer
+#define baroSCLPin 8
+#define baroSDAPin 7
 
 
 
