@@ -1,4 +1,9 @@
-#include "Gyro.h"
+#include <DelaysAndOffsets.h>
+#include <Gyro.h>
+#include <Motors.h>
+#include <PinoutConfig.h>
+#include <UltrasoundSense.h>
+
 void setup(){
   Serial.begin(9600);
   gyro_Setup();
