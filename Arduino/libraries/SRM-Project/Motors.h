@@ -11,7 +11,6 @@
 #include <ServoTimer2.h>
 #include "DelaysAndOffsets.h"
 #include "PinoutConfig.h"
-#include "Servo.h"
 
 ServoTimer2 a,b,c,d;
 int speeds[3];
@@ -22,6 +21,7 @@ int atom(int angle){
 
 void motor_setup(){
 //  Arming Process
+	Serial.println("Arming motors...");
 	a.attach(motor_FR_Pin);  //the pin for the servo control 
 	b.attach(motor_FL_Pin); 
 	c.attach(motor_BR_Pin); 
@@ -35,7 +35,8 @@ void motor_setup(){
 
   	
   	delay(motor_Arm_Delay);	
-	Serial.println("Arming Completed"); // so I can keep track of what is loaded
+  	Serial.println("Motors Armed...");
+	// Serial.println("Arming Completed"); // so I can keep track of what is loaded
 }
 
 int motor_Get_Speed_FR(){

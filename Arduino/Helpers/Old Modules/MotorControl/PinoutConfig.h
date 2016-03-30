@@ -13,7 +13,7 @@
 //A=Front, B= Back, C= Left, D= Right
 
 //Motors ( 4 Gnd, 4 Digital)
-#define motor_FR_Pin 6
+#define motor_FR_Pin 13
 #define motor_FL_Pin 10
 #define motor_BR_Pin 11
 #define motor_BL_Pin 12

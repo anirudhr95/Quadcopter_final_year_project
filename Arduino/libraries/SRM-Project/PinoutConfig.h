@@ -27,11 +27,16 @@
 //#define ultra_Trig_PinD 6
 //#define ultra_Echo_Pin 13
 
-#define ultra_Trig_Pin_AB 3
-#define ultra_Trig_Pin_CD 4
-#define ultra_Echo_Pin_AC 5
-#define ultra_Echo_Pin_BD 6
-//Pins 7,8 can be used to power these.
+#define ultra_Trig_Pin_A 6
+#define ultra_Trig_Pin_B 7
+#define ultra_Trig_Pin_C 8
+#define ultra_Trig_Pin_D 9
+#define ultra_Echo_Pin_A 14
+#define ultra_Echo_Pin_B 15
+#define ultra_Echo_Pin_C 16
+#define ultra_Echo_Pin_D 17
+
+//A0, A1, A2, A3 can power these
 
 
 //Accelerometer ( 1 Gnd, 1 VCC, 1 Dig, 2 Analog)

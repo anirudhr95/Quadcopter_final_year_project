@@ -12,7 +12,8 @@
 #include "DelaysAndOffsets.h"
 
 float ultrainternalDistanceMeasure(int echo_pin){
-  int	duration = pulseIn(echo_pin, HIGH,ultra_DelayBetweenReads) ; //sensor stops reading after some time - adding delay 26/03
+  int	duration = pulseIn(echo_pin, HIGH) ; //sensor stops reading after some time - adding delay 26/03
+  // Serial.println(duration);
   int distance = (duration/2) / 29.1;
   
   if(distance >=200 || distance <= 0){
@@ -24,10 +25,15 @@ float ultrainternalDistanceMeasure(int echo_pin){
   
 }
 void ultra_Setup(){
-	pinMode(ultra_Trig_Pin_AB, OUTPUT);
-	pinMode(ultra_Trig_Pin_CD, OUTPUT);
-	pinMode(ultra_Echo_Pin_AC  , INPUT);
-	pinMode(ultra_Echo_Pin_BD  , INPUT);
+	pinMode(ultra_Trig_Pin_A, OUTPUT);
+	pinMode(ultra_Trig_Pin_B, OUTPUT);
+	pinMode(ultra_Trig_Pin_C, OUTPUT);
+	pinMode(ultra_Trig_Pin_D, OUTPUT);
+	pinMode(ultra_Echo_Pin_A  , INPUT);
+	pinMode(ultra_Echo_Pin_B  , INPUT);
+	pinMode(ultra_Echo_Pin_C  , INPUT);	
+	pinMode(ultra_Echo_Pin_D  , INPUT);
+	
 }
 void ultrainternalTrigger(int trig_pin){
 	digitalWrite(trig_pin, LOW);
@@ -36,32 +42,32 @@ void ultrainternalTrigger(int trig_pin){
 	delayMicroseconds(10);
 	digitalWrite(trig_pin, LOW);
 }
+float getDistance(int trig_pin, int echo_pin){
+	ultrainternalTrigger(trig_pin);
+	return ultrainternalDistanceMeasure(echo_pin);
+}
 float ultragetA() {
-	ultrainternalTrigger(ultra_Trig_Pin_AB);
-	return ultrainternalDistanceMeasure(ultra_Echo_Pin_AC);
+	return (getDistance(ultra_Trig_Pin_A,ultra_Echo_Pin_A ) - ultra_toWingtipOffset + ultra_Offset_A);
 }
 float ultragetB() {
-	ultrainternalTrigger(ultra_Trig_Pin_AB);
-	return ultrainternalDistanceMeasure(ultra_Echo_Pin_BD);
+	return (getDistance(ultra_Trig_Pin_B,ultra_Echo_Pin_B) - ultra_toWingtipOffset + ultra_Offset_B);
 }
 float ultragetC() {
-	ultrainternalTrigger(ultra_Trig_Pin_CD);
-	return ultrainternalDistanceMeasure(ultra_Echo_Pin_AC);
+	return (getDistance(ultra_Trig_Pin_C,ultra_Echo_Pin_C ) - ultra_toWingtipOffset + ultra_Offset_C);
 }
 float ultragetD() {
-	ultrainternalTrigger(ultra_Trig_Pin_CD);
-	return ultrainternalDistanceMeasure(ultra_Echo_Pin_BD);
+	return (getDistance(ultra_Trig_Pin_D,ultra_Echo_Pin_D ) - ultra_toWingtipOffset + ultra_Offset_);
 }
 
 float* getABCD()
 {
 	float a[3];
 	// The following order & delay is important, as the pairs of functions should not have echo/trigger pins same
+	
 	a[0] = ultragetA();
-	a[3] = ultragetD();	
-	// delay(ultra_DelayBetweenReads);
-	a[1] = ultragetB();
+	a[1] = ultragetB();	
 	a[2] = ultragetC();
+	a[3] = ultragetD();
 	
 	
 	return a;
