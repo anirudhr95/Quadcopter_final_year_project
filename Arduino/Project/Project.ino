@@ -8,16 +8,18 @@
 
 String readString;
 int MotorSpeeds[3];
-float *ypr, *ypr_desired;
-float *ypr_stationary = {0.0,0.0,0.0}
-float *altitude, *altitude_desired; // Requires barometer
+float *ypr = {{0.0,0.0,0.0}, *ypr_desired = {0.0,0.0,0.0};
+float *ypr_stationary = {0.0,0.0,0.0};
+double *altitude, *altitude_desired; // Requires barometer
+
+int *UltraValues = {0,0,0,0};
 
 bool should_stabilize = false;  //for hover
 bool should_hold_altitude = false; //for holding altitude
 // PID myPID(&Input, &Output, &Setpoint,2,5,1, DIRECT);
 
 // YAW DISABLED TILL ACCURATE MAGNETO READING CAN BE OBTAINED. Need to fix direction as well
-// To enable, Uncomment following, as well as definitions in Setup(), and refreshPIDS()
+// To enable, Uncomment following, as well as definitions in Setup(), and stabilize_flight()
 // YAW
 // PID PID_motor_Yaw_FR(&ypr[0], MotorSpeeds[0], &desired_ypr[0], Kp, Ki, Kd, REVERSE);
 // PID PID_motor_Yaw_FL(&ypr[0], MotorSpeeds[1], &desired_ypr[0], Kp, Ki, Kd, REVERSE);
@@ -74,35 +76,68 @@ void setup() {
   Serial.print("Yaw\tPitch\tRoll\tAx\tAy\tAz\t\tUA\tUB\tUC\tRF\tRL\tBR\tBL");
 
 }
-void refreshYPR(){
+void quad_takeoff()
+{
+  set_Mode_Hover(takeoff_prefered_altitude);
+}
+void quad_land(){
+  set_Mode_Hover(0.0);
+}
+void set_Mode_Altitude_Hold(double desired=0.0) {
+  should_hold_altitude =  true;
+  id(desired == 0.0){
+    altitude = bmp_getAltitude();
+    *altitude_desired = *altitude;
+  }
+  else {
+    *altitude_desired = desired; 
+  }
+}
+void remove_Altitude_Hold(){
+  should_hold_altitude = false;
+}
+void refreshYPRA(){
+  // Not to be called directly.. Use RefreshPIDS()
   ypr = getYPR();
-  if(should_stabilize)
-    *ypr_desired = *ypr_stationary;
+  altitude = bmp_getAltitude();
+}
+void set_Mode_Flight(){
+  should_stabilize = false;
+}
+void set_Mode_Hover(double desired=0.0){
+  should_stabilize = true;
+  *ypr_desired = *ypr_stationary;
+  set_Mode_Altitude_Hold(desired);
+}
+void set_YPR(float *new_ypr){
+  if(check_ypr_goodness(new_ypr)){
+    set_Mode_Flight();
+    *ypr_desired = *new_ypr;
+  }
+  else{
+    set_Mode_Hover();
+  }
+}
 
-}
-void refreshMotors(){
-  motor_Set_Speed_FR(MotorSpeeds[0]);
-  motor_Set_Speed_FL(MotorSpeeds[1]);
-  motor_Set_Speed_BR(MotorSpeeds[2]);
-  motor_Set_Speed_BL(MotorSpeeds[3]);
-}
-void refreshPIDS(){
-  refreshYPR();
+void stabilize_flight(){
+  refreshYPRA();
   
   // PID_motor_Yaw_FR.Compute();
   // PID_motor_Yaw_FL.Compute();
   // PID_motor_Yaw_BR.Compute();
   // PID_motor_Yaw_BL.Compute();
-
-  PID_motor_Pitch_FR.Compute();
-  PID_motor_Pitch_FL.Compute();
-  PID_motor_Pitch_BR.Compute();
-  PID_motor_Pitch_BL.Compute();
+  if(should_stabilize){
+    PID_motor_Pitch_FR.Compute();
+    PID_motor_Pitch_FL.Compute();
+    PID_motor_Pitch_BR.Compute();
+    PID_motor_Pitch_BL.Compute();
+    
+    PID_motor_Roll_FR.Compute();
+    PID_motor_Roll_FL.Compute();
+    PID_motor_Roll_BR.Compute();
+    PID_motor_Roll_BL.Compute();
+  }
   
-  PID_motor_Roll_FR.Compute();
-  PID_motor_Roll_FL.Compute();
-  PID_motor_Roll_BR.Compute();
-  PID_motor_Roll_BL.Compute();
 
   // if(should_hold_altitude){
   //   PID_motor_Altitude_FR.Compute();
@@ -110,50 +145,10 @@ void refreshPIDS(){
   //   PID_motor_Altitude_BR.Compute();
   //   PID_motor_Altitude_BL.Compute();
   // }
-  refreshMotors();
+  refreshMotors(motorSpeeds);
 }
 
-void printData(){ 
-  float *ypr = getYPR();
-  Serial.print("ypr\t");
-  Serial.print(ypr[0]);
-  Serial.print("\t");
-  Serial.print(ypr[1]);
-  Serial.print("\t");
-  Serial.print(ypr[2]);
 
-
-  VectorInt16 aaReal = getAccel();
-  Serial.print("areal\t");
-  Serial.print(aaReal.x);
-  Serial.print("\t");
-  Serial.print(aaReal.y);
-  Serial.print("\t");
-  Serial.println(aaReal.z);
-
-// Ultrasonic
-  Serial.print(ultragetA());
-  Serial.print("\t");
-  Serial.print(ultragetB());
-  Serial.print("\t");
-  Serial.print(ultragetC());
-  Serial.print("\t");
-  Serial.print(ultragetD());
-
-//  Serial.print(ultragetA());
-//  Serial.print("\t");
-//  delay(50);
-
-
-//  MOTOR
-  for(int i=0;i<=3;i++){
-    Serial.print(motorSpeeds[i]);
-    Serial.print("\t");
-  }
-  Serial.println();
-
-  
-}
 
 void loop() {
 
@@ -181,7 +176,7 @@ void loop() {
     
     readString=""; //empty for next input
   } 
-  SoftwareServo::refresh();
+  stabilize_flight();
 
   
   // put your main code here, to run repeatedly:

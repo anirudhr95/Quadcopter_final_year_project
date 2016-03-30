@@ -10,7 +10,7 @@
 
 #include "PinoutConfig.h"
 #include "DelaysAndOffsets.h"
-
+float *a = {0.0,0.0,0.0,0.0};
 float ultrainternalDistanceMeasure(int echo_pin){
   int	duration = pulseIn(echo_pin, HIGH) ; //sensor stops reading after some time - adding delay 26/03
   // Serial.println(duration);
@@ -61,7 +61,7 @@ float ultragetD() {
 
 float* getABCD()
 {
-	float a[3];
+	
 	// The following order & delay is important, as the pairs of functions should not have echo/trigger pins same
 	
 	a[0] = ultragetA();

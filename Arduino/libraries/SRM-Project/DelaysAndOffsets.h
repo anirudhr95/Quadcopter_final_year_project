@@ -29,6 +29,10 @@
 #define gyro_Z_Offset -85
 #define gyro_Z_Accel_Offset 1788
 
+#define gyro_limit_pitch_pos 45
+#define gyro_limit_pitch_neg 45
+#define gyro_limit_roll_pos 45
+#define gyro_limit_roll_neg 45
 
 //Motors
 #define motor_FR_Offset 0
@@ -40,5 +44,8 @@
 #define motor_Arm_Speed 65
 #define motor_small_delay 50
 
-
+// BMP
+#define sensor_to_base_offset 5
+#define bmp_sensor_refresh_delay 500
+#define takeoff_prefered_altitude 150.00
 #endif /* DelaysAndOffsets_h */

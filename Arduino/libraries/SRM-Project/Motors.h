@@ -75,6 +75,13 @@ void motor_Set_Speed_BL(int n){
 	speeds[3] =n + motor_BL_Offset;
 	//	delay(motor_small_delay);
 }
+void refreshMotors(int *MotorSpeeds){
+  motor_Set_Speed_FR(MotorSpeeds[0]);
+  motor_Set_Speed_FL(MotorSpeeds[1]);
+  motor_Set_Speed_BR(MotorSpeeds[2]);
+  motor_Set_Speed_BL(MotorSpeeds[3]);
+}
+
 
 
 void motor_Set_Speed(int n){

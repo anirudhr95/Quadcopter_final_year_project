@@ -372,5 +372,17 @@ float *getYPR(){
       }
   }
 
+bool check_ypr_goodness(float *new_ypr){
+	if (new_ypr[1] > gyro_limit_pitch_pos)
+		return false;
+	if (new_ypr[1] < gyro_limit_pitch_neg)
+		return false;
+	if (new_ypr[2] > gyro_limit_roll_pos)
+		return false;
+	if (new_ypr[2] < gyro_limit_roll_neg)
+		return false;
 
+	return true
+
+}
 #endif /* Gyro_h */
