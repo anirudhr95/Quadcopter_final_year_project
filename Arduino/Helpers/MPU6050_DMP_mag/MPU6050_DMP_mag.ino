@@ -1,15 +1,3 @@
-//
-//  Gyro.h
-//  
-//
-//  Created by Shyam Ravikumar on 26/03/16.
-//
-//
-
-#ifndef Gyro_h
-#define Gyro_h
-
-
 // I2C device class (I2Cdev) demonstration Arduino sketch for MPU6050 class using DMP (MotionApps v2.0)
 // 6/21/2012 by Jeff Rowberg <jeff@rowberg.net>
 // Updates (of the library) should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
@@ -107,7 +95,7 @@ int16_t mx, my, mz;     //To store magnetometer readings
 VectorInt16 aaReal;     // [x, y, z]            gravity-free accel sensor measurements
 VectorInt16 aaWorld;    // [x, y, z]            world-frame accel sensor measurements
 VectorFloat gravity;    // [x, y, z]            gravity vector
-float ypr[3], magData[4];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
+float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
 float heading;          // Simple magnetic heading. (NOT COMPENSATED FOR PITCH AND ROLL)
 
 // To check DMP frecuency  (it can be changed it the MotionApps v2 .h file)
@@ -131,7 +119,7 @@ void dmpDataReady() {
 // ===                      INITIAL SETUP                       ===
 // ================================================================
 
-void gyro_Setup() {
+void setup() {
 
   // join I2C bus (I2Cdev library doesn't do this automatically)
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
@@ -148,6 +136,7 @@ void gyro_Setup() {
 #endif
 
   // initialize serial communication
+  Serial.begin(115200);
   //while (!Serial); // wait for Leonardo enumeration, others continue immediately
 
   // NOTE: 8MHz or slower host processors, like the Teensy @ 3.3v or Ardunio
@@ -157,14 +146,12 @@ void gyro_Setup() {
   // crystal solution for the UART timer.
 
   // wait for ready
-
-
-  // while (Serial.available() && Serial.read()); // empty buffer
-  // while (!Serial.available()) {
-  //   Serial.println(F("\nSend any character to begin DMP programming and demo: "));  // wait for data
-  //   delay(1000);
-  //   }
-  // while (Serial.available() && Serial.read()); // empty buffer again
+  while (Serial.available() && Serial.read()); // empty buffer
+  while (!Serial.available()) {
+    Serial.println(F("\nSend any character to begin DMP programming and demo: "));  // wait for data
+    delay(1000);
+    }
+  while (Serial.available() && Serial.read()); // empty buffer again
 
   // initialize device
   Serial.println(F("Initializing I2C devices..."));
@@ -181,13 +168,13 @@ void gyro_Setup() {
   // supply your own gyro offsets here, scaled for min sensitivity
   // If you don't know yours, you can find an automated sketch for this task from: http://www.i2cdevlib.com/forums/topic/96-arduino-sketch-to-automatically-calculate-mpu6050-offsets/
 
-  mpu.setXAccelOffset(gyro_X_Accel_Offset);
-  mpu.setYAccelOffset(gyro_Y_Accel_Offset);
-  mpu.setZAccelOffset(gyro_Z_Accel_Offset);
+  mpu.setXAccelOffset(-3591);
+  mpu.setYAccelOffset(-842);
+  mpu.setZAccelOffset(578);
 
-  mpu.setXGyroOffset(gyro_X_Offset);
-  mpu.setYGyroOffset(gyro_Y_Offset);
-  mpu.setZGyroOffset(gyro_Z_Offset);
+  mpu.setXGyroOffset(-51);
+  mpu.setYGyroOffset(-57);
+  mpu.setZGyroOffset(0);
 
   // In case you want to change MPU sensors' measurements ranges, you should implement it here. This has not been tested with DMP.
 
@@ -274,172 +261,104 @@ void gyro_Setup() {
 }
 
 
-	// ================================================================
-	// ===                    MAIN PROGRAM LOOP                     ===
-	// ================================================================
-float *getYPR(){
+
+// ================================================================
+// ===                    MAIN PROGRAM LOOP                     ===
+// ================================================================
+
+void loop() {
   // if programming failed, don't try to do anything
-  //  TODO FIX NEXT LINE
-  //    if (!dmpReady) return [-1.0];
-	
-		// wait for MPU interrupt or extra packet(s) available
-	while (!mpuInterrupt && fifoCount < packetSize) {
-			// other program behavior stuff here
-			// .
-			// .
-			// .
-			// if you are really paranoid you can frequently test in between other
-			// stuff to see if mpuInterrupt is true, and if so, "break;" from the
-			// while() loop to immediately process the MPU data
-			// .
-			// .
-			// .
-	}
-	
-		// reset interrupt flag and get INT_STATUS byte
-	mpuInterrupt = false;
-	mpuIntStatus = mpu.getIntStatus();
-	
-		// get current FIFO count
-	fifoCount = mpu.getFIFOCount();
-	
-		// check for overflow (this should never happen unless our code is too inefficient)
-	if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
-			// reset so we can continue cleanly
-		mpu.resetFIFO();
-		Serial.println(F("FIFO overflow!"));
-		
-			// otherwise, check for DMP data ready interrupt (this should happen frequently)
-	} else if (mpuIntStatus & 0x02) {
-			// wait for correct available data length, should be a VERY short wait
-		while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
-		
-			// read a packet from FIFO
-		mpu.getFIFOBytes(fifoBuffer, packetSize);
-		
-			// track FIFO count here in case there is > 1 packet available
-			// (this lets us immediately read more without waiting for an interrupt)
-		fifoCount -= packetSize;
-			// display Euler angles in degrees
-		mpu.dmpGetQuaternion(&q, fifoBuffer);
-		mpu.dmpGetGravity(&gravity, &q);
-		mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-		for(int i=0;i<3;i++)
-			ypr[i] *= (180/M_PI);
-		return ypr;
-		
-		
-	}
-}
+  if (!dmpReady) return;
 
-float *getMAG(){
-	magData[0]=mpu.getExternalSensorWord(0);
-    magData[1]=mpu.getExternalSensorWord(2);
-    magData[2]=mpu.getExternalSensorWord(4);
-    
-    return magData;
-
-    
-}
-float getHeading(){
-	getMAG();
-	heading = atan2(magData[1], magData[0]);
-    if(heading < 0) heading += 2 * M_PI;
-    return heading * 180/M_PI;
-}
-
-
-  VectorInt16 getAccel() {
-      // if programming failed, don't try to do anything
-//      if (!dmpReady) return;
-  
-      // wait for MPU interrupt or extra packet(s) available
-      while (!mpuInterrupt && fifoCount < packetSize) {
-          // other program behavior stuff here
-          // .
-          // .
-          // .
-          // if you are really paranoid you can frequently test in between other
-          // stuff to see if mpuInterrupt is true, and if so, "break;" from the
-          // while() loop to immediately process the MPU data
-          // .
-          // .
-          // .
-      }
-  
-      // reset interrupt flag and get INT_STATUS byte
-      mpuInterrupt = false;
-      mpuIntStatus = mpu.getIntStatus();
-  
-      // get current FIFO count
-      fifoCount = mpu.getFIFOCount();
-  
-      // check for overflow (this should never happen unless our code is too inefficient)
-      if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
-          // reset so we can continue cleanly
-          mpu.resetFIFO();
-          Serial.println(F("FIFO overflow!"));
-  
-      // otherwise, check for DMP data ready interrupt (this should happen frequently)
-      } else if (mpuIntStatus & 0x02) {
-          // wait for correct available data length, should be a VERY short wait
-          while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
-  
-          // read a packet from FIFO
-          mpu.getFIFOBytes(fifoBuffer, packetSize);
-  
-          // track FIFO count here in case there is > 1 packet available
-          // (this lets us immediately read more without waiting for an interrupt)
-          fifoCount -= packetSize;
-  
-  
-              // display real acceleration, adjusted to remove gravity
-              mpu.dmpGetQuaternion(&q, fifoBuffer);
-              mpu.dmpGetAccel(&aa, fifoBuffer);
-              mpu.dmpGetGravity(&gravity, &q);
-              mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
-              return aaReal;
-  //            Serial.print("areal\t");
-  //            Serial.print(aaReal.x);
-  //            Serial.print("\t");
-  //            Serial.print(aaReal.y);
-  //            Serial.print("\t");
-  //            Serial.println(aaReal.z);
-  
-  
-  //        #ifdef OUTPUT_READABLE_WORLDACCEL
-  //            // display initial world-frame acceleration, adjusted to remove gravity
-  //            // and rotated based on known orientation from quaternion
-  //            mpu.dmpGetQuaternion(&q, fifoBuffer);
-  //            mpu.dmpGetAccel(&aa, fifoBuffer);
-  //            mpu.dmpGetGravity(&gravity, &q);
-  //            mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
-  //            mpu.dmpGetLinearAccelInWorld(&aaWorld, &aaReal, &q);
-  //            Serial.print("aworld\t");
-  //            Serial.print(aaWorld.x);
-  //            Serial.print("\t");
-  //            Serial.print(aaWorld.y);
-  //            Serial.print("\t");
-  //            Serial.println(aaWorld.z);
-  //        #endif
-  
-  
-  
-  
-      }
+  // wait for MPU interrupt or extra packet(s) available
+  while (!mpuInterrupt && fifoCount < packetSize) {
+    // other program behavior stuff here
+    // .
+    // .
+    // .
+    // if you are really paranoid you can frequently test in between other
+    // stuff to see if mpuInterrupt is true, and if so, "break;" from the
+    // while() loop to immediately process the MPU data
+    // .
+    // .
+    // .
   }
 
-bool check_ypr_goodness(float *new_ypr){
-	if (new_ypr[1] > gyro_limit_pitch_pos)
-		return false;
-	if (new_ypr[1] < gyro_limit_pitch_neg)
-		return false;
-	if (new_ypr[2] > gyro_limit_roll_pos)
-		return false;
-	if (new_ypr[2] < gyro_limit_roll_neg)
-		return false;
+  // reset interrupt flag and get INT_STATUS byte
+  mpuInterrupt = false;
+  mpuIntStatus = mpu.getIntStatus();
 
-	return true;
+  // get current FIFO count
+  fifoCount = mpu.getFIFOCount();
 
+  // check for overflow (this should never happen unless our code is too inefficient)
+  if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
+    // reset so we can continue cleanly
+    mpu.resetFIFO();
+    Serial.println(F("FIFO overflow!"));
+
+    // otherwise, check for DMP data ready interrupt (this should happen frequently)
+  } 
+  else if (mpuIntStatus & 0x02) {
+    // wait for correct available data length, should be a VERY short wait
+    while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+
+    // read a packet from FIFO
+    mpu.getFIFOBytes(fifoBuffer, packetSize);
+
+    // track FIFO count here in case there is > 1 packet available
+    // (this lets us immediately read more without waiting for an interrupt)
+    fifoCount -= packetSize;
+
+    // Check DMP frecuency
+    time1=micros()-time1old;
+    time1old=micros();
+    frec1=1000000/time1;
+
+    // Get and process information from DMP
+    mpu.dmpGetQuaternion(&q, fifoBuffer);
+    mpu.dmpGetGyro(gyro, fifoBuffer);
+    //    mpu.dmpGetAccel(&aa, fifoBuffer);  //Use this if you want accelerometer measures
+    mpu.dmpGetGravity(&gravity, &q);
+    mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+    //    mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);  //Use this to get linear acceleration apart from gravity.
+    //    mpu.dmpGetLinearAccelInWorld(&aaWorld, &aaReal, &q);  //NOT RECOMMENDED. Gives you linear acceleration rotated to initial position.
+
+    //Read magnetometer measures
+    mx=mpu.getExternalSensorWord(0);
+    my=mpu.getExternalSensorWord(2);
+    mz=mpu.getExternalSensorWord(4);
+
+    heading = atan2(my, mx);
+    if(heading < 0) heading += 2 * M_PI;
+
+    // TIME TO PRINT TO CONSOLE
+    // Printing to console takes lots of time, so if you print too many things you could have timing problems, Fifo overflow errors and variable frecuency.
+    
+    Serial.print("ypr\t");                    // Prints are commented for the reason above
+//    Serial.print(ypr[0] * 180/M_PI);
+//    Serial.print("\t");
+    Serial.print(ypr[1] * 180/M_PI);
+//    Serial.print("\t");
+//    Serial.print(ypr[2] * 180/M_PI);
+//    Serial.print("\t vang\t");
+//    Serial.print(gyro[0]);
+//    Serial.print("\t");
+//    Serial.print(gyro[1]);
+//    Serial.print("\t");
+//    Serial.print(gyro[2]);
+    Serial.print("\t h:\t");
+    Serial.print(heading * 180/M_PI);
+    Serial.print("\t F:\t");
+    Serial.println(frec1);
+
+
+    // blink LED to indicate activity
+    blinkState = !blinkState;
+    digitalWrite(LED_PIN, blinkState);
+  }
 }
-#endif /* Gyro_h */
+
+
+
+

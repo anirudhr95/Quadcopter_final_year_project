@@ -21,12 +21,6 @@
 //Ultrasound Sensors ( 4 Gnd, 4 VCC, 2 Dig each)
 //A=Front, B= Back, C= Left, D= Right
 
-//#define ultra_Trig_PinA 3
-//#define ultra_Trig_PinB 4
-//#define ultra_Trig_PinC 5
-//#define ultra_Trig_PinD 6
-//#define ultra_Echo_Pin 13
-
 #define ultra_Trig_Pin_A 6
 #define ultra_Trig_Pin_B 7
 #define ultra_Trig_Pin_C 8
@@ -40,7 +34,7 @@
 
 
 //Accelerometer ( 1 Gnd, 1 VCC, 1 Dig, 2 Analog)
-#define gyro_int_Pin 2
+// #define gyro_int_Pin 2
 #define gyro_SCL_Pin A5
 #define gyro_SDA_Pin A4
 

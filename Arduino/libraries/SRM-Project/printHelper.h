@@ -1,5 +1,11 @@
 #ifndef printHelper_h
 #define printHelper_h
+
+#include <DelaysAndOffsets.h>
+#include <Gyro.h>
+#include <Motors.h>
+#include <PinoutConfig.h>
+#include <UltrasoundSense.h>
   void printData(float *ypr, int *ultra, int *motorSpeeds){ 
     
     Serial.print("ypr\t");

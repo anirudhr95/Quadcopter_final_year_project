@@ -16,7 +16,8 @@
 
 //	Ultrasound
 #define ultra_DelayBetweenReads 200
-#define ultra_toWingtipOffset 25
+// #define ultra_toWingtipOffset 25
+#define ultra_toWingtipOffset 0
 #define ultra_safe_distance_from_wingtip 20
 #define ultra_Offset_A 2
 #define ultra_Offset_B 2
@@ -24,10 +25,12 @@
 #define ultra_Offset_D 0
 
 //Gyro
-#define gyro_X_Offset 220
-#define gyro_Y_Offset 76
-#define gyro_Z_Offset -85
-#define gyro_Z_Accel_Offset 1788
+#define gyro_X_Offset 12
+#define gyro_Y_Offset 2
+#define gyro_Z_Offset 70
+#define gyro_X_Accel_Offset -3593
+#define gyro_Y_Accel_Offset -939
+#define gyro_Z_Accel_Offset 1291
 
 #define gyro_limit_pitch_pos 45
 #define gyro_limit_pitch_neg 45

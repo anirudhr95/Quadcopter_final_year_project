@@ -10,7 +10,9 @@
 
 #include "PinoutConfig.h"
 #include "DelaysAndOffsets.h"
-float *a = {0.0,0.0,0.0,0.0};
+
+
+float *ultra_values;
 float ultrainternalDistanceMeasure(int echo_pin){
   int	duration = pulseIn(echo_pin, HIGH) ; //sensor stops reading after some time - adding delay 26/03
   // Serial.println(duration);
@@ -56,7 +58,7 @@ float ultragetC() {
 	return (getDistance(ultra_Trig_Pin_C,ultra_Echo_Pin_C ) - ultra_toWingtipOffset + ultra_Offset_C);
 }
 float ultragetD() {
-	return (getDistance(ultra_Trig_Pin_D,ultra_Echo_Pin_D ) - ultra_toWingtipOffset + ultra_Offset_);
+	return (getDistance(ultra_Trig_Pin_D,ultra_Echo_Pin_D ) - ultra_toWingtipOffset + ultra_Offset_D);
 }
 
 float* getABCD()
@@ -64,13 +66,13 @@ float* getABCD()
 	
 	// The following order & delay is important, as the pairs of functions should not have echo/trigger pins same
 	
-	a[0] = ultragetA();
-	a[1] = ultragetB();	
-	a[2] = ultragetC();
-	a[3] = ultragetD();
+	ultra_values[0] = ultragetA();
+	ultra_values[1] = ultragetB();	
+	ultra_values[2] = ultragetC();
+	ultra_values[3] = ultragetD();
 	
 	
-	return a;
+	return ultra_values;
 }
 
 #endif /* UltrasoundSense_h */

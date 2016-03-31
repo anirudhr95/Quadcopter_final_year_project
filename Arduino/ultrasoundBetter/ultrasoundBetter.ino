@@ -11,19 +11,11 @@ void setup() {
 void loop() {
   
   // put your main code here, to run repeatedly:
-//  float *a = getABCD();
-//  for(int i=0;i<4;i++){
-//  Serial.print(a[i]);
-//  Serial.print("\t");}
-//  Serial.println();
-Serial.print(ultragetD());
-//Serial.print("\t");
-//Serial.print(ultragetB());
-//Serial.print("\t");
-////delay(2000);
-//Serial.print(ultragetC());
-//Serial.print("\t");
-//Serial.print(ultragetD());
+  float *a = getABCD();
+  for(int i=0;i<4;i++){
+  Serial.print(a[i]);
+  Serial.print("\t");}
+  Serial.println();
 Serial.println();
 delay(1000);
   
