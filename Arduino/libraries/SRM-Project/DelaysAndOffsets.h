@@ -43,9 +43,11 @@
 #define motor_BR_Offset 0
 #define motor_BL_Offset 0
 
-#define motor_Arm_Delay 5000
-#define motor_Arm_Speed 65
+#define motor_Arm_Delay 3000
+#define motor_Arm_Speed 0  //If calibrated correctly, it will arm without problems
 #define motor_small_delay 50
+#define motor_Min_Speed 1200
+#define motor_Max_Speed 2000
 
 // BMP
 #define sensor_to_base_offset 5

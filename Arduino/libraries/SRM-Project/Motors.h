@@ -5,39 +5,23 @@
 //  Created by Shyam Ravikumar on 26/03/16.
 //
 //
-
+/* 
+To calibrate motors, use Calibrate() function.. Concept : max(2000) microsecond pulse is applied, and power is connected. After some time, a musical note will be heard, signifying that calibration has started. Now apply Min(1000) pulse.Wait for 5 seconds, and remove power.
+*/
 #ifndef Motors_h
 #define Motors_h
-#include <ServoTimer2.h>
+#include <Servo.h>
 #include "DelaysAndOffsets.h"
 #include "PinoutConfig.h"
 
-ServoTimer2 a,b,c,d;
+Servo a,b,c,d;
 int speeds[3];
 
 int atom(int angle){
-	return map(angle, 0,180,1000,2000);
+	return map(angle, 0,180,motor_Min_Speed,motor_Max_Speed);
 }
 
-void motor_setup(){
-//  Arming Process
-	Serial.println("Arming motors...");
-	a.attach(motor_FR_Pin);  //the pin for the servo control 
-	b.attach(motor_FL_Pin); 
-	c.attach(motor_BR_Pin); 
-	d.attach(motor_BL_Pin);
-	
 
-	a.write(motor_Arm_Speed); //set initial servo position if desired
-  	b.write(motor_Arm_Speed); //set initial servo position if desired
-  	c.write(motor_Arm_Speed); //set initial servo position if desired
-  	d.write(motor_Arm_Speed); //set initial servo position if desired
-
-  	
-  	delay(motor_Arm_Delay);	
-  	Serial.println("Motors Armed...");
-	// Serial.println("Arming Completed"); // so I can keep track of what is loaded
-}
 
 int motor_Get_Speed_FR(){
 	return speeds[0];
@@ -87,13 +71,57 @@ void refreshMotors(double MotorSpeeds[]){
 void motor_Set_Speed(int n){
 	motor_Set_Speed_FR(n);
 	motor_Set_Speed_FL(n);
+	delay(motor_small_delay);
 	motor_Set_Speed_BR(n);
 	motor_Set_Speed_BL(n);
 	
-	delay(motor_small_delay);
+	
 	Serial.println("Speed set to " + String(n));
 	
 }
+void motor_setup(){
+//  Arming Process
+	Serial.println("Arming motors...");
+	a.attach(motor_FR_Pin,2000,1000);  //the pin for the servo control 
+	b.attach(motor_FL_Pin,2000,1000); 
+	c.attach(motor_BR_Pin,2000,1000); 
+	d.attach(motor_BL_Pin,2000,1000);
+	
+	// Arming speed should be 0 for sometime
+	motor_Set_Speed(motor_Arm_Speed);
 
+  	
+  	delay(motor_Arm_Delay);	
+  	Serial.println("Motors Armed...");
+	// Serial.println("Arming Completed"); // so I can keep track of what is loaded
+}
 
+void motor_calibrate(){
+	Serial.println("Please remove power to motors.. Once done, press (1)");
+	while(!Serial.available());
+	int read = Serial.parseInt();
+	if(read==1){
+		a.writeMicroseconds(2000);
+		b.writeMicroseconds(2000);
+		c.writeMicroseconds(2000);
+		d.writeMicroseconds(2000);
+		Serial.println("Connect Power, and wait for melody.. Once you hear that, press any key to continue...");
+		while(!Serial.available());
+		Serial.println("Calibrating..");
+  		delay(8000);
+		a.writeMicroseconds(1000);
+		b.writeMicroseconds(1000);
+		c.writeMicroseconds(1000);
+		d.writeMicroseconds(1000);
+		delay(5000);
+		motor_Set_Speed(1500);
+  		Serial.println("Calibration completed..");
+		Serial.println("If all motors are spinning, calibration is successful..Restart program if not confirmed");
+	}
+	else{
+		motor_calibrate();
+
+	}
+
+}
 #endif /* Motors_h */

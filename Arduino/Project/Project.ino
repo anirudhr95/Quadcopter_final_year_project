@@ -58,6 +58,8 @@ PID PID_motor_Altitude_FL(&altitude_current, &MotorSpeeds[1], &altitude_desired,
 PID PID_motor_Altitude_BR(&altitude_current, &MotorSpeeds[2], &altitude_desired, Kp, Ki, Kd, REVERSE);
 PID PID_motor_Altitude_BL(&altitude_current, &MotorSpeeds[3], &altitude_desired, Kp, Ki, Kd, REVERSE);
 
+
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin (9600);
@@ -85,6 +87,23 @@ void setup() {
   PID_motor_Altitude_BR.SetMode(AUTOMATIC);
   PID_motor_Altitude_BL.SetMode(AUTOMATIC);
 
+  PID_motor_Yaw_FR.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Yaw_FL.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Yaw_BR.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Yaw_BL.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Pitch_FR.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Pitch_FL.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Pitch_BR.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Pitch_BL.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Roll_FR.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Roll_FL.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Roll_BR.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Roll_BL.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Altitude_FR.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Altitude_FL.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Altitude_BR.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Altitude_BL.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
+
 
   Serial.print("Setup Completed");
   Serial.print("Yaw\tPitch\tRoll\tAx\tAy\tAz\t\tUA\tUB\tUC\tRF\tRL\tBR\tBL");
@@ -103,6 +122,9 @@ void set_Mode_Altitude_Hold_At(double prefered_altitude) {
 void quad_land(){
   
   set_Mode_Altitude_Hold_At(0.0);
+  //TODO : Decrement very small amount till 0.0!!
+  // Use setTunings();
+  // Eg : http://playground.arduino.cc/Code/PIDLibraryAdaptiveTuningsExample
 }
 void set_Mode_Altitude_Hold() {
   should_hold_altitude =  true;
