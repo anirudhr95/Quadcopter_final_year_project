@@ -1,5 +1,6 @@
 import Constants
 import pi_send
+from Server import socketio
 
 class middleware:
     def __init__(self, direction):
@@ -32,7 +33,6 @@ class middleware:
             return self.p2a.set_speed(params)
         if functionName == Constants.IOSCOMMAND_SETYPR:
             return self.p2a.setYPR(params.split(';'))
-
 
     def message_to_send(self, params):
         if self.direction==1:

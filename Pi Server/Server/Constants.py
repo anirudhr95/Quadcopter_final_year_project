@@ -5,6 +5,9 @@ ENABLE_FLASK_LOGGING = False
 ENABLE_FLASK_DEBUG_MODE = True
 ENABLE_BONJOUR_REGISTER = True
 
+#SOCKET-IO
+SOCKETIO_NAMESPACE = '/test'
+
 # SERVER INFO
 SERVER_IP = socket.gethostbyname(socket.gethostname())
 SERVER_PORT = 5000
@@ -24,9 +27,13 @@ BONJOUR_NAME = "quadcopter bonjour service"
 BONJOUR_DESC = {'Project_By': 'Shyam, Jo, Anirudh, Kaushik'}
 BONJOUR_SERVICE_NAME = "dont-have-a-server-socool.local."
 BONJOUR_REPLACEMENT_STATICIP = "0.0.0.0"
+BONJOUR_WEIGHT = 0
+BONJOUR_PRIORITY = 0
+
 
 #PYSERIAL
-ARDUINO_PORT = '/dev/tty.usbserial'
+# ARDUINO_PORT = '/dev/tty.usbserial'
+ARDUINO_PORT = '/dev/cu.usbmodem1411'
 ARDUINO_BAUDRATE = 9600
 
 #IOS COMMANDS RECEIVED

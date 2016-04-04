@@ -8,9 +8,10 @@
 
 void setup() {
   
-   Serial.begin(9600);
-   baro_Setup();
+   Serial.begin(115200);
+   
    gyro_Setup();
+   baro_Setup();
    
    
 }

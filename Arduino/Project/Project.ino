@@ -1,13 +1,16 @@
+//#include <ServoTimer2.h>
+
 #include <DelaysAndOffsets.h>
 #include <Gyro.h>
-#include <Motors.h>
+//#include <Motors.h>
+#include <Motors_servotimer.h>
 #include <PID_v1.h>
 #include <Baro.h>
 #include <PinoutConfig.h>
 #include <UltrasoundSense.h>
 
 
-String readString;
+
 double MotorSpeeds[3];
 double ypr_current[] = {0.0,0.0,0.0}, ypr_desired[] = {0.0,0.0,0.0};
 double ypr_stationary[] = {0.0,0.0,0.0};
@@ -62,10 +65,11 @@ PID PID_motor_Altitude_BL(&altitude_current, &MotorSpeeds[3], &altitude_desired,
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin (9600);
+  Serial.begin (115200);
+  gyro_Setup();
   ultra_Setup();
   motor_setup();
-  gyro_Setup();
+  
 
   PID_motor_Yaw_FR.SetMode(AUTOMATIC);
   PID_motor_Yaw_FL.SetMode(AUTOMATIC);
@@ -87,22 +91,22 @@ void setup() {
   PID_motor_Altitude_BR.SetMode(AUTOMATIC);
   PID_motor_Altitude_BL.SetMode(AUTOMATIC);
 
-  PID_motor_Yaw_FR.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
-  PID_motor_Yaw_FL.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
-  PID_motor_Yaw_BR.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
-  PID_motor_Yaw_BL.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
-  PID_motor_Pitch_FR.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
-  PID_motor_Pitch_FL.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
-  PID_motor_Pitch_BR.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
-  PID_motor_Pitch_BL.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
-  PID_motor_Roll_FR.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
-  PID_motor_Roll_FL.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
-  PID_motor_Roll_BR.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
-  PID_motor_Roll_BL.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
-  PID_motor_Altitude_FR.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
-  PID_motor_Altitude_FL.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
-  PID_motor_Altitude_BR.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
-  PID_motor_Altitude_BL.setOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Yaw_FR.SetOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Yaw_FL.SetOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Yaw_BR.SetOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Yaw_BL.SetOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Pitch_FR.SetOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Pitch_FL.SetOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Pitch_BR.SetOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Pitch_BL.SetOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Roll_FR.SetOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Roll_FL.SetOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Roll_BR.SetOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Roll_BL.SetOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Altitude_FR.SetOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Altitude_FL.SetOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Altitude_BR.SetOutputLimits(motor_Min_Speed,motor_Max_Speed);
+  PID_motor_Altitude_BL.SetOutputLimits(motor_Min_Speed,motor_Max_Speed);
 
 
   Serial.print("Setup Completed");
@@ -156,7 +160,10 @@ void set_Mode_Hover(){
   set_Mode_Altitude_Hold();
 }
 void set_YPR(float new_ypr[]){
-  if(check_ypr_goodness(new_ypr)){
+
+//UNCOMMENT AFTER REINTRODUCING THE FUNCTION IN GYRO.H ( REMOVED DUE TO MEMORY CONSTRAINTS)
+//  if(check_ypr_goodness(new_ypr)){
+  if(true){
     set_Mode_Flight();
     for(int i=0;i<3;i++)
       ypr_desired[i] = new_ypr[i];
@@ -168,7 +175,6 @@ void set_YPR(float new_ypr[]){
 
 void stabilize_flight(){
   refreshYPRA();
-  
   PID_motor_Yaw_FR.Compute();
   PID_motor_Yaw_FL.Compute();
   PID_motor_Yaw_BR.Compute();
@@ -192,6 +198,12 @@ void stabilize_flight(){
     PID_motor_Altitude_BR.Compute();
     PID_motor_Altitude_BL.Compute();
   }
+
+  Serial.print("\nCalib Motor Speeds : ");
+  for(int i=0;i<4;i++){
+    Serial.print(MotorSpeeds[i]);
+    Serial.print("\t");
+  }
   
   refreshMotors(MotorSpeeds);
 }
@@ -199,36 +211,57 @@ void stabilize_flight(){
 
 
 void loop() {
-
-  while (Serial.available()) {
-    char c = Serial.read();  //gets one byte from serial bufferaa
+  String input;
+  if(Serial.available()){
+    input = Serial.readString();
+    arduinoAction(input);
     
-    readString += c; //makes the string readString
-    delay(2);  //slow looping to allow buffer to fill with next character
   }
-
-  if (readString.length() >0) {
-    Serial.println(readString);  //so you can see the captured string 
-    if(readString=="w"){
-      while(!Serial.available());
-          while (Serial.available()) {
-        readString="";
-        char c = Serial.read();  //gets one byte from serial bufferaa
-        
-        readString += c; //makes the string readString
-        delay(2);  //slow looping to allow buffer to fill with next character
-      }
-      int n = readString.toInt();  //convert readString into a number
-      motor_Set_Speed(n);
-    }
-    
-    readString=""; //empty for next input
-  } 
+    input=""; //empty for next input
+  
   stabilize_flight();
+}
 
-  
-  // put your main code here, to run repeatedly:
-  
-  
+void arduinoAction(String action)
+{
+  if(action=="takeoff")
+  {
+    Serial.println(F("Taking off!"));
+    quad_takeoff();
+  }
+  else if(action=="land")
+  {
+    Serial.println(F("Landing"));
+     quad_land();
+  }
+  else if(action=="hover")
+  {
+    Serial.println(F("Hovering!!"));
+    set_Mode_Hover();
+  }
+  else if(action=="hold_altitude")
+  {
+    set_Mode_Altitude_Hold();
+  }
+  else if(action.startsWith("quad_setSpeed"))
+  {
+    String speed = action.substring(15);
+    quad_setSpeed(speed.toInt());
 
+  }
+  else if(action.startsWith("set_ypr"))
+  {
+    String ypr = action.substring(9);
+    int first_position , second_position;
+    first_position = ypr.indexOf(';');
+    second_position = ypr.indexOf(';',first_position+1);
+
+    float setypr[] = {ypr.substring(0,first_position).toFloat(), ypr.substring(first_position+1,second_position).toFloat(), ypr.substring(second_position+1).toFloat()} ;
+    
+    
+    
+    set_YPR(setypr);
+    //should work - but hey this is arduino!!
+
+  }
 }

@@ -25,12 +25,12 @@
 #define ultra_Offset_D 0
 
 //Gyro
-#define gyro_X_Offset 12
-#define gyro_Y_Offset 2
-#define gyro_Z_Offset 70
-#define gyro_X_Accel_Offset -3593
-#define gyro_Y_Accel_Offset -939
-#define gyro_Z_Accel_Offset 1291
+#define gyro_X_Offset 41
+#define gyro_Y_Offset -11
+#define gyro_Z_Offset 97
+#define gyro_X_Accel_Offset -3490
+#define gyro_Y_Accel_Offset -910
+#define gyro_Z_Accel_Offset 1646
 
 #define gyro_limit_pitch_pos 45
 #define gyro_limit_pitch_neg 45
@@ -43,9 +43,9 @@
 #define motor_BR_Offset 0
 #define motor_BL_Offset 0
 
-#define motor_Arm_Delay 3000
+#define motor_Arm_Delay 8000
 #define motor_Arm_Speed 0  //If calibrated correctly, it will arm without problems
-#define motor_small_delay 50
+#define motor_small_delay 10
 #define motor_Min_Speed 1200
 #define motor_Max_Speed 2000
 

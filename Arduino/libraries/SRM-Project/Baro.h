@@ -20,8 +20,8 @@
 #include <MS5611.h>
 
 MS5611 ms5611;
-int baro_Offset = 0;
-double baseline;
+static int baro_Offset = 0;
+static double baseline;
 
 float baro_getPressure(){
 	return float(ms5611.readPressure()) - baro_Offset;

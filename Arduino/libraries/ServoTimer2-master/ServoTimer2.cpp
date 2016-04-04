@@ -15,6 +15,9 @@ static void writeChan(uint8_t chan, int pulsewidth);
 #define DELAY_ADJUST	 8		 // number of microseconds of calculation overhead to be subtracted from pulse timings   
 
 static servo_t servos[NBR_CHANNELS+1];    // static array holding servo data for all channels
+bool changed = false;
+static int NEW_MAX_PULSE_WIDTH = 0;
+static int NEW_MIN_PULSE_WIDTH = 0;
 
 static volatile uint8_t Channel;   // counter holding the channel being pulsed
 static volatile uint8_t ISRCount;  // iteration counter used in the interrupt routines;
@@ -68,8 +71,15 @@ uint8_t ServoTimer2::attach(int pin)
 	} 
 	return this->chanIndex ;
 }
+uint8_t ServoTimer2::attach(int pin, int min, int max)
+{
+	changed = true;
+	NEW_MIN_PULSE_WIDTH = min;
+	NEW_MAX_PULSE_WIDTH = max;
+	return attach(pin);
+}
 
-void ServoTimer2::detach()  
+void ServoTimer2::detach()
 {
     servos[this->chanIndex].Pin.isActive = false;  
 }
@@ -98,11 +108,20 @@ static void writeChan(uint8_t chan, int pulsewidth)
 {
    // calculate and store the values for the given channel
    if( (chan > 0) && (chan <= NBR_CHANNELS) )   // ensure channel is valid
-   { 
-	if( pulsewidth < MIN_PULSE_WIDTH )		    // ensure pulse width is valid
-	    pulsewidth = MIN_PULSE_WIDTH;
-	else if( pulsewidth > MAX_PULSE_WIDTH )
-	    pulsewidth = MAX_PULSE_WIDTH;	 
+   {
+	   if(changed == 1){
+		   if( pulsewidth < NEW_MIN_PULSE_WIDTH )		    // ensure pulse width is valid
+			   pulsewidth = NEW_MIN_PULSE_WIDTH;
+		   else if( pulsewidth > NEW_MAX_PULSE_WIDTH )
+			   pulsewidth = NEW_MAX_PULSE_WIDTH;
+	   }
+	   else{
+		   if( pulsewidth < MIN_PULSE_WIDTH )		    // ensure pulse width is valid
+			   pulsewidth = MIN_PULSE_WIDTH;
+		   else if( pulsewidth > MAX_PULSE_WIDTH )
+			   pulsewidth = MAX_PULSE_WIDTH;
+	   }
+		 
 	
 	  pulsewidth -=DELAY_ADJUST;			 // subtract the time it takes to process the start and end pulses (mostly from digitalWrite) 
 	servos[chan].counter = pulsewidth / 128;	

@@ -92,27 +92,27 @@ int interrupt_pin=0; // Check where your INT pin is connected. Check below.
 bool blinkState = false;
 
 // MPU control/status vars
-bool dmpReady = false;  // set true if DMP init was successful
-uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
-uint8_t devStatus;      // return status after each device operation (0 = success, !0 = error)
-uint16_t packetSize;    // expected DMP packet size (default is 42 bytes)
-uint16_t fifoCount;     // count of all bytes currently in FIFO
-uint8_t fifoBuffer[64]; // FIFO storage buffer
+static bool dmpReady = false;  // set true if DMP init was successful
+static uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
+static uint8_t devStatus;      // return status after each device operation (0 = success, !0 = error)
+static uint16_t packetSize;    // expected DMP packet size (default is 42 bytes)
+static uint16_t fifoCount;     // count of all bytes currently in FIFO
+static uint8_t fifoBuffer[64]; // FIFO storage buffer
 
 // orientation/motion vars
-Quaternion q;           // [w, x, y, z]         quaternion container
-VectorInt16 aa;         // [x, y, z]            accel sensor measurements
-int16_t gyro[3];        //To store gyro's measures
-int16_t mx, my, mz;     //To store magnetometer readings
-VectorInt16 aaReal;     // [x, y, z]            gravity-free accel sensor measurements
-VectorInt16 aaWorld;    // [x, y, z]            world-frame accel sensor measurements
-VectorFloat gravity;    // [x, y, z]            gravity vector
-float ypr[3], magData[4];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
-float heading;          // Simple magnetic heading. (NOT COMPENSATED FOR PITCH AND ROLL)
+static Quaternion q;           // [w, x, y, z]         quaternion container
+static VectorInt16 aa;         // [x, y, z]            accel sensor measurements
+static int16_t gyro[3];        //To store gyro's measures
+static int16_t mx, my, mz;     //To store magnetometer readings
+static VectorInt16 aaReal;     // [x, y, z]            gravity-free accel sensor measurements
+static VectorInt16 aaWorld;    // [x, y, z]            world-frame accel sensor measurements
+static VectorFloat gravity;    // [x, y, z]            gravity vector
+static float ypr[3], magData[4];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
+static float heading;          // Simple magnetic heading. (NOT COMPENSATED FOR PITCH AND ROLL)
 
 // To check DMP frecuency  (it can be changed it the MotionApps v2 .h file)
-int time1,time1old;
-float frec1;
+static int time1,time1old;
+static float frec1;
 
 
 
@@ -399,47 +399,11 @@ float getHeading(){
               mpu.dmpGetGravity(&gravity, &q);
               mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
               return aaReal;
-  //            Serial.print("areal\t");
-  //            Serial.print(aaReal.x);
-  //            Serial.print("\t");
-  //            Serial.print(aaReal.y);
-  //            Serial.print("\t");
-  //            Serial.println(aaReal.z);
-  
-  
-  //        #ifdef OUTPUT_READABLE_WORLDACCEL
-  //            // display initial world-frame acceleration, adjusted to remove gravity
-  //            // and rotated based on known orientation from quaternion
-  //            mpu.dmpGetQuaternion(&q, fifoBuffer);
-  //            mpu.dmpGetAccel(&aa, fifoBuffer);
-  //            mpu.dmpGetGravity(&gravity, &q);
-  //            mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
-  //            mpu.dmpGetLinearAccelInWorld(&aaWorld, &aaReal, &q);
-  //            Serial.print("aworld\t");
-  //            Serial.print(aaWorld.x);
-  //            Serial.print("\t");
-  //            Serial.print(aaWorld.y);
-  //            Serial.print("\t");
-  //            Serial.println(aaWorld.z);
-  //        #endif
-  
   
   
   
       }
   }
 
-bool check_ypr_goodness(float *new_ypr){
-	if (new_ypr[1] > gyro_limit_pitch_pos)
-		return false;
-	if (new_ypr[1] < gyro_limit_pitch_neg)
-		return false;
-	if (new_ypr[2] > gyro_limit_roll_pos)
-		return false;
-	if (new_ypr[2] < gyro_limit_roll_neg)
-		return false;
 
-	return true;
-
-}
 #endif /* Gyro_h */

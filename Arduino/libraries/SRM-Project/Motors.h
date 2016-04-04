@@ -17,9 +17,7 @@ To calibrate motors, use Calibrate() function.. Concept : max(2000) microsecond 
 Servo a,b,c,d;
 int speeds[3];
 
-int atom(int angle){
-	return map(angle, 0,180,motor_Min_Speed,motor_Max_Speed);
-}
+
 
 
 
@@ -40,24 +38,24 @@ int *motor_Get_Speed(){
 }
 
 void motor_Set_Speed_FR(int n){
-	a.write(atom(n + motor_FR_Offset));
+	a.writeMicroseconds(n + motor_FR_Offset);
 	speeds[0] = n + motor_FR_Offset;
-	//	delay(motor_small_delay);
+		delay(motor_small_delay);
 }
 void motor_Set_Speed_FL(int n){
-	b.write(atom(n + motor_FL_Offset));
+	b.writeMicroseconds(n + motor_FL_Offset);
 	speeds[1] =n + motor_FL_Offset;
-	//	delay(motor_small_delay);
+		delay(motor_small_delay);
 }
 void motor_Set_Speed_BR(int n){
-	c.write(atom(n + motor_BR_Offset));
+	c.writeMicroseconds(n + motor_BR_Offset);
 	speeds[2] =n + motor_BR_Offset;
-	//	delay(motor_small_delay);
+		delay(motor_small_delay);
 }
 void motor_Set_Speed_BL(int n){
-	d.write(atom(n + motor_BL_Offset));
+	d.writeMicroseconds(n + motor_BL_Offset);
 	speeds[3] =n + motor_BL_Offset;
-	//	delay(motor_small_delay);
+		delay(motor_small_delay);
 }
 void refreshMotors(double MotorSpeeds[]){
   motor_Set_Speed_FR(int(MotorSpeeds[0]));
@@ -69,11 +67,16 @@ void refreshMotors(double MotorSpeeds[]){
 
 
 void motor_Set_Speed(int n){
+	
 	motor_Set_Speed_FR(n);
+	
 	motor_Set_Speed_FL(n);
-	delay(motor_small_delay);
-	motor_Set_Speed_BR(n);
+	
 	motor_Set_Speed_BL(n);
+	motor_Set_Speed_BR(n);
+	
+	
+	
 	
 	
 	Serial.println("Speed set to " + String(n));
@@ -81,23 +84,26 @@ void motor_Set_Speed(int n){
 }
 void motor_setup(){
 //  Arming Process
-	Serial.println("Arming motors...");
-	a.attach(motor_FR_Pin,2000,1000);  //the pin for the servo control 
-	b.attach(motor_FL_Pin,2000,1000); 
-	c.attach(motor_BR_Pin,2000,1000); 
+	Serial.println(F("Arming motors..."));
+	a.attach(motor_FR_Pin,2000,1000);  //the pin for the servo control
+	b.attach(motor_FL_Pin,2000,1000);
+	c.attach(motor_BR_Pin,2000,1000);
 	d.attach(motor_BL_Pin,2000,1000);
 	
 	// Arming speed should be 0 for sometime
-	motor_Set_Speed(motor_Arm_Speed);
-
+	a.writeMicroseconds(000);
+	b.writeMicroseconds(000);
+	c.writeMicroseconds(000);
+	d.writeMicroseconds(000);
+	delay(motor_Arm_Delay);
   	
-  	delay(motor_Arm_Delay);	
-  	Serial.println("Motors Armed...");
+	
+  	Serial.println(F("Motors Armed..."));
 	// Serial.println("Arming Completed"); // so I can keep track of what is loaded
 }
 
 void motor_calibrate(){
-	Serial.println("Please remove power to motors.. Once done, press (1)");
+	Serial.println(F("Please remove power to motors.. Once done, press (1)"));
 	while(!Serial.available());
 	int read = Serial.parseInt();
 	if(read==1){
@@ -105,9 +111,9 @@ void motor_calibrate(){
 		b.writeMicroseconds(2000);
 		c.writeMicroseconds(2000);
 		d.writeMicroseconds(2000);
-		Serial.println("Connect Power, and wait for melody.. Once you hear that, press any key to continue...");
+		Serial.println(F("Connect Power, and wait for melody.. Once you hear that, press any key to continue..."));
 		while(!Serial.available());
-		Serial.println("Calibrating..");
+		Serial.println(F("Calibrating.."));
   		delay(8000);
 		a.writeMicroseconds(1000);
 		b.writeMicroseconds(1000);
@@ -115,8 +121,8 @@ void motor_calibrate(){
 		d.writeMicroseconds(1000);
 		delay(5000);
 		motor_Set_Speed(1500);
-  		Serial.println("Calibration completed..");
-		Serial.println("If all motors are spinning, calibration is successful..Restart program if not confirmed");
+  		Serial.println(F("Calibration completed.."));
+		Serial.println(F("If all motors are spinning, calibration is successful..Restart program if not confirmed"));
 	}
 	else{
 		motor_calibrate();

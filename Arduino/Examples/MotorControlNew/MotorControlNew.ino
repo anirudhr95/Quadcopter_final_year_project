@@ -1,5 +1,6 @@
 #include <DelaysAndOffsets.h>
-#include <Motors.h>
+//#include <Motors.h>
+#include <Motors_servotimer.h>
 #include <PinoutConfig.h>
 
 
@@ -8,7 +9,7 @@ String readString;
 
 void setup() {
   
-  Serial.begin(9600);
+  Serial.begin(115200);
   
    motor_setup();
 }

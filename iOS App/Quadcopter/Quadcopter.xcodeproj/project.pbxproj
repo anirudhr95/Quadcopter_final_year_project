@@ -7,14 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		523DC7CF1CB0EC8B00C4D7D2 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 523DC7CE1CB0EC8B00C4D7D2 /* art.scnassets */; };
+		523DC7D21CB0EE8700C4D7D2 /* FlightViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523DC7D11CB0EE8700C4D7D2 /* FlightViewController.swift */; };
 		5273AB641CB0448E00436D14 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5273AB631CB0448E00436D14 /* AppDelegate.swift */; };
 		5273AB661CB0448E00436D14 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5273AB651CB0448E00436D14 /* ViewController.swift */; };
 		5273AB691CB0448E00436D14 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5273AB671CB0448E00436D14 /* Main.storyboard */; };
 		5273AB6B1CB0448E00436D14 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5273AB6A1CB0448E00436D14 /* Assets.xcassets */; };
 		5273AB6E1CB0448E00436D14 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5273AB6C1CB0448E00436D14 /* LaunchScreen.storyboard */; };
+		579803DC2D72D221F7003DB6 /* Pods_Quadcopter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57D76CB62F2AC59FDEBAF99F /* Pods_Quadcopter.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		523DC7CE1CB0EC8B00C4D7D2 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
+		523DC7D11CB0EE8700C4D7D2 /* FlightViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightViewController.swift; sourceTree = "<group>"; };
 		5273AB601CB0448E00436D14 /* Quadcopter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Quadcopter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5273AB631CB0448E00436D14 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5273AB651CB0448E00436D14 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -22,6 +27,9 @@
 		5273AB6A1CB0448E00436D14 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5273AB6D1CB0448E00436D14 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5273AB6F1CB0448E00436D14 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		57D76CB62F2AC59FDEBAF99F /* Pods_Quadcopter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Quadcopter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C85BA73026F024788ADBB4E6 /* Pods-Quadcopter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Quadcopter.release.xcconfig"; path = "Pods/Target Support Files/Pods-Quadcopter/Pods-Quadcopter.release.xcconfig"; sourceTree = "<group>"; };
+		FE7D4EDB854392339D39A23D /* Pods-Quadcopter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Quadcopter.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Quadcopter/Pods-Quadcopter.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,17 +37,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				579803DC2D72D221F7003DB6 /* Pods_Quadcopter.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3ECBDDE7213DA3D9EECE4D42 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				57D76CB62F2AC59FDEBAF99F /* Pods_Quadcopter.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		523DC7D01CB0EC9300C4D7D2 /* Extra */ = {
+			isa = PBXGroup;
+			children = (
+				5273AB6F1CB0448E00436D14 /* Info.plist */,
+				5273AB631CB0448E00436D14 /* AppDelegate.swift */,
+			);
+			name = Extra;
+			sourceTree = "<group>";
+		};
 		5273AB571CB0448E00436D14 = {
 			isa = PBXGroup;
 			children = (
 				5273AB621CB0448E00436D14 /* Quadcopter */,
 				5273AB611CB0448E00436D14 /* Products */,
+				9E3E2BD7E2058603A157658C /* Pods */,
+				3ECBDDE7213DA3D9EECE4D42 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -54,14 +82,24 @@
 		5273AB621CB0448E00436D14 /* Quadcopter */ = {
 			isa = PBXGroup;
 			children = (
-				5273AB631CB0448E00436D14 /* AppDelegate.swift */,
+				523DC7D01CB0EC9300C4D7D2 /* Extra */,
 				5273AB651CB0448E00436D14 /* ViewController.swift */,
+				523DC7D11CB0EE8700C4D7D2 /* FlightViewController.swift */,
 				5273AB671CB0448E00436D14 /* Main.storyboard */,
+				523DC7CE1CB0EC8B00C4D7D2 /* art.scnassets */,
 				5273AB6A1CB0448E00436D14 /* Assets.xcassets */,
 				5273AB6C1CB0448E00436D14 /* LaunchScreen.storyboard */,
-				5273AB6F1CB0448E00436D14 /* Info.plist */,
 			);
 			path = Quadcopter;
+			sourceTree = "<group>";
+		};
+		9E3E2BD7E2058603A157658C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				FE7D4EDB854392339D39A23D /* Pods-Quadcopter.debug.xcconfig */,
+				C85BA73026F024788ADBB4E6 /* Pods-Quadcopter.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -71,9 +109,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5273AB721CB0448E00436D14 /* Build configuration list for PBXNativeTarget "Quadcopter" */;
 			buildPhases = (
+				0BF95425339F9CAB6928EA36 /* Check Pods Manifest.lock */,
 				5273AB5C1CB0448E00436D14 /* Sources */,
 				5273AB5D1CB0448E00436D14 /* Frameworks */,
 				5273AB5E1CB0448E00436D14 /* Resources */,
+				C08F084A9DDE2F0B46D132A5 /* Embed Pods Frameworks */,
+				5C10C282750B9F99A441C7E7 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -124,12 +165,61 @@
 			buildActionMask = 2147483647;
 			files = (
 				5273AB6E1CB0448E00436D14 /* LaunchScreen.storyboard in Resources */,
+				523DC7CF1CB0EC8B00C4D7D2 /* art.scnassets in Resources */,
 				5273AB6B1CB0448E00436D14 /* Assets.xcassets in Resources */,
 				5273AB691CB0448E00436D14 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0BF95425339F9CAB6928EA36 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		5C10C282750B9F99A441C7E7 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Quadcopter/Pods-Quadcopter-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C08F084A9DDE2F0B46D132A5 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Quadcopter/Pods-Quadcopter-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		5273AB5C1CB0448E00436D14 /* Sources */ = {
@@ -138,6 +228,7 @@
 			files = (
 				5273AB661CB0448E00436D14 /* ViewController.swift in Sources */,
 				5273AB641CB0448E00436D14 /* AppDelegate.swift in Sources */,
+				523DC7D21CB0EE8700C4D7D2 /* FlightViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,6 +339,7 @@
 		};
 		5273AB731CB0448E00436D14 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FE7D4EDB854392339D39A23D /* Pods-Quadcopter.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -262,6 +354,7 @@
 		};
 		5273AB741CB0448E00436D14 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C85BA73026F024788ADBB4E6 /* Pods-Quadcopter.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -293,6 +386,7 @@
 				5273AB741CB0448E00436D14 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

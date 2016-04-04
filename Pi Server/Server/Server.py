@@ -1,57 +1,89 @@
 import logging
-import os
-import time
 from logging.handlers import RotatingFileHandler
+import os
+
+async_mode = None
+
+if async_mode is None:
+    try:
+        import eventlet
+
+        async_mode = 'eventlet'
+    except ImportError:
+        pass
+
+    if async_mode is None:
+        try:
+            from gevent import monkey
+
+            async_mode = 'gevent'
+        except ImportError:
+            pass
+
+    if async_mode is None:
+        async_mode = 'threading'
+
+    print('async_mode is ' + async_mode)
+
+# monkey patching is necessary because this application uses a background
+# thread
+if async_mode == 'eventlet':
+    import eventlet
+
+    eventlet.monkey_patch()
+elif async_mode == 'gevent':
+    from gevent import monkey
+
+    monkey.patch_all()
+
+import threading
+import time
 from threading import Thread
 
-import requests
+import serial
 from flask import Flask, request
-from flask_socketio import emit, SocketIO, join_room, leave_room
-from requests import session
+from flask_socketio import SocketIO
 
 import Constants
-
-class global_vars:
-    Serial_Worker = None
-    SENDER_Iphone = None
-    SENDER_Arduino = None
-    socketio = None
-
 
 # Socket-io server example
 # https://github.com/miguelgrinberg/Flask-SocketIO/blob/v2.2/example/app.py
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'secret!'
-global_vars.socketio = SocketIO(app)
 
+socketio = SocketIO(app)
+serial_port = None
+message_queue = []
+
+
+def read_from_port(event=None, serial_port=None):
+    """
+
+    :param event: Thread.Event to call upon reading data froms serial (Used by IOSSenderThread)
+    :param serial_port: serial.Serial() variable specifying serial port of arduino decice
+    """
+    serial_port = serial.Serial('/dev/cu.usbmodem1411', 9600)
+    print "SERIAL WORKER THREAD STARTED with event %s" % event
+    while True:
+        reading = serial_port.readline().decode("Utf-8").rstrip()
+        print "READING FROM SERIAL : ", reading
+        event.set()
+        message_queue.append(reading)
 
 
 @app.route("/")
 def index():
-    global_vars.socketio.emit('my response',
+    socketio.emit('my response',
                   {'data': 'Server generated event', 'count': 4},
                   namespace='/test',
-                  broadcast = True)
+                  broadcast=True)
     return 'Hello World'
 
-@app.route("/iphone")
-def iphone():
-    session['name'] = 'iphone'
-    return index()
-
-@app.route("/dash")
-def dashboard():
-    session['name'] = 'dash'
-    return index()
-
-@app.route("/send")
-def send_msg():
-    emit('message','HELLO WORLDDDD', namespace='/test',broadcast= True)
-    return 'yo'
 
 @app.before_first_request
 def initialSetup():
+    # TODO Implement Logging
     if Constants.ENABLE_FLASK_LOGGING:
         formatter = logging.Formatter(
             Constants.LOG_FORMAT_FLASK)
@@ -61,50 +93,96 @@ def initialSetup():
         handler.setFormatter(formatter)
         app.logger.addHandler(handler)
 
-
-
-
     import Bonjour
     service = Bonjour.Bonjour()
     service.publish()
 
-    #SERIAL SERVICE
-    from Serial_Listener import Serial_Worker
-    global Serial_Worker
-    global_vars.Serial_Worker = Serial_Worker()
+    # Create Thread event for notifying threads about serial read success op (Used by ios_senderthread to send to ios)
+    e = threading.Event()
 
-    # MIDDLEWARE MESSAGE PASSERS
-    from middleware import middleware
-    global SENDER_Arduino, SENDER_Iphone
-    global_vars.SENDER_Iphone = middleware(1)
-    global_vars.SENDER_Arduino = middleware(2)
+    # SERIAL SERVICE
+    # from Serial_Comm import read_from_port
+    global serial_port
+    serial_port = serial.Serial(Constants.ARDUINO_PORT, Constants.ARDUINO_BAUDRATE, timeout=0)
+    thread = threading.Thread(name="Serial Thread", target=read_from_port, kwargs={'event': e,
+                                                                                   'serial_port': serial_port})
+    thread.daemon = True
+    thread.start()
+
+    # IOS SENDER THREAD
+    thread3 = Thread(target=ios_sender_thread, kwargs={'event': e})
+    thread3.daemon = True
+    thread3.start()
+
+    # TEST USING A BACKGROUND THREAD
+    # thread2 = Thread(target=background_thread)
+    # thread2.daemon = True
+    # thread2.start()
 
 
-@global_vars.socketio.on('connect', namespace='/test')
+def ios_sender_thread(event=None):
+    print 'IOS SENDER THREAD STARTED with event %s' % event
+    while True:
+        # print "EVENT SET? : ", event.isSet()
+        event_is_set = event.wait()
+        print "EVENT RECEIVED AT IOS SENDER THREAD"
+        global message_queue
+        for val in message_queue:
+            print "SENDING :%s:" % val
+            send_to_ios(val)
+        event.clear()
+
+
+def background_thread():
+    """Example of how to send server generated events to clients."""
+    count = 0
+    while True:
+        time.sleep(10)
+        count += 1
+        socketio.emit('my response',
+                      {'data': 'Server generated event', 'count': count},
+                      namespace='/test')
+
+
+@socketio.on('connect', namespace=Constants.SOCKETIO_NAMESPACE)
 def test_connect():
     print('Client connected : ', request.sid)
     return True
 
-@global_vars.socketio.on('disconnect', namespace='/test')
+
+@socketio.on('disconnect', namespace=Constants.SOCKETIO_NAMESPACE)
 def test_disconnect():
     print('Client disconnected : ', request.sid)
     return True
 
 
-@global_vars.socketio.on('do_task', namespace='/test')
-def handle_message(message):
-    """
-    :param message : A string message containing function to call, and values if required
-    Sent from iphone
-    """
+@socketio.on('message', namespace=Constants.SOCKETIO_NAMESPACE)
+def handle_message(data):
+    # TODO Pass the message to the ios message parser
+    pass
 
-    message = SENDER_Arduino.message_to_send(message)
-    Serial_Worker.send(message)
-    emit('my response', {'data': 'SUCCESS'})
+
+def send_to_ios(data):
+    print 'SENDING %s To IOS ' % str(data)
+
+    socketio.emit('message', data, namespace=Constants.SOCKETIO_NAMESPACE)
+
+
+def send_to_arduino(data):
+    print "SENDING '%s' TO ARDUINO" % data
+    global serial_port
+    serial_port.write(data)
+
+
+def receive_from_arduino(data):
+    # TODO Pass the message to Arduino Message Parser
+    send_to_ios(data)
+    # send_to_arduino(data)
 
 
 if __name__ == '__main__':
-    global_vars.socketio.run(app,
+    socketio.run(app,
                  debug=Constants.ENABLE_FLASK_DEBUG_MODE,
                  host=Constants.SERVER_IP,
-                 port=Constants.SERVER_PORT)
+                 port=Constants.SERVER_PORT,
+                 use_reloader=False)
