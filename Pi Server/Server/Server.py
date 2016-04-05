@@ -2,6 +2,8 @@ import logging
 from logging.handlers import RotatingFileHandler
 import os
 
+from Quad_Controls import Quadcopter
+
 async_mode = None
 
 if async_mode is None:
@@ -37,13 +39,13 @@ elif async_mode == 'gevent':
     monkey.patch_all()
 
 import threading
-import time
+
 from threading import Thread
 
 import serial
 from flask import Flask, request
 from flask_socketio import SocketIO
-
+from pi_send import pi_send_toArduino
 import Constants
 
 # Socket-io server example
@@ -54,9 +56,16 @@ app.config['SECRET_KEY'] = 'secret!'
 
 socketio = SocketIO(app)
 serial_port = None
+quadcopter = None
+e = None
 
 class messages:
+
     message_queue = []
+    def append(self,msg):
+        messages.message_queue.append(msg)
+        e.set()
+
 
 
 def read_from_port(event=None, serial_port=None):
@@ -72,6 +81,21 @@ def read_from_port(event=None, serial_port=None):
         print "READING FROM SERIAL : ", reading
         event.set()
         messages.message_queue.append(reading)
+
+
+def speed_control():
+    """
+
+    """
+    global quadcopter
+    quadcopter = Quadcopter()
+    import time
+    print "PID CONTROL THREAD STARTED"
+    while True:
+        speeds = quadcopter.refresh()
+        msg = pi_send_toArduino.set_speeds(*speeds)
+        send_to_arduino(msg)
+        time.sleep(Constants.REFRESH_PID_TIME)
 
 
 @app.route("/")
@@ -100,6 +124,7 @@ def initialSetup():
     service.publish()
 
     # Create Thread event for notifying threads about serial read success op (Used by ios_senderthread to send to ios)
+    global e
     e = threading.Event()
 
     # SERIAL SERVICE
@@ -115,15 +140,22 @@ def initialSetup():
     thread.start()
 
     # IOS SENDER THREAD
-    thread3 = Thread(target=ios_sender_thread,
+    thread2 = Thread(name="IOS Sender Thread",
+                     target=ios_sender_thread,
                      kwargs={'event': e})
+    thread2.daemon = True
+    thread2.start()
+
+    # PID THREAD
+    thread3 = Thread(name="PID Thread",
+                     target=speed_control())
     thread3.daemon = True
     thread3.start()
 
     # TEST USING A BACKGROUND THREAD
-    # thread2 = Thread(target=background_thread)
-    # thread2.daemon = True
-    # thread2.start()
+    # thread3 = Thread(target=background_thread)
+    # thread3.daemon = True
+    # thread3.start()
 
 
 def ios_sender_thread(event=None):
@@ -139,6 +171,7 @@ def ios_sender_thread(event=None):
 def background_thread():
     """Example of how to send server generated events to clients."""
     count = 0
+    import time
     while True:
         time.sleep(10)
         count += 1

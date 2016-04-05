@@ -1,43 +1,61 @@
 import Constants
 import pi_send
-from Server import socketio
 
-class IOS_Middleware:
-    global
-class middleware:
-    def __init__(self, direction):
-        """
-        directions : 1-ArduinoToIphone, 2- IphoneToArduino"""
-        self.direction = direction
 
-        self.p2a = pi_send.pi_send_toArduino()
-        self.p2i = pi_send.pi_send_toIOS()
+class Middleware_IOS:
+    """
+    Class for processing messages from IOS devices
+    """
 
-    def __send_to_iphone__(self, data):
-        functionName,params = data.split(':')
+    def __init__(self, quadcopter):
+        self.quadcopter = quadcopter
+
+    def parseMessage(self, msg):
+        if ':' in msg:
+            functionName, params = msg.split(':')
+            if functionName == Constants.IOSCOMMAND_SETSPEED:
+                self.quadcopter.set_speed(params)
+            elif functionName == Constants.IOSCOMMAND_SETYPR:
+                params = map(lambda x: float(x), params.split(";"))
+                self.quadcopter.set_YPR(params)
+            else:
+                self.erraneous_message(msg)
+
+        else:
+            # Message is a single line command
+            if msg == Constants.IOSCOMMAND_HOLDALTITUDE:
+                self.quadcopter.set_Mode_Altitude_Hold()
+            elif msg == Constants.IOSCOMMAND_HOVER:
+                self.quadcopter.set_Mode_Hover()
+            elif msg == Constants.IOSCOMMAND_LAND:
+                self.quadcopter.land()
+            elif msg == Constants.IOSCOMMAND_TAKEOFF:
+                self.quadcopter.takeoff()
+            else:
+                self.erraneous_message(msg)
+
+    def erraneous_message(self, msg):
+        # TODO         LOG AS INCORRECT COMMAND WITH PI AS MODULE
+        pass
+
+
+class Middleware_Arduino:
+    """
+    Class for processing messages from Arduino
+    """
+
+    def __init__(self, ios_message_queue):
+        self.message_queue = ios_message_queue
+        self.converter = pi_send.pi_send_toIOS()
+
+    def parseMessage(self, msg):
+        functionName, params = msg.split(':')
         if functionName == Constants.ARDUINOSTATUS_ERROR:
-            return self.p2i.error(params)
+            # TODO LOG ERROR
+            self.message_queue.append(self.converter.error(msg))
+            pass
         if functionName == Constants.ARDUINOSTATUS_ULTRASOUND_COLLISION:
-            return self.p2i.collision(params.split(';'))
-        if functionName == Constants.ARDUINOSTATUS_ULTRASOUND_DATA:
-            return self.p2i.ultra_data(params.split(';'))
-    def __send_to_arduino__(self, data):
-        functionName,params = str(data).split(' ')
-        if functionName ==Constants.IOSCOMMAND_TAKEOFF:
-            return self.p2a.takeoff()
-        if functionName == Constants.IOSCOMMAND_LAND:
-            return self.p2a.land()
-        if functionName == Constants.IOSCOMMAND_HOLDALTITUDE:
-            return self.p2a.altitude_hold()
-        if functionName == Constants.IOSCOMMAND_HOVER:
-            return self.p2a.hover()
-        if functionName == Constants.IOSCOMMAND_SETSPEED:
-            return self.p2a.set_speed(params)
-        if functionName == Constants.IOSCOMMAND_SETYPR:
-            return self.p2a.setYPR(params.split(';'))
+            self.message_queue.append(self.converter.collision(params.split(';')))
 
-    def message_to_send(self, params):
-        if self.direction==1:
-            return self.__send_to_iphone__(params)
-        elif self.direction == 2:
-            return self.__send_to_arduino__(params)
+        if functionName == Constants.ARDUINOSTATUS_ULTRASOUND_DATA:
+            self.message_queue.append(self.converter.ultra_data(params.split(';')))

@@ -10,15 +10,18 @@ class pi_send_toArduino:
     def land(self):
         return Constants.IOSCOMMAND_LAND
     def set_speed(self,a):
-        return str(Constants.IOSCOMMAND_SETSPEED  + ' ' + str(a))
+        return str(Constants.IOSCOMMAND_SETSPEED  + ':' + str(a))
     def hover(self):
         return str(Constants.IOSCOMMAND_HOVER)
     def altitude_hold(self):
         return str(Constants.IOSCOMMAND_HOLDALTITUDE)
     def setYPR(self,a,b,c):
-        return str(Constants.IOSCOMMAND_SETYPR + ' ' + str(a)+';'+str(b)+';'+str(c))
+        return '%s:%s;%s;%s'%(Constants.IOSCOMMAND_SETYPR ,a,b,c)
+    def set_speeds(self, a, b, c, d):
+        return '%s:%s;%s;%s;%s'%(Constants.PICOMMAND_SETSPEEDS,a,b,c,d)
 
 class pi_send_toIOS:
+
     def error(self, message):
         return {
             'event' : Constants.ARDUINOSTATUS_ERROR,
@@ -37,3 +40,24 @@ class pi_send_toIOS:
             'event' : Constants.ARDUINOSTATUS_ULTRASOUND_DATA,
             'data' : ultraValues
         }
+class pi_receive_fromIOS:
+    def takeoff(self):
+        return Constants.IOSCOMMAND_TAKEOFF
+
+    def land(self):
+        return Constants.IOSCOMMAND_LAND
+
+    def set_speed(self, a):
+        return str(Constants.IOSCOMMAND_SETSPEED + ' ' + str(a))
+
+    def hover(self):
+        return str(Constants.IOSCOMMAND_HOVER)
+
+    def altitude_hold(self):
+        return str(Constants.IOSCOMMAND_HOLDALTITUDE)
+
+    def setYPR(self, a, b, c):
+        return '%s %s;%s;%s' % (Constants.IOSCOMMAND_SETYPR, a, b, c)
+
+    def set_speeds(self, a, b, c, d):
+        return '%s %s;%s;%s;%s' % (Constants.PICOMMAND_SETSPEEDS, a, b, c, d)
