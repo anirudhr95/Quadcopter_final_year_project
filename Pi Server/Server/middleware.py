@@ -2,6 +2,8 @@ import Constants
 import pi_send
 from Server import socketio
 
+class IOS_Middleware:
+    global
 class middleware:
     def __init__(self, direction):
         """

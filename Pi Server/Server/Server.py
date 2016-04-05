@@ -54,7 +54,9 @@ app.config['SECRET_KEY'] = 'secret!'
 
 socketio = SocketIO(app)
 serial_port = None
-message_queue = []
+
+class messages:
+    message_queue = []
 
 
 def read_from_port(event=None, serial_port=None):
@@ -69,7 +71,7 @@ def read_from_port(event=None, serial_port=None):
         reading = serial_port.readline().decode("Utf-8").rstrip()
         print "READING FROM SERIAL : ", reading
         event.set()
-        message_queue.append(reading)
+        messages.message_queue.append(reading)
 
 
 @app.route("/")
@@ -104,13 +106,17 @@ def initialSetup():
     # from Serial_Comm import read_from_port
     global serial_port
     serial_port = serial.Serial(Constants.ARDUINO_PORT, Constants.ARDUINO_BAUDRATE, timeout=0)
-    thread = threading.Thread(name="Serial Thread", target=read_from_port, kwargs={'event': e,
-                                                                                   'serial_port': serial_port})
+    thread = threading.Thread(name="Serial Thread",
+                              target=read_from_port,
+                              kwargs={'event': e,
+                                      'serial_port': serial_port}
+                              )
     thread.daemon = True
     thread.start()
 
     # IOS SENDER THREAD
-    thread3 = Thread(target=ios_sender_thread, kwargs={'event': e})
+    thread3 = Thread(target=ios_sender_thread,
+                     kwargs={'event': e})
     thread3.daemon = True
     thread3.start()
 
@@ -123,12 +129,9 @@ def initialSetup():
 def ios_sender_thread(event=None):
     print 'IOS SENDER THREAD STARTED with event %s' % event
     while True:
-        # print "EVENT SET? : ", event.isSet()
         event_is_set = event.wait()
         print "EVENT RECEIVED AT IOS SENDER THREAD"
-        global message_queue
-        for val in message_queue:
-            print "SENDING :%s:" % val
+        for val in messages.message_queue:
             send_to_ios(val)
         event.clear()
 
@@ -164,7 +167,6 @@ def handle_message(data):
 
 def send_to_ios(data):
     print 'SENDING %s To IOS ' % str(data)
-
     socketio.emit('message', data, namespace=Constants.SOCKETIO_NAMESPACE)
 
 
