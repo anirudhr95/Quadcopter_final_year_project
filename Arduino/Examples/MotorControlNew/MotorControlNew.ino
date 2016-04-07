@@ -20,7 +20,7 @@ void loop() {
 //  Serial.println("Enter 'r' to read speed, 'w' to write : ");
 //  Serial.println("Enter Speed");
   Serial.print("Enter new speed : ");
-  while(!Serial.available());
+//  while(!Serial.available());
   
 //  readString = Serial.readString();
 //  if(readString.equals("r"))

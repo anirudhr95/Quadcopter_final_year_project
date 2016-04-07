@@ -1,9 +1,6 @@
 #include <DelaysAndOffsets.h>
 #include <Gyro.h>
-#include <Motors.h>
 #include <PinoutConfig.h>
-#include <printHelper.h>
-#include <UltrasoundSense.h>
 #include <Baro.h>
 
 void setup() {

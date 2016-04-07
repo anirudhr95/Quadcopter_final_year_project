@@ -15,7 +15,6 @@ class Bonjour(object):
         """
 
         self.zeroconf = Zeroconf()
-
         self.info = ServiceInfo(type = Constants.BONJOUR_TYPE,
                                 name = Constants.BONJOUR_NAME + '.' + Constants.BONJOUR_TYPE,
                                 address = socket.inet_aton(Constants.SERVER_IP),

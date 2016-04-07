@@ -58,14 +58,16 @@ socketio = SocketIO(app)
 serial_port = None
 quadcopter = None
 e = None
+middleware_ios = None
+middleware_arduino = None
 
+ard_msg_converter = pi_send_toArduino()
 class messages:
-
     message_queue = []
-    def append(self,msg):
+
+    def append(self, msg):
         messages.message_queue.append(msg)
         e.set()
-
 
 
 def read_from_port(event=None, serial_port=None):
@@ -80,7 +82,7 @@ def read_from_port(event=None, serial_port=None):
         reading = serial_port.readline().decode("Utf-8").rstrip()
         print "READING FROM SERIAL : ", reading
         event.set()
-        messages.message_queue.append(reading)
+        middleware_arduino.parseMessage(reading)
 
 
 def speed_control():
@@ -88,12 +90,12 @@ def speed_control():
 
     """
     global quadcopter
-    quadcopter = Quadcopter()
+
     import time
     print "PID CONTROL THREAD STARTED"
     while True:
         speeds = quadcopter.refresh()
-        msg = pi_send_toArduino.set_speeds(*speeds)
+        msg = ard_msg_converter.set_speeds(speeds)
         send_to_arduino(msg)
         time.sleep(Constants.REFRESH_PID_TIME)
 
@@ -109,6 +111,13 @@ def index():
 
 @app.before_first_request
 def initialSetup():
+    global quadcopter, middleware_arduino, middleware_ios
+    from middleware import Middleware_IOS, Middleware_Arduino
+    quadcopter = Quadcopter()
+
+    middleware_arduino = Middleware_Arduino(quadcopter, messages)
+    middleware_ios = Middleware_IOS(quadcopter)
+
     # TODO Implement Logging
     if Constants.ENABLE_FLASK_LOGGING:
         formatter = logging.Formatter(
@@ -129,15 +138,22 @@ def initialSetup():
 
     # SERIAL SERVICE
     # from Serial_Comm import read_from_port
+
+
     global serial_port
-    serial_port = serial.Serial(Constants.ARDUINO_PORT, Constants.ARDUINO_BAUDRATE, timeout=0)
-    thread = threading.Thread(name="Serial Thread",
-                              target=read_from_port,
-                              kwargs={'event': e,
-                                      'serial_port': serial_port}
-                              )
-    thread.daemon = True
-    thread.start()
+    try:
+        serial_port = serial.Serial(Constants.ARDUINO_PORT, Constants.ARDUINO_BAUDRATE, timeout=0)
+        # except serial.SerialException():
+        #     print("FAILED TO CONNECT TO SERIAL PORT : %s"%msg)
+        thread = threading.Thread(name="Serial Thread",
+                                  target=read_from_port,
+                                  kwargs={'event': e,
+                                          'serial_port': serial_port}
+                                  )
+        thread.daemon = True
+        thread.start()
+    except serial.SerialException as e:
+        print "COULD NOT START SERIAL : \n",e
 
     # IOS SENDER THREAD
     thread2 = Thread(name="IOS Sender Thread",
@@ -147,10 +163,15 @@ def initialSetup():
     thread2.start()
 
     # PID THREAD
-    thread3 = Thread(name="PID Thread",
-                     target=speed_control())
-    thread3.daemon = True
-    thread3.start()
+    try:
+        thread3 = Thread(name="PID Thread",
+                         target=speed_control)
+        thread3.daemon = True
+        thread3.start()
+    except Exception as e:
+        print e
+    messages.append("Ready")
+    print 'Sent'
 
     # TEST USING A BACKGROUND THREAD
     # thread3 = Thread(target=background_thread)
@@ -195,7 +216,8 @@ def test_disconnect():
 @socketio.on('message', namespace=Constants.SOCKETIO_NAMESPACE)
 def handle_message(data):
     # TODO Pass the message to the ios message parser
-    pass
+    print 'Received Message : %s'%data
+    middleware_ios.parseMessage(data)
 
 
 def send_to_ios(data):

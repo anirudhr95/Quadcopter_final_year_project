@@ -17,11 +17,13 @@ class ArduinoLogger:
         self.logger.addHandler(handler)
 
     def ultrasound_data(self, data = [0 for i in range(4)]):
-        pass
+        logging.info("%s %s" %(Constants.ARDUINOSTATUS_ULTRASOUND_DATA,data))
+
     def error(self, message, options = ''):
-        pass
-    def flight_mode_changed(self, active_modes, options=''):
-        pass
+        logging.info("%s %s %s" %(Constants.ARDUINOSTATUS_ERROR,message,options))
+
+    def ultrasound_collide(self,sensor_ID):
+        logging.info("%s %s" %(Constants.ARDUINOSTATUS_ULTRASOUND_COLLISION,sensor_ID))
 
 class IOSLogger:
     def __init__(self):
@@ -33,26 +35,29 @@ class IOSLogger:
         handler.setLevel(logging.DEBUG)
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
-    def sensor_data(self, ypr):
-        pass
+
     def Takeoff(self):
-        pass
+        logging.info("%s" %(Constants.IOSCOMMAND_TAKEOFF))
 
     def Land(self):
-        pass
+        logging.info("%s" %(Constants.IOSCOMMAND_LAND))
 
     def Set_Speed(self, speed):
-        pass
+        logging.info("%s %s"%(Constants.IOSCOMMAND_SETSPEED,speed))
 
     def hover(self, state):
-        pass
+        logging.info("%s %s"%(Constants.IOSCOMMAND_HOVER,state))
 
     def altitude_hold(self, state):
-        pass
+        logging.info("%s %s"%(Constants.IOSCOMMAND_HOLDALTITUDE,state))
+    def set_ypr(self,y,p,r):
+        logging.info("%s %s %s %s"%(Constants.IOSCOMMAND_SETYPR,y,p,r))
+    def error(self,error):
+        logging.info("%s %s"%(Constants.IOSCOMMAND_ERROR,error))
 
 class PILogger:
     def __init__(self):
-        self.logger = logging.getLogger("RASP-PI")
+        self.logger = logging.getLogger("PI")
 
         formatter = logging.Formatter(
             Constants.LOG_FORMAT_APP)
@@ -61,3 +66,8 @@ class PILogger:
         handler.setLevel(logging.DEBUG)
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
+
+        def set_speed(self, motor_speed ): #int i 0 to 4
+            logging.info("%s %s"%(Constants.PICOMMAND_SETSPEEDS,motor_speed))
+        def error(self , error):
+            logging.info("%s %s"%(Constants.PICOMMAND_ERROR,error))

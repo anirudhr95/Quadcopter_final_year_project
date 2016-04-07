@@ -17,8 +17,8 @@ class pi_send_toArduino:
         return str(Constants.IOSCOMMAND_HOLDALTITUDE)
     def setYPR(self,a,b,c):
         return '%s:%s;%s;%s'%(Constants.IOSCOMMAND_SETYPR ,a,b,c)
-    def set_speeds(self, a, b, c, d):
-        return '%s:%s;%s;%s;%s'%(Constants.PICOMMAND_SETSPEEDS,a,b,c,d)
+    def set_speeds(self, speeds):
+        return '%s:%s;%s;%s;%s'%(Constants.PICOMMAND_SETSPEEDS,speeds[0],speeds[1],speeds[2],speeds[3])
 
 class pi_send_toIOS:
 
@@ -40,7 +40,14 @@ class pi_send_toIOS:
             'event' : Constants.ARDUINOSTATUS_ULTRASOUND_DATA,
             'data' : ultraValues
         }
+
+
+
+
 class pi_receive_fromIOS:
+    """
+    USELESS CLASS  : REFERENCE FOR SENDING COMMANDS FROM IOS
+    """
     def takeoff(self):
         return Constants.IOSCOMMAND_TAKEOFF
 

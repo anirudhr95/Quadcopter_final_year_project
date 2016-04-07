@@ -307,7 +307,8 @@ float *getYPR(){
 	if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
 			// reset so we can continue cleanly
 		mpu.resetFIFO();
-		Serial.println(F("FIFO overflow!"));
+//		Serial.println(F("FIFO overflow!"));
+//		delay(1);
 		
 			// otherwise, check for DMP data ready interrupt (this should happen frequently)
 	} else if (mpuIntStatus & 0x02) {

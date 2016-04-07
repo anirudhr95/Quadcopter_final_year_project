@@ -25,12 +25,13 @@
 #define ultra_Offset_D 0
 
 //Gyro
-#define gyro_X_Offset 41
-#define gyro_Y_Offset -11
-#define gyro_Z_Offset 97
-#define gyro_X_Accel_Offset -3490
-#define gyro_Y_Accel_Offset -910
-#define gyro_Z_Accel_Offset 1646
+#define gyro_X_Accel_Offset -3481
+#define gyro_Y_Accel_Offset -974
+#define gyro_Z_Accel_Offset 1612
+#define gyro_X_Offset 60
+#define gyro_Y_Offset -23
+#define gyro_Z_Offset 14
+
 
 #define gyro_limit_pitch_pos 45
 #define gyro_limit_pitch_neg 45

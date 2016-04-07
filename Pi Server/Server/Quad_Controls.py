@@ -198,21 +198,22 @@ class Quadcopter:
                     'desired': [0.0, 0.0, 0.0]}
 
         self.heading_current = 0
-        self.sensor = GY_86()
-
         self.__init_PID__()
         print 'Initialized Quadcopter'
 
     def takeoff(self):
+        print 'Takeoff Mode On'
         self.set_Mode_Hover(Constants.TAKEOFF_PREFERED_ALTITUDE)
 
     def land(self):
+        print 'Land Mode On'
         self.set_Mode_Altitude_Hold(0.0)
 
     def set_Mode_Altitude_Hold(self, height=None):
+        print 'Altitude Hold Mode On at height : ' + height
         self.should_hold_altitude = True
         # TODO Fix Altitude Algorithm (Getting None Value)
-        self.altitudes['current'] = self.sensor.get_altitude()
+        self.altitudes['current'] = self.altitudes['current']
         self.altitudes['desired'] = height if height else self.altitudes['current']
 
     def set_Mode_Rotate(self):
@@ -222,16 +223,8 @@ class Quadcopter:
         self.should_change_yaw = False
 
     def remove_Altitude_Hold(self):
+        print 'Altitude Hold Mode Off'
         self.should_hold_altitude = False
-
-    def __refresh_YPR__(self):
-        self.ypr['current'] = self.sensor.get_ypr()
-
-    def __refresh_Altitude__(self):
-        self.altitudes['current'] = self.sensor.get_altitude()
-
-    def __refresh_Heading__(self):
-        self.heading_current = self.sensor.get_heading()
 
     def __compute__(self):
         """
@@ -259,25 +252,23 @@ class Quadcopter:
             self.PID_ALT_FL.compute()
             self.PID_ALT_BR.compute()
             self.PID_ALT_BL.compute()
+
+        print 'Motor Speeds : ', self.motor_Speeds
         return self.motor_Speeds
 
     def refresh(self):
         """
         :returns Motorspeeds: The new motor speeds to set
         """
-
-        # TODO UNCOMMENT BEFORE HOSTING IN SERVER
-        if not Constants.TESTING_MODE:
-            self.__refresh_YPR__()
-            self.__refresh_Altitude__()
-            self.__refresh_Heading__()
         return self.__compute__()
 
     def set_Mode_Flight(self, hold_altitude=True):
-        self.should_stabilize = False
+        print 'Flight Mode On'
+        self.should_stabilize = True
         self.should_hold_altitude = hold_altitude
 
     def set_Mode_Hover(self, height=None):
+        print 'Hover Mode On'
         self.should_stabilize = True
         self.__set_YPR_Desired__(Constants.YPR_STATIONARY)
         self.set_Mode_Altitude_Hold(height)
@@ -285,10 +276,20 @@ class Quadcopter:
     def __check_YPR_Goodness(self, ypr):
         return ypr[1] <= Constants.MAX_PITCH and ypr[2] <= Constants.MAX_ROLL
 
+    def set_current_ypr(self, ypr):
+        self.ypr['current'] = ypr
+    def set_current_altitude(self,altitude):
+        self.altitudes['current'] = altitude
+
+    def set_heading(self, heading):
+        self.heading_current = heading
+
     def get_ypr_current(self):
         return self.ypr['current']
-    def set_speed(self,height):
+
+    def set_speed(self, height):
         self.set_Mode_Hover(height)
+
     def __set_YPR_Desired__(self, ypr):
         if self.__check_YPR_Goodness(ypr):
             self.ypr['desired'] = ypr
@@ -304,22 +305,21 @@ class Quadcopter:
             self.set_Mode_Hover()
 
 
-def test_quadcopter():
-    a= Quadcopter()
-    a.set_YPR([0, 20.0, 0])
+if __name__ == '__main__':
+    a = Quadcopter()
+    a.set_YPR([0, 20.0, 10.0])
     a.should_stabilize = True
     a.should_hold_altitude = False
 
     for i in range(20):
         a.refresh()
-        print a.get_ypr_current(),a.refresh()
-        a.ypr['current'][1]+=2
+        print a.get_ypr_current(), a.refresh()
+        a.ypr['current'][1] += 2
+        a.ypr['current'][2] += 1
 
     print 'Decreasing PITCH'
     for i in range(20):
         a.refresh()
         print a.get_ypr_current(), a.refresh()
         a.ypr['current'][1] -= 3
-
-test_quadcopter()
-
+        a.ypr['current'][2] -= 0.5

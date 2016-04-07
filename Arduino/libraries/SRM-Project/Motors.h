@@ -40,22 +40,22 @@ int *motor_Get_Speed(){
 void motor_Set_Speed_FR(int n){
 	a.writeMicroseconds(n + motor_FR_Offset);
 	speeds[0] = n + motor_FR_Offset;
-		delay(motor_small_delay);
+		// delay(motor_small_delay);
 }
 void motor_Set_Speed_FL(int n){
 	b.writeMicroseconds(n + motor_FL_Offset);
 	speeds[1] =n + motor_FL_Offset;
-		delay(motor_small_delay);
+		// delay(motor_small_delay);
 }
 void motor_Set_Speed_BR(int n){
 	c.writeMicroseconds(n + motor_BR_Offset);
 	speeds[2] =n + motor_BR_Offset;
-		delay(motor_small_delay);
+		// delay(motor_small_delay);
 }
 void motor_Set_Speed_BL(int n){
 	d.writeMicroseconds(n + motor_BL_Offset);
 	speeds[3] =n + motor_BL_Offset;
-		delay(motor_small_delay);
+		// delay(motor_small_delay);
 }
 void refreshMotors(double MotorSpeeds[]){
   motor_Set_Speed_FR(int(MotorSpeeds[0]));
@@ -91,11 +91,11 @@ void motor_setup(){
 	d.attach(motor_BL_Pin,2000,1000);
 	
 	// Arming speed should be 0 for sometime
-	a.writeMicroseconds(000);
-	b.writeMicroseconds(000);
-	c.writeMicroseconds(000);
-	d.writeMicroseconds(000);
-	delay(motor_Arm_Delay);
+	a.writeMicroseconds(2300);
+	b.writeMicroseconds(2300);
+	c.writeMicroseconds(2300);
+	d.writeMicroseconds(2300);
+	// delay(motor_Arm_Delay);
   	
 	
   	Serial.println(F("Motors Armed..."));

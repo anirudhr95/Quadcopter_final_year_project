@@ -91,11 +91,11 @@ void motor_setup(){
 	// d.attach(motor_BL_Pin,2000,1000);
 	
 	// Arming speed should be 0 for sometime
-	a.write(0);
-	b.write(0);
-	c.write(0);
-	d.write(0);
-	delay(motor_Arm_Delay);
+	a.write(2300);
+	b.write(2300);
+	c.write(2300);
+	d.write(2300);
+	// delay(motor_Arm_Delay);
   	
 	
   	Serial.println(F("Motors Armed..."));
