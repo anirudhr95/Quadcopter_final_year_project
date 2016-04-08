@@ -1,12 +1,24 @@
 PODS:
+  - CocoaAsyncSocket (7.4.3):
+    - CocoaAsyncSocket/All (= 7.4.3)
+  - CocoaAsyncSocket/All (7.4.3):
+    - CocoaAsyncSocket/GCD
+    - CocoaAsyncSocket/RunLoop
+  - CocoaAsyncSocket/GCD (7.4.3)
+  - CocoaAsyncSocket/RunLoop (7.4.3)
+  - Socket.IO-Client-Swift (6.0.0)
   - Starscream (1.1.3)
   - SVProgressHUD (2.0.2)
 
 DEPENDENCIES:
+  - CocoaAsyncSocket
+  - Socket.IO-Client-Swift
   - Starscream (~> 1.1.3)
   - SVProgressHUD
 
 SPEC CHECKSUMS:
+  CocoaAsyncSocket: a18c75dca4b08723628a0bacca6e94803d90be91
+  Socket.IO-Client-Swift: 014fe27dbb8d9d359d09b482309421fb4eccc16c
   Starscream: d662732354b40dd19ed1ece3e3c44c80b536b83c
   SVProgressHUD: e4020e23badbd7cc61bc4a80d3c1da57f166a978
 

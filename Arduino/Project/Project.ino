@@ -7,36 +7,74 @@
 #include <PinoutConfig.h>
 #include <UltrasoundSense.h>
 
-// #define SENSORS_ON
+
 //#define TEST_MODE_ON
+//#define MAG_ON
+#define GYRO_ON
+#define ALT_ON
+#define ULTRA_ON
+#define DONT_SETUP_MOTORS
+
+
+
 double MotorSpeeds[3];
-String input;
+String input,x;
 int first_position , second_position, third_position;
-int UltraValues[] = {0,0,0,0};
-
-
+float *UltraValues;
+int count = 0;
 String sender;
-String sendData()
-{
-//  Y;P;R;Mx;My;Mz;He;Al;U1;U2;U3;U4
-String x = String(ypr[0]) + ";" + String(ypr[1]) + ";" + String(ypr[2]) + ";" + String(magData[0]) + ";" + String(magData[1]) + ";" + String(magData[2]) +";"+ String(getHeading())+";"+String(baro_getAltitude())
-+ ";" + String(ultra_values[0]) + ";" + String(ultra_values[1])+ ";" + String(ultra_values[2])+ ";" + String(ultra_values[3]) ;
-return x;
-}
-
-
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin (38400);
-//  motor_setup();
+  Serial.begin (115200);
+  #ifndef DONT_SETUP_MOTORS
+  motor_setup();
+  #endif
   ultra_Setup();
   gyro_Setup();
   baro_Setup();
-  #ifdef TEST_MODE_ON
-  Serial.print("Setup Completed");
-  Serial.print("Yaw\tPitch\tRoll\tAx\tAy\tAz\t\tUA\tUB\tUC\tRF\tRL\tBR\tBL");
-  #endif
 
+}
+String sendData(){
+  #ifdef GYRO_ON
+  if(count%4==0)
+    {
+      
+      getYPR();
+   
+      
+     x = String("ypr:") + String(ypr[0]) + ";" + String(ypr[1]) + ";" + String(ypr[2]) + ";";
+      
+      
+    }
+    #endif
+    #ifdef MAG_ON
+    if(count%4==1)
+    {
+        getMAG();
+         x = String("Magdata:") + ";" + String(mx) + ";" + String(my) + ";" + String(mz) + ";" + String(getHeading());
+        
+    
+      
+    }
+    #endif
+    #ifdef ULTRA_ON
+    if(count%4==2)
+    {
+      UltraValues = getABCD();
+     x = String("Ultra:")+";" + String(UltraValues[0]) + ";" + String(UltraValues[1])+ ";" + String(UltraValues[2])+ ";" + String(UltraValues[3])+";" ;
+    
+    
+    }
+    #endif
+    #ifdef ALT_ON
+    if(count%4==3){
+      x=String("Alt:")+String(baro_getAltitude());
+    }
+    #endif
+    
+  
+  count += 1;
+  return x;
 }
 void loop() {
   sender="";
@@ -67,9 +105,7 @@ void loop() {
     #endif
 
   }
-  getYPR();
-//  getMAG();
-  ultragetA();
   Serial.println(sendData());
+  delay(1000);
 }
 

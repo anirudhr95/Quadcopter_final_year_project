@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		522554241CB64761009597A0 /* SocketIOClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522554231CB64761009597A0 /* SocketIOClient.swift */; };
 		523DC7CF1CB0EC8B00C4D7D2 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 523DC7CE1CB0EC8B00C4D7D2 /* art.scnassets */; };
 		523DC7D21CB0EE8700C4D7D2 /* FlightViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523DC7D11CB0EE8700C4D7D2 /* FlightViewController.swift */; };
 		5271448A1CB52E8B007694D7 /* BonjourNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527144891CB52E8B007694D7 /* BonjourNetworkManager.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		522554231CB64761009597A0 /* SocketIOClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketIOClient.swift; sourceTree = "<group>"; };
 		523DC7CE1CB0EC8B00C4D7D2 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
 		523DC7D11CB0EE8700C4D7D2 /* FlightViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightViewController.swift; sourceTree = "<group>"; };
 		527144891CB52E8B007694D7 /* BonjourNetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BonjourNetworkManager.swift; sourceTree = "<group>"; };
@@ -70,6 +72,7 @@
 			children = (
 				5271448B1CB6340E007694D7 /* SocketIOManager.swift */,
 				527144891CB52E8B007694D7 /* BonjourNetworkManager.swift */,
+				522554231CB64761009597A0 /* SocketIOClient.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -259,6 +262,7 @@
 				5273AB661CB0448E00436D14 /* ViewController.swift in Sources */,
 				5271448C1CB6340E007694D7 /* SocketIOManager.swift in Sources */,
 				5271448A1CB52E8B007694D7 /* BonjourNetworkManager.swift in Sources */,
+				522554241CB64761009597A0 /* SocketIOClient.swift in Sources */,
 				5273AB641CB0448E00436D14 /* AppDelegate.swift in Sources */,
 				523DC7D21CB0EE8700C4D7D2 /* FlightViewController.swift in Sources */,
 			);

@@ -5,6 +5,7 @@ use_frameworks!
 
 target 'Quadcopter' do
 pod 'Starscream', '~> 1.1.3'
+pod 'Socket.IO-Client-Swift'
 pod 'SVProgressHUD'
 pod 'CocoaAsyncSocket'
 end

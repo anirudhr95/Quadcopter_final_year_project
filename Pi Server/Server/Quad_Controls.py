@@ -287,8 +287,9 @@ class Quadcopter:
     def get_ypr_current(self):
         return self.ypr['current']
 
-    def set_speed(self, height):
-        self.set_Mode_Hover(height)
+    def set_speed(self, speed):
+        val = [self.motor_Speeds[i]-min(self.motor_Speeds) for i in range(4)]
+        self.motor_Speeds = [val[i] + speed for i in range(4)]
 
     def __set_YPR_Desired__(self, ypr):
         if self.__check_YPR_Goodness(ypr):

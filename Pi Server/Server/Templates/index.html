@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quadcopter Actuator</title>
+</head>
+<body>
+
+<form target="." method="post">
+    <table width="100%">
+        <tr>
+            <td>
+                <input type="submit" name="takeoff" value="TAKEOFF" style="width:100%">
+            </td>
+            <td>
+                <input type="submit" name="land" value="LAND" style="width:100%">
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" name="hover" value="HOVER" style="width:100%">
+            </td>
+            <td>
+                <input type="submit" name="hold_altitude" value="HOLD ALTITUDE" style="width:100%">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" name="quad_setSpeed_text" placeholder="Enter Speed" style="width:100%">
+                <input type="submit" name="quad_setSpeed" value="Set Speed" style="width:100%">
+            </td>
+            <td>
+                <input type="text" name="set_ypr_y" placeholder="Enter Yaw" style="width:100%">
+                <input type="text" name="set_ypr_p" placeholder="Enter Pitch" style="width:100%">
+                <input type="text" name="set_ypr_r" placeholder="Enter Roll" style="width:100%">
+                <input type="submit" name="set_ypr" value="Set YPR" style="width:100%">
+            </td>
+        </tr>
+
+    </table>
+</form>
+
+</body>
+</html>

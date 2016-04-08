@@ -4,12 +4,22 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>CocoaAsyncSocket.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-Quadcopter.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
 		<key>SVProgressHUD.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Socket.IO-Client-Swift.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -22,17 +32,27 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>2D4ECDD33188797B0B64C7764DB037BE</key>
+		<key>08F32FF1D45471F2424B69FC56F48972</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>8EE407AD2703F57CA15804F937AE819E</key>
+		<key>58B66C67C9993C59F758611031FC62E1</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>CA1F432C399759018ECE22A3B53A0AA1</key>
+		<key>B1D17BA74BEACBD28F897F231B5907A4</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C29A3B77DB2503D5C220A10C90F8FE06</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>DB2BED58C41FE5438112E7385665F963</key>
 		<dict>
 			<key>primary</key>
 			<true/>

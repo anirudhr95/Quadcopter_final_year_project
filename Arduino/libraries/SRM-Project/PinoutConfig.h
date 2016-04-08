@@ -22,7 +22,7 @@
 //A=Front, B= Back, C= Left, D= Right
 
 #define ultra_Trig_Pin_A 11
-#define ultra_Trig_Pin_B 3
+#define ultra_Trig_Pin_B 4
 #define ultra_Trig_Pin_C 8
 #define ultra_Trig_Pin_D 9
 #define ultra_Echo_Pin_A 14

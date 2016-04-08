@@ -8,7 +8,7 @@
 
 #ifndef Gyro_h
 #define Gyro_h
-
+#define use_old
 
 // I2C device class (I2Cdev) demonstration Arduino sketch for MPU6050 class using DMP (MotionApps v2.0)
 // 6/21/2012 by Jeff Rowberg <jeff@rowberg.net>
@@ -67,11 +67,8 @@
 // specific I2C addresses may be passed as a parameter here
 // AD0 low = 0x68 (default for SparkFun breakout and InvenSense evaluation board)
 // AD0 high = 0x69
-MPU6050 mpu(0x68); // Most common is 0x68
-
-int interrupt_pin=0; // Check where your INT pin is connected. Check below.
-
-
+// MPU6050 mpu(0x68); // Most common is 0x68
+ MPU6050 mpu;
 /* =========================================================================
  NOTE: In addition to connection 3.3v, GND, SDA, and SCL, this sketch
  depends on the MPU-6050's INT pin being connected to the Arduino's
@@ -87,9 +84,6 @@ int interrupt_pin=0; // Check where your INT pin is connected. Check below.
 #define HMC5883L_RA_DATAX_H         0x03
 #define HMC5883L_RA_DATAZ_H         0x05
 #define HMC5883L_RA_DATAY_H         0x07
-
-#define LED_PIN 13 // (Arduino is 13, Teensy is 11, Teensy++ is 6)
-bool blinkState = false;
 
 // MPU control/status vars
 static bool dmpReady = false;  // set true if DMP init was successful
@@ -107,12 +101,8 @@ static int16_t mx, my, mz;     //To store magnetometer readings
 static VectorInt16 aaReal;     // [x, y, z]            gravity-free accel sensor measurements
 static VectorInt16 aaWorld;    // [x, y, z]            world-frame accel sensor measurements
 static VectorFloat gravity;    // [x, y, z]            gravity vector
-static float ypr[3], magData[4];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
+static float ypr[3], accel[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
 static float heading;          // Simple magnetic heading. (NOT COMPENSATED FOR PITCH AND ROLL)
-
-// To check DMP frecuency  (it can be changed it the MotionApps v2 .h file)
-static int time1,time1old;
-static float frec1;
 
 
 
@@ -136,6 +126,7 @@ void gyro_Setup() {
   // join I2C bus (I2Cdev library doesn't do this automatically)
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
   Wire.begin();
+  TWBR = 24; // 400kHz I2C clock (200kHz if CPU is 8MHz)
   // **************************************************************
   // It is best to configure I2C to 400 kHz. 
   // If you are using an Arduino DUE, modify the variable TWI_CLOCK to 400000, defined in the file:
@@ -195,6 +186,9 @@ void gyro_Setup() {
 
   mpu.setI2CMasterModeEnabled(0);
   mpu.setI2CBypassEnabled(1);
+  mpu.setSleepEnabled(false);
+
+  #ifdef use_old
 
   Wire.beginTransmission(HMC5883L_DEFAULT_ADDRESS);
   Wire.write(0x02); 
@@ -238,7 +232,7 @@ void gyro_Setup() {
   mpu.setSlaveDataLength(2, 2);
 
   mpu.setI2CMasterModeEnabled(1);
-
+  #endif
 
   // make sure it worked (returns 0 if so)
   if (devStatus == 0) {
@@ -248,7 +242,7 @@ void gyro_Setup() {
 
     // enable Arduino interrupt detection
     Serial.println(F("Enabling interrupt detection (Arduino external interrupt 0)..."));
-    attachInterrupt(interrupt_pin, dmpDataReady, RISING);
+    attachInterrupt(0, dmpDataReady, RISING);
     mpuIntStatus = mpu.getIntStatus();
 
     // set our DMP Ready flag so the main loop() function knows it's okay to use it
@@ -268,8 +262,6 @@ void gyro_Setup() {
     Serial.println(F(")"));
   }
 
-  // configure LED for output
-  pinMode(LED_PIN, OUTPUT);
 
 }
 
@@ -280,44 +272,38 @@ void gyro_Setup() {
 float *getYPR(){
   // if programming failed, don't try to do anything
   //  TODO FIX NEXT LINE
-  //    if (!dmpReady) return [-1.0];
-	
-		// wait for MPU interrupt or extra packet(s) available
+     if (!dmpReady){
+        float a[] = {-1.0,-1.0,-1.0};
+        return a;
+     } 
+	// get current FIFO count
 	while (!mpuInterrupt && fifoCount < packetSize) {
-			// other program behavior stuff here
-			// .
-			// .
-			// .
-			// if you are really paranoid you can frequently test in between other
-			// stuff to see if mpuInterrupt is true, and if so, "break;" from the
-			// while() loop to immediately process the MPU data
-			// .
-			// .
-			// .
-	}
-	
-		// reset interrupt flag and get INT_STATUS byte
-	mpuInterrupt = false;
-	mpuIntStatus = mpu.getIntStatus();
-	
-		// get current FIFO count
-	fifoCount = mpu.getFIFOCount();
-	
-		// check for overflow (this should never happen unless our code is too inefficient)
-	if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
-			// reset so we can continue cleanly
-		mpu.resetFIFO();
-//		Serial.println(F("FIFO overflow!"));
-//		delay(1);
-		
-			// otherwise, check for DMP data ready interrupt (this should happen frequently)
-	} else if (mpuIntStatus & 0x02) {
-			// wait for correct available data length, should be a VERY short wait
-		while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
-		
+        // other program behavior stuff here
+        // .
+        // .
+        // .
+        // if you are really paranoid you can frequently test in between other
+        // stuff to see if mpuInterrupt is true, and if so, "break;" from the
+        // while() loop to immediately process the MPU data
+        // .
+        // .
+        // .
+    }
+
+    // reset interrupt flag and get INT_STATUS byte
+    mpuInterrupt = false;
+    
+    mpuIntStatus = mpu.getIntStatus();
+
+    // get current FIFO count
+    fifoCount = mpu.getFIFOCount();
+    mpu.resetFIFO();
+    while(mpu.getFIFOCount() <= packetSize);
+    
+    
+    
 			// read a packet from FIFO
-		mpu.getFIFOBytes(fifoBuffer, packetSize);
-		
+    mpu.getFIFOBytes(fifoBuffer, packetSize);
 			// track FIFO count here in case there is > 1 packet available
 			// (this lets us immediately read more without waiting for an interrupt)
 		fifoCount -= packetSize;
@@ -325,86 +311,38 @@ float *getYPR(){
 		mpu.dmpGetQuaternion(&q, fifoBuffer);
 		mpu.dmpGetGravity(&gravity, &q);
 		mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-		for(int i=0;i<3;i++)
-			ypr[i] *= (180/M_PI);
-		return ypr;
+    for(int i=0;i<3;i++)
+      ypr[i] *= (180/M_PI);
+    return ypr;
 		
+//		Get Acceleration Components
+#ifdef ENABLE_ACCEL
+		mpu.dmpGetAccel(&aa, fifoBuffer);
+		mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
+		accel[0]=aaReal.x
+		accel[1]=aaReal.y
+		accel[2]=aaReal.z
 		
-	}
+#endif
+		
+
+		
+	
 }
 
 float *getMAG(){
-	magData[0]=mpu.getExternalSensorWord(0);
-    magData[1]=mpu.getExternalSensorWord(2);
-    magData[2]=mpu.getExternalSensorWord(4);
-    
-    return magData;
-
-    
+	mx=mpu.getExternalSensorWord(0);
+    my=mpu.getExternalSensorWord(2);
+    mz=mpu.getExternalSensorWord(4);
 }
 float getHeading(){
 	getMAG();
-	heading = atan2(magData[1], magData[0]);
+	heading = atan2(my, mx);
     if(heading < 0) heading += 2 * M_PI;
     return heading * 180/M_PI;
 }
 
 
-  VectorInt16 getAccel() {
-      // if programming failed, don't try to do anything
-//      if (!dmpReady) return;
-  
-      // wait for MPU interrupt or extra packet(s) available
-      while (!mpuInterrupt && fifoCount < packetSize) {
-          // other program behavior stuff here
-          // .
-          // .
-          // .
-          // if you are really paranoid you can frequently test in between other
-          // stuff to see if mpuInterrupt is true, and if so, "break;" from the
-          // while() loop to immediately process the MPU data
-          // .
-          // .
-          // .
-      }
-  
-      // reset interrupt flag and get INT_STATUS byte
-      mpuInterrupt = false;
-      mpuIntStatus = mpu.getIntStatus();
-  
-      // get current FIFO count
-      fifoCount = mpu.getFIFOCount();
-  
-      // check for overflow (this should never happen unless our code is too inefficient)
-      if ((mpuIntStatus & 0x10) || fifoCount == 1024) {
-          // reset so we can continue cleanly
-          mpu.resetFIFO();
-          Serial.println(F("FIFO overflow!"));
-  
-      // otherwise, check for DMP data ready interrupt (this should happen frequently)
-      } else if (mpuIntStatus & 0x02) {
-          // wait for correct available data length, should be a VERY short wait
-          while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
-  
-          // read a packet from FIFO
-          mpu.getFIFOBytes(fifoBuffer, packetSize);
-  
-          // track FIFO count here in case there is > 1 packet available
-          // (this lets us immediately read more without waiting for an interrupt)
-          fifoCount -= packetSize;
-  
-  
-              // display real acceleration, adjusted to remove gravity
-              mpu.dmpGetQuaternion(&q, fifoBuffer);
-              mpu.dmpGetAccel(&aa, fifoBuffer);
-              mpu.dmpGetGravity(&gravity, &q);
-              mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
-              return aaReal;
-  
-  
-  
-      }
-  }
 
 
 #endif /* Gyro_h */

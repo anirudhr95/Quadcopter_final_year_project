@@ -2,6 +2,8 @@ import logging
 from logging.handlers import RotatingFileHandler
 import os
 
+from werkzeug.contrib.jsrouting import render_template
+
 from Quad_Controls import Quadcopter
 
 async_mode = None
@@ -62,10 +64,12 @@ middleware_ios = None
 middleware_arduino = None
 
 ard_msg_converter = pi_send_toArduino()
+
+
 class messages:
     message_queue = []
 
-    def append(self, msg):
+    def append(msg):
         messages.message_queue.append(msg)
         e.set()
 
@@ -100,13 +104,25 @@ def speed_control():
         time.sleep(Constants.REFRESH_PID_TIME)
 
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def index():
-    socketio.emit('my response',
-                  {'data': 'Server generated event', 'count': 4},
-                  namespace='/test',
-                  broadcast=True)
-    return 'Hello World'
+    if request.method == "POST":
+        if 'quad_setSpeed' in request.form:
+            quadcopter.set_speed(int(request.form["quad_setSpeed_text"]))
+        elif 'set_ypr' in request.form:
+            ypr = [float(request.form.get('set_ypr_y', 0.0)),
+                   float(request.form.get('set_ypr_p', 0.0)),
+                   float(request.form.get('set_ypr_r', 0.0))]
+            quadcopter.set_YPR(ypr)
+        elif 'takeoff' in request.form:
+            quadcopter.takeoff()
+        elif 'land' in request.form:
+            quadcopter.land()
+        elif 'hover' in request.form:
+            quadcopter.set_Mode_Hover()
+        elif 'hold_altitude' in request.form:
+            quadcopter.set_Mode_Altitude_Hold()
+    return render_template("index.html")
 
 
 @app.before_first_request
@@ -140,8 +156,9 @@ def initialSetup():
     # from Serial_Comm import read_from_port
 
 
-    global serial_port
-    try:
+
+    if Constants.ENABLE_SERIAL:
+        global serial_port
         serial_port = serial.Serial(Constants.ARDUINO_PORT, Constants.ARDUINO_BAUDRATE, timeout=0)
         # except serial.SerialException():
         #     print("FAILED TO CONNECT TO SERIAL PORT : %s"%msg)
@@ -152,24 +169,22 @@ def initialSetup():
                                   )
         thread.daemon = True
         thread.start()
-    except serial.SerialException as e:
-        print "COULD NOT START SERIAL : \n",e
 
-    # IOS SENDER THREAD
-    thread2 = Thread(name="IOS Sender Thread",
-                     target=ios_sender_thread,
-                     kwargs={'event': e})
-    thread2.daemon = True
-    thread2.start()
+    if Constants.ENABLE_IOS_SENDER:
+        # IOS SENDER THREAD
+        thread2 = Thread(name="IOS Sender Thread",
+                         target=ios_sender_thread,
+                         kwargs={'event': e})
+        thread2.daemon = True
+        thread2.start()
+    if Constants.ENABLE_PID:
+        # PID THREAD
 
-    # PID THREAD
-    try:
         thread3 = Thread(name="PID Thread",
                          target=speed_control)
         thread3.daemon = True
         thread3.start()
-    except Exception as e:
-        print e
+
     messages.append("Ready")
     print 'Sent'
 
@@ -216,7 +231,7 @@ def test_disconnect():
 @socketio.on('message', namespace=Constants.SOCKETIO_NAMESPACE)
 def handle_message(data):
     # TODO Pass the message to the ios message parser
-    print 'Received Message : %s'%data
+    print 'Received Message : %s' % data
     middleware_ios.parseMessage(data)
 
 
