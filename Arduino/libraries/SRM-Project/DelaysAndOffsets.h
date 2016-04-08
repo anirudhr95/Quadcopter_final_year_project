@@ -8,6 +8,18 @@
 
 #ifndef DelaysAndOffsets_h
 #define DelaysAndOffsets_h
+#define BAUD_RATE 115200
+#define PRINT_MOTOR_CHANGES
+// GYRO TRANSMISSION RATE 
+/*
+Uncomment the transmission rate to use
+//HIGH = 3 for every other possible type of message
+//MID = 2 for every other possible type of message
+//LOW = 1 for every other possible type of message
+*/
+// #define GYRO_TRANSMISSION_RATE_HIGH
+// #define GYRO_TRANSMISSION_RATE_MID 
+#define GYRO_TRANSMISSION_RATE_LOW
 
 // PID
 #define Kp 1

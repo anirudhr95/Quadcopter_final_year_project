@@ -8,7 +8,7 @@
 
 #ifndef Gyro_h
 #define Gyro_h
-#define use_old
+#include "printHelper.h"
 
 // I2C device class (I2Cdev) demonstration Arduino sketch for MPU6050 class using DMP (MotionApps v2.0)
 // 6/21/2012 by Jeff Rowberg <jeff@rowberg.net>
@@ -158,15 +158,28 @@ void gyro_Setup() {
   // while (Serial.available() && Serial.read()); // empty buffer again
 
   // initialize device
-  Serial.println(F("Initializing I2C devices..."));
+  char buf[100];
+  sprintf(buf,FORMAT_SETUP_INIT,"GYRO");
+  Serial.print(buf);
+
+  sprintf(buf,FORMAT_SETUP_MESSAGE,"I2C devices");
+  Serial.print(buf);
+  
   mpu.initialize();
 
   // verify connection
-  Serial.println(F("Testing device connections..."));
-  Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
+  sprintf(buf,FORMAT_SETUP_MESSAGE,"Testing device connections...");
+  Serial.print(buf);
+  if(mpu.testConnection()){
+    sprintf(buf,FORMAT_SETUP_SUCCESS,"MPU6050");
+  }
+  else{
+    sprintf(buf,FORMAT_SETUP_FAILURE,"MPU6050");
+  }
+  Serial.print(buf);
 
   // load and configure the DMP
-  Serial.println(F("Initializing DMP..."));
+  sprintf(buf,FORMAT_SETUP_INIT,"DMP");
   devStatus = mpu.dmpInitialize();
 
   // supply your own gyro offsets here, scaled for min sensitivity
@@ -187,8 +200,6 @@ void gyro_Setup() {
   mpu.setI2CMasterModeEnabled(0);
   mpu.setI2CBypassEnabled(1);
   mpu.setSleepEnabled(false);
-
-  #ifdef use_old
 
   Wire.beginTransmission(HMC5883L_DEFAULT_ADDRESS);
   Wire.write(0x02); 
@@ -232,21 +243,23 @@ void gyro_Setup() {
   mpu.setSlaveDataLength(2, 2);
 
   mpu.setI2CMasterModeEnabled(1);
-  #endif
 
   // make sure it worked (returns 0 if so)
   if (devStatus == 0) {
     // turn on the DMP, now that it's ready
-    Serial.println(F("Enabling DMP..."));
+    sprintf(buf,FORMAT_SETUP_MESSAGE,"Enabling DMP...");
+    Serial.print(buf);
     mpu.setDMPEnabled(true);
 
     // enable Arduino interrupt detection
-    Serial.println(F("Enabling interrupt detection (Arduino external interrupt 0)..."));
+    sprintf(buf,FORMAT_SETUP_MESSAGE,"Enabling interrupt detection (Arduino external interrupt 0)...");
+    Serial.print(buf);
     attachInterrupt(0, dmpDataReady, RISING);
     mpuIntStatus = mpu.getIntStatus();
 
+    sprintf(buf,FORMAT_SETUP_SUCCESS,"DMP");
+    Serial.print(buf);
     // set our DMP Ready flag so the main loop() function knows it's okay to use it
-    Serial.println(F("DMP ready! Waiting for first interrupt..."));
     dmpReady = true;
 
     // get expected DMP packet size for later comparison
@@ -257,9 +270,10 @@ void gyro_Setup() {
     // 1 = initial memory load failed
     // 2 = DMP configuration updates failed
     // (if it's going to break, usually the code will be 1)
-    Serial.print(F("DMP Initialization failed (code "));
-    Serial.print(devStatus);
-    Serial.println(F(")"));
+    sprintf(buf,FORMAT_SETUP_ERRORCODE,devStatus);
+    Serial.print(buf);
+    sprintf(buf,FORMAT_SETUP_FAILURE,"DMP");
+    Serial.print(buf);
   }
 
 
@@ -272,76 +286,56 @@ void gyro_Setup() {
 float *getYPR(){
   // if programming failed, don't try to do anything
   //  TODO FIX NEXT LINE
-     if (!dmpReady){
-        float a[] = {-1.0,-1.0,-1.0};
-        return a;
-     } 
+ if (!dmpReady){
+  float a[] = {-1.0,-1.0,-1.0};
+  return a;
+} 
 	// get current FIFO count
-	while (!mpuInterrupt && fifoCount < packetSize) {
-        // other program behavior stuff here
-        // .
-        // .
-        // .
-        // if you are really paranoid you can frequently test in between other
-        // stuff to see if mpuInterrupt is true, and if so, "break;" from the
-        // while() loop to immediately process the MPU data
-        // .
-        // .
-        // .
-    }
+while (!mpuInterrupt && fifoCount < packetSize);
+mpuInterrupt = false;
+mpu.resetFIFO();
+while(mpu.getFIFOCount() <= packetSize);
 
-    // reset interrupt flag and get INT_STATUS byte
-    mpuInterrupt = false;
-    
-    mpuIntStatus = mpu.getIntStatus();
 
-    // get current FIFO count
-    fifoCount = mpu.getFIFOCount();
-    mpu.resetFIFO();
-    while(mpu.getFIFOCount() <= packetSize);
-    
-    
-    
+
 			// read a packet from FIFO
-    mpu.getFIFOBytes(fifoBuffer, packetSize);
+mpu.getFIFOBytes(fifoBuffer, packetSize);
 			// track FIFO count here in case there is > 1 packet available
 			// (this lets us immediately read more without waiting for an interrupt)
-		fifoCount -= packetSize;
+fifoCount -= packetSize;
 			// display Euler angles in degrees
-		mpu.dmpGetQuaternion(&q, fifoBuffer);
-		mpu.dmpGetGravity(&gravity, &q);
-		mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-    for(int i=0;i<3;i++)
-      ypr[i] *= (180/M_PI);
-    return ypr;
-		
-//		Get Acceleration Components
-#ifdef ENABLE_ACCEL
-		mpu.dmpGetAccel(&aa, fifoBuffer);
-		mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
-		accel[0]=aaReal.x
-		accel[1]=aaReal.y
-		accel[2]=aaReal.z
-		
-#endif
-		
+mpu.dmpGetQuaternion(&q, fifoBuffer);
+mpu.dmpGetGravity(&gravity, &q);
+mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+for(int i=0;i<3;i++)
+  ypr[i] *= (180/M_PI);
+return ypr;
 
-		
-	
+
+}
+float *getACCEL(){
+  mpu.dmpGetAccel(&aa, fifoBuffer);
+mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
+accel[0]=aaReal.x;
+accel[1]=aaReal.y;
+accel[2]=aaReal.z;
+return accel;
+
 }
 
 float *getMAG(){
 	mx=mpu.getExternalSensorWord(0);
-    my=mpu.getExternalSensorWord(2);
-    mz=mpu.getExternalSensorWord(4);
+  my=mpu.getExternalSensorWord(2);
+  mz=mpu.getExternalSensorWord(4);
+  heading = atan2(my, mx);
+  if(heading < 0) heading += 2 * M_PI;
+  heading*= 180/M_PI;
 }
 float getHeading(){
 	getMAG();
-	heading = atan2(my, mx);
-    if(heading < 0) heading += 2 * M_PI;
-    return heading * 180/M_PI;
+  return heading;
 }
-
+ 
 
 
 
