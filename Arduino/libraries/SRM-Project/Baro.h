@@ -24,11 +24,11 @@ static int baro_Offset = 0;
 static double baseline;
 
 float baro_getPressure(){
-	return float(ms5611.readPressure()) - baro_Offset;
+	return float(ms5611.readPressure(true));
 	// Measured in Pascals
 }
 float baro_getTemperature(){
-	return float(ms5611.readTemperature());	
+	return float(ms5611.readTemperature(true));	
 	// Measured in Celsius
 }
 
@@ -50,19 +50,14 @@ void baro_Setup()
 { // Initialize MS5611 sensor
   Serial.println("Initialize MS5611 Sensor");
 
-  if(!ms5611.begin())
+  if(!ms5611.begin(MS5611_ULTRA_HIGH_RES))
   {
-    Serial.println("Could not find a valid MS5611 sensor, check wiring!");
-    Serial.println("Baro Connection Failed");
+    Serial.println(F("Could not find a valid MS5611 sensor, check wiring!"));
+    Serial.println(F("Baro Connection Failed"));
   }
 
   // Get reference pressure for relative altitude
   baro_setBaseline();
-
-  // Check settings
-  Serial.print("Oversampling Offset: ");
-  baro_Offset = ms5611.getOversampling();
-  Serial.println(baro_Offset);
   Serial.println("Barometer connection Successful");
 }
 

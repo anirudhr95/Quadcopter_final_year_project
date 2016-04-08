@@ -76,7 +76,7 @@ void motor_Set_Speed(int n){
 	
 	motor_Set_Speed_BL(n);
 	motor_Set_Speed_BR(n);
-	Serial.println("Speed set to " + String(n));
+	// Serial.println("Speed set to " + String(n));
 	
 }
 void motor_setup(){
@@ -86,17 +86,20 @@ void motor_setup(){
 	b.attach(motor_FL_Pin);
 	c.attach(motor_BR_Pin);
 	d.attach(motor_BL_Pin);
+	Serial.println(F("Attached"));
+
 	// a.attach(motor_FR_Pin,2000,1000);  //the pin for the servo control
 	// b.attach(motor_FL_Pin,2000,1000);
 	// c.attach(motor_BR_Pin,2000,1000);
 	// d.attach(motor_BL_Pin,2000,1000);
 	
 	// Arming speed should be 0 for sometime
-	a.write(2300);
-	b.write(2300);
-	c.write(2300);
-	d.write(2300);
-	// delay(motor_Arm_Delay);
+	a.write(1000);
+	b.write(1000);
+	c.write(1000);
+	d.write(1000);
+
+	delay(motor_Arm_Delay);
   	
 	
   	Serial.println(F("Motors Armed..."));
@@ -104,6 +107,11 @@ void motor_setup(){
 }
 
 void motor_calibrate(){
+	a.attach(motor_FR_Pin);  //the pin for the servo control
+	b.attach(motor_FL_Pin);
+	c.attach(motor_BR_Pin);
+	d.attach(motor_BL_Pin);
+	Serial.println(F("Beginning Calibration.."));
 	Serial.println(F("Please remove power to motors.. Once done, press (1)"));
 	while(!Serial.available());
 	int read = Serial.parseInt();
@@ -112,10 +120,10 @@ void motor_calibrate(){
 		b.write(2000);
 		c.write(2000);
 		d.write(2000);
-		Serial.println(F("Connect Power, and wait for melody.. Once you hear that, press any key to continue..."));
+		Serial.println(F("Connect Power, and immediately press any key to continue..."));
 		while(!Serial.available());
 		Serial.println(F("Calibrating.."));
-  		delay(8000);
+  		delay(3000);
 		a.write(1000);
 		b.write(1000);
 		c.write(1000);

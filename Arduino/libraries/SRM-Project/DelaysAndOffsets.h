@@ -44,7 +44,7 @@
 #define motor_BR_Offset 0
 #define motor_BL_Offset 0
 
-#define motor_Arm_Delay 8000
+#define motor_Arm_Delay 4000
 #define motor_Arm_Speed 0  //If calibrated correctly, it will arm without problems
 #define motor_small_delay 10
 #define motor_Min_Speed 1200

@@ -10,9 +10,9 @@
 
 //#define TEST_MODE_ON
 //#define MAG_ON
-#define GYRO_ON
+//#define GYRO_ON
 #define ALT_ON
-#define ULTRA_ON
+//#define ULTRA_ON
 #define DONT_SETUP_MOTORS
 
 
@@ -106,6 +106,6 @@ void loop() {
 
   }
   Serial.println(sendData());
-  delay(1000);
+  delay(500);
 }
 
