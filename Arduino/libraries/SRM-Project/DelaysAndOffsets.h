@@ -8,6 +8,18 @@
 
 #ifndef DelaysAndOffsets_h
 #define DelaysAndOffsets_h
+#define BAUD_RATE 115200
+#define PRINT_MOTOR_CHANGES
+// GYRO TRANSMISSION RATE 
+/*
+Uncomment the transmission rate to use
+//HIGH = 3 for every other possible type of message
+//MID = 2 for every other possible type of message
+//LOW = 1 for every other possible type of message
+*/
+// #define GYRO_TRANSMISSION_RATE_HIGH
+// #define GYRO_TRANSMISSION_RATE_MID 
+#define GYRO_TRANSMISSION_RATE_LOW
 
 // PID
 #define Kp 1
@@ -25,12 +37,13 @@
 #define ultra_Offset_D 0
 
 //Gyro
-#define gyro_X_Offset 41
-#define gyro_Y_Offset -11
-#define gyro_Z_Offset 97
-#define gyro_X_Accel_Offset -3490
-#define gyro_Y_Accel_Offset -910
-#define gyro_Z_Accel_Offset 1646
+#define gyro_X_Accel_Offset -3481
+#define gyro_Y_Accel_Offset -974
+#define gyro_Z_Accel_Offset 1612
+#define gyro_X_Offset 60
+#define gyro_Y_Offset -23
+#define gyro_Z_Offset 14
+
 
 #define gyro_limit_pitch_pos 45
 #define gyro_limit_pitch_neg 45
@@ -43,7 +56,7 @@
 #define motor_BR_Offset 0
 #define motor_BL_Offset 0
 
-#define motor_Arm_Delay 8000
+#define motor_Arm_Delay 4000
 #define motor_Arm_Speed 0  //If calibrated correctly, it will arm without problems
 #define motor_small_delay 10
 #define motor_Min_Speed 1200

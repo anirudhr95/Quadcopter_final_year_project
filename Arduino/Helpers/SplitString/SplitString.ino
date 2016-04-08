@@ -9,8 +9,8 @@ void loop() {
   int pos1, pos2, pos3;
 //  char* buf = "1:90&2:80&3:180";
   String buaf= "1:90&2:80&3:180";
-  char* buf = "";
-  buaf.toCharArray(buf,buaf.length());
+  char buf[100];
+  buaf.toCharArray(buf,sizeof(buaf));
   int n = sscanf(buf, "%d:%d&%d:%d&%d:%d", &id1, &pos1, &id2, &pos2, &id3, &pos3);
   Serial.print(F("n="));
   Serial.println(n);

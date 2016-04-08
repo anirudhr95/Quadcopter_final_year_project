@@ -8,6 +8,7 @@
 
 #ifndef Baro_h
 #define Baro_h
+
 /*
   MS5611 Barometric Pressure & Temperature Sensor. Simple Example
   Read more: http://www.jarzebski.pl/arduino/czujniki-i-sensory/czujnik-cisnienia-i-temperatury-ms5611.html
@@ -17,6 +18,7 @@
 */
 #include "DelaysAndOffsets.h"
 #include <Wire.h>
+#include "printHelper.h"
 #include <MS5611.h>
 
 MS5611 ms5611;
@@ -24,11 +26,11 @@ static int baro_Offset = 0;
 static double baseline;
 
 float baro_getPressure(){
-	return float(ms5611.readPressure()) - baro_Offset;
+	return float(ms5611.readPressure(true));
 	// Measured in Pascals
 }
 float baro_getTemperature(){
-	return float(ms5611.readTemperature());	
+	return float(ms5611.readTemperature(true));	
 	// Measured in Celsius
 }
 
@@ -48,22 +50,19 @@ float baro_getAltitude(){
 
 void baro_Setup() 
 { // Initialize MS5611 sensor
-  Serial.println("Initialize MS5611 Sensor");
+  char buf[100];
+  sprintf(buf,FORMAT_SETUP_INIT,"BARO");
+  Serial.print(buf);
 
-  if(!ms5611.begin())
+  if(!ms5611.begin(MS5611_ULTRA_HIGH_RES))
   {
-    Serial.println("Could not find a valid MS5611 sensor, check wiring!");
-    Serial.println("Baro Connection Failed");
+    sprintf(buf,FORMAT_SETUP_FAILURE,"BARO");
+    Serial.print(buf);
   }
-
-  // Get reference pressure for relative altitude
-  baro_setBaseline();
-
-  // Check settings
-  Serial.print("Oversampling Offset: ");
-  baro_Offset = ms5611.getOversampling();
-  Serial.println(baro_Offset);
-  Serial.println("Barometer connection Successful");
+  else{
+    baro_setBaseline();
+    sprintf(buf,FORMAT_SETUP_SUCCESS,"BARO");
+  }
 }
 
 

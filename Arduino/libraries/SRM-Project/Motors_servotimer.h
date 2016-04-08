@@ -11,9 +11,11 @@ To calibrate motors, use Calibrate() function.. Concept : max(2000) microsecond 
 #ifndef Motors_h
 #define Motors_h
 // #include <Servo.h>
+
 #include <ServoTimer2.h>
 #include "DelaysAndOffsets.h"
 #include "PinoutConfig.h"
+#include "printHelper.h"
 
 ServoTimer2 a,b,c,d;
 
@@ -44,25 +46,26 @@ int *motor_Get_Speed(){
 
 void motor_Set_Speed_FR(int n){
 	a.write(n + motor_FR_Offset);
-		delay(motor_small_delay);
 }
 void motor_Set_Speed_FL(int n){
 	b.write(n + motor_FL_Offset);
-		delay(motor_small_delay);
 }
 void motor_Set_Speed_BR(int n){
 	c.write(n + motor_BR_Offset);
-		delay(motor_small_delay);
 }
 void motor_Set_Speed_BL(int n){
 	d.write(n + motor_BL_Offset);
-		delay(motor_small_delay);
 }
-void refreshMotors(double MotorSpeeds[]){
-  motor_Set_Speed_FR(int(MotorSpeeds[0]));
-  motor_Set_Speed_FL(int(MotorSpeeds[1]));
-  motor_Set_Speed_BR(int(MotorSpeeds[2]));
-  motor_Set_Speed_BL(int(MotorSpeeds[3]));
+void refreshMotors(int MotorSpeeds[]){
+	motor_Set_Speed_FR(MotorSpeeds[0]);
+	motor_Set_Speed_FL(MotorSpeeds[1]);
+	motor_Set_Speed_BR(MotorSpeeds[2]);
+	motor_Set_Speed_BL(MotorSpeeds[3]);
+	#ifdef PRINT_MOTOR_CHANGES
+	char buf[30];
+	sprintf(buf, FORMAT_MOTOR_SPEEDS, MotorSpeeds[0],MotorSpeeds[1],MotorSpeeds[2],MotorSpeeds[3]);
+	Serial.print(buf);
+	#endif
 }
 
 
@@ -70,64 +73,57 @@ void refreshMotors(double MotorSpeeds[]){
 void motor_Set_Speed(int n){
 	
 	motor_Set_Speed_FR(n);
-	
 	motor_Set_Speed_FL(n);
-	
 	motor_Set_Speed_BL(n);
 	motor_Set_Speed_BR(n);
-	Serial.println("Speed set to " + String(n));
-	
+	#ifdef PRINT_MOTOR_CHANGES
+	char buf[30];
+	sprintf(buf, FORMAT_MOTOR_SPEEDS, n,n,n,n);
+	Serial.print(buf);
+	#endif
 }
 void motor_setup(){
 //  Arming Process
-	Serial.println(F("Arming motors..."));
+	char buf[100];
+	sprintf(buf,FORMAT_SETUP_INIT,"MOTOR");
+	Serial.print(buf);
 	a.attach(motor_FR_Pin);  //the pin for the servo control
 	b.attach(motor_FL_Pin);
 	c.attach(motor_BR_Pin);
 	d.attach(motor_BL_Pin);
-	// a.attach(motor_FR_Pin,2000,1000);  //the pin for the servo control
-	// b.attach(motor_FL_Pin,2000,1000);
-	// c.attach(motor_BR_Pin,2000,1000);
-	// d.attach(motor_BL_Pin,2000,1000);
 	
-	// Arming speed should be 0 for sometime
-	a.write(0);
-	b.write(0);
-	c.write(0);
-	d.write(0);
+	// Arming speed should be LOW for sometime, to instruct the ESC that it is in "WORKING" mode
+	motor_Set_Speed(1000);
+
 	delay(motor_Arm_Delay);
-  	
-	
-  	Serial.println(F("Motors Armed..."));
-	// Serial.println("Arming Completed"); // so I can keep track of what is loaded
+
+	sprintf(buf,FORMAT_SETUP_SUCCESS,"MOTOR");
 }
 
 void motor_calibrate(){
-	Serial.println(F("Please remove power to motors.. Once done, press (1)"));
+	a.attach(motor_FR_Pin);  //the pin for the servo control
+	b.attach(motor_FL_Pin);
+	c.attach(motor_BR_Pin);
+	d.attach(motor_BL_Pin);
+	Serial.println(F("Beginning Calibration.."));
+	Serial.println(F("Please remove power to motors.. Once done, press any key.."));
 	while(!Serial.available());
-	int read = Serial.parseInt();
-	if(read==1){
-		a.write(2000);
-		b.write(2000);
-		c.write(2000);
-		d.write(2000);
-		Serial.println(F("Connect Power, and wait for melody.. Once you hear that, press any key to continue..."));
-		while(!Serial.available());
-		Serial.println(F("Calibrating.."));
-  		delay(8000);
-		a.write(1000);
-		b.write(1000);
-		c.write(1000);
-		d.write(1000);
-		delay(5000);
-		motor_Set_Speed(1500);
-  		Serial.println(F("Calibration completed.."));
-		Serial.println(F("If all motors are spinning, calibration is successful..Restart program if not confirmed"));
-	}
-	else{
-		motor_calibrate();
+	motor_Set_Speed(2000);
+	Serial.println(F("Connect Power, and immediately press any key to continue..."));
+	while(!Serial.available());
+	Serial.println(F("Calibrating.."));
+	delay(3000);
+	motor_Set_Speed(1000);
+	delay(5000);
+	motor_Set_Speed(1500);
 
-	}
+	Serial.println(F("Calibration completed.."));
+	Serial.println(F("If all motors are spinning, calibration is successful..Restart program if not confirmed\nPress any key to stop motors.."));
+	while(!Serial.available());
+	motor_Set_Speed(1000);
+
+
+	
 
 }
 #endif /* Motors_h */
