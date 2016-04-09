@@ -367,7 +367,8 @@ class Quadcopter:
 
 
 if __name__ == '__main__':
-    a = Quadcopter()
+    import CustomLogger
+    a = Quadcopter(CustomLogger.PILogger())
     a.set_YPR_Desired([0, 20.0, 10.0])
     a.mode_Altitude_Hold_Enable()
 

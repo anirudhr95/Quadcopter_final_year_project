@@ -21,7 +21,7 @@ SERVER_PORT = 5000
 LOG_LOCATION_FLASK = "~/Desktop"
 LOG_FILENAME_FLASK = "FlaskLog.log"
 LOG_FORMAT_FLASK   = "[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s"
-LOG_LOCATION_APP   = "~/Desktop"
+LOG_LOCATION_APP   = "./"
 LOG_FILENAME_APP   = "Quadcopter.log"
 LOG_FORMAT_APP     = "%(asctime)s %(name)s %(levelname)s : %(message)s"
 

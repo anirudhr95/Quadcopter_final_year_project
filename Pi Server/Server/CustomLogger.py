@@ -92,7 +92,7 @@ class PILogger:
         self.logger.addHandler(handler)
 
     def data_set_speeds(self, motor_speeds):  # int i 0 to 4
-        self.logger.debug("%s:%s" % (Constants.PIMESSAGE_SETSPEEDS, ';'.join(motor_speeds)))
+        self.logger.debug("%s:%s" % (Constants.PIMESSAGE_SETSPEEDS, ';'.join(str(val) for val in motor_speeds)))
 
     def state_ultra_mode(self, mode):
         self.logger.info("%s;%s" % (Constants.PIMESSAGE_ULTRAMODE, mode))
@@ -100,7 +100,7 @@ class PILogger:
     def data_set_altitude(self,altitude):
         self.logger.debug("SET_ALTITUDE:"%altitude)
     def data_set_ypr(self, ypr):
-        self.logger.info("%s:%s" % (Constants.IOSMESSAGE_SETYPR, ";".join(ypr)))
+        self.logger.info("%s:%s" % (Constants.IOSMESSAGE_SETYPR, ";".join(str(val) for val in ypr)))
 
     def state_reset_baro(self):
         self.logger.info("%s" % Constants.PIMESSAGE_RESETBAROREFERENCE)
