@@ -5,20 +5,20 @@ import Constants
 class pi_send_toArduino:
 
     def takeoff(self):
-        return Constants.IOSCOMMAND_TAKEOFF
+        return Constants.IOSMESSAGE_TAKEOFF
 
     def land(self):
-        return Constants.IOSCOMMAND_LAND
+        return Constants.IOSMESSAGE_LAND
     def set_speed(self,a):
-        return str(Constants.IOSCOMMAND_SETSPEED  + ':' + str(a))
+        return str(Constants.IOSMESSAGE_SETSPEED + ':' + str(a))
     def hover(self):
-        return str(Constants.IOSCOMMAND_HOVER)
+        return str(Constants.IOSMESSAGE_HOVER)
     def altitude_hold(self):
-        return str(Constants.IOSCOMMAND_HOLDALTITUDE)
+        return str(Constants.IOSMESSAGE_HOLDALTITUDE)
     def setYPR(self,a,b,c):
-        return '%s:%s;%s;%s'%(Constants.IOSCOMMAND_SETYPR ,a,b,c)
+        return '%s:%s;%s;%s'%(Constants.IOSMESSAGE_SETYPR , a, b, c)
     def set_speeds(self, speeds):
-        return '%s:%s;%s;%s;%s'%(Constants.PICOMMAND_SETSPEEDS,speeds[0],speeds[1],speeds[2],speeds[3])
+        return '%s:%s;%s;%s;%s'%(Constants.PIMESSAGE_SETSPEEDS, speeds[0], speeds[1], speeds[2], speeds[3])
 
 class pi_send_toIOS:
 
@@ -49,22 +49,22 @@ class pi_receive_fromIOS:
     USELESS CLASS  : REFERENCE FOR SENDING COMMANDS FROM IOS
     """
     def takeoff(self):
-        return Constants.IOSCOMMAND_TAKEOFF
+        return Constants.IOSMESSAGE_TAKEOFF
 
     def land(self):
-        return Constants.IOSCOMMAND_LAND
+        return Constants.IOSMESSAGE_LAND
 
     def set_speed(self, a):
-        return str(Constants.IOSCOMMAND_SETSPEED + ' ' + str(a))
+        return str(Constants.IOSMESSAGE_SETSPEED + ' ' + str(a))
 
     def hover(self):
-        return str(Constants.IOSCOMMAND_HOVER)
+        return str(Constants.IOSMESSAGE_HOVER)
 
     def altitude_hold(self):
-        return str(Constants.IOSCOMMAND_HOLDALTITUDE)
+        return str(Constants.IOSMESSAGE_HOLDALTITUDE)
 
     def setYPR(self, a, b, c):
-        return '%s %s;%s;%s' % (Constants.IOSCOMMAND_SETYPR, a, b, c)
+        return '%s %s;%s;%s' % (Constants.IOSMESSAGE_SETYPR, a, b, c)
 
     def set_speeds(self, a, b, c, d):
-        return '%s %s;%s;%s;%s' % (Constants.PICOMMAND_SETSPEEDS, a, b, c, d)
+        return '%s %s;%s;%s;%s' % (Constants.PIMESSAGE_SETSPEEDS, a, b, c, d)

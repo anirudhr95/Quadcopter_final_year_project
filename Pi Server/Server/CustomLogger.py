@@ -3,8 +3,10 @@ Logs each kind of input differently
 """
 from logging.handlers import RotatingFileHandler
 import os
-import logging
+import logging, logging.config
 import Constants
+
+
 class ArduinoLogger:
     def __init__(self):
         self.logger = logging.getLogger("ARDUINO")
@@ -16,14 +18,33 @@ class ArduinoLogger:
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
 
-    def ultrasound_data(self, data = [0 for i in range(4)]):
-        logging.info("%s %s" %(Constants.ARDUINOSTATUS_ULTRASOUND_DATA,data))
+    def setup_init(self, module):
+        self.logger.info("SETUP-INITIALIZING:%s" % module)
 
-    def error(self, message, options = ''):
-        logging.info("%s %s %s" %(Constants.ARDUINOSTATUS_ERROR,message,options))
+    def setup_success(self, module):
+        self.logger.info("SETUP-SUCCESS:%s" % module)
 
-    def ultrasound_collide(self,sensor_ID):
-        logging.info("%s %s" %(Constants.ARDUINOSTATUS_ULTRASOUND_COLLISION,sensor_ID))
+    def setup_failure(self, module):
+        self.logger.critical("SETUP-FAILURE:%s" % module)
+
+    def setup_message(self, message):
+        self.logger.info("SETUP-MESSAGE:%s" % message)
+
+    def setup_errorcode(self, code):
+        self.logger.error("ERROR-CODE:%s" % code)
+
+    def data_motor_speeds(self, speeds):
+        self.logger.debug("MOTOR-SPEED:%s" % (";".join(speeds)))
+
+    def data_gyromag(self, gyro, mag, heading):
+        self.logger.debug("GYRO-MAG:%s;%s;%s" % (";".join(gyro), ';'.join(mag), heading))
+
+    def data_ultrasound(self, mode, data):
+        self.logger.debug("%s:%s" % (mode, data))
+
+    def data_altitude(self, data):
+        self.logger.debug("ALTITUDE:%s" % data)
+
 
 class IOSLogger:
     def __init__(self):
@@ -37,23 +58,26 @@ class IOSLogger:
         self.logger.addHandler(handler)
 
     def Takeoff(self):
-        logging.info("%s" %(Constants.IOSCOMMAND_TAKEOFF))
+        self.logger.debug("%s" % (Constants.IOSMESSAGE_TAKEOFF))
 
     def Land(self):
-        logging.info("%s" %(Constants.IOSCOMMAND_LAND))
+        self.logger.debug("%s" % (Constants.IOSMESSAGE_LAND))
 
     def Set_Speed(self, speed):
-        logging.info("%s %s"%(Constants.IOSCOMMAND_SETSPEED,speed))
+        self.logger.debug("%s %s" % (Constants.IOSMESSAGE_SETSPEED, speed))
 
     def hover(self, state):
-        logging.info("%s %s"%(Constants.IOSCOMMAND_HOVER,state))
+        self.logger.debug("%s:%s" % (Constants.IOSMESSAGE_HOVER, state))
 
     def altitude_hold(self, state):
-        logging.info("%s %s"%(Constants.IOSCOMMAND_HOLDALTITUDE,state))
-    def set_ypr(self,y,p,r):
-        logging.info("%s %s %s %s"%(Constants.IOSCOMMAND_SETYPR,y,p,r))
-    def error(self,error):
-        logging.info("%s %s"%(Constants.IOSCOMMAND_ERROR,error))
+        self.logger.debug("%s:%s" % (Constants.IOSMESSAGE_HOLDALTITUDE, state))
+
+    def set_ypr(self, ypr):
+        self.logger.debug("%s:%s" % (Constants.IOSMESSAGE_SETYPR, ";".join(ypr)))
+
+    def error(self, error):
+        self.logger.error("%s:%s" % (Constants.IOSMESSAGE_ERROR, error))
+
 
 class PILogger:
     def __init__(self):
@@ -67,7 +91,38 @@ class PILogger:
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
 
-        def set_speed(self, motor_speed ): #int i 0 to 4
-            logging.info("%s %s"%(Constants.PICOMMAND_SETSPEEDS,motor_speed))
-        def error(self , error):
-            logging.info("%s %s"%(Constants.PICOMMAND_ERROR,error))
+    def data_set_speeds(self, motor_speeds):  # int i 0 to 4
+        self.logger.debug("%s:%s" % (Constants.PIMESSAGE_SETSPEEDS, ';'.join(motor_speeds)))
+
+    def state_ultra_mode(self, mode):
+        self.logger.info("%s;%s" % (Constants.PIMESSAGE_ULTRAMODE, mode))
+
+    def data_set_altitude(self,altitude):
+        self.logger.debug("SET_ALTITUDE:"%altitude)
+    def data_set_ypr(self, ypr):
+        self.logger.info("%s:%s" % (Constants.IOSMESSAGE_SETYPR, ";".join(ypr)))
+
+    def state_reset_baro(self):
+        self.logger.info("%s" % Constants.PIMESSAGE_RESETBAROREFERENCE)
+
+    def warn_collision(self, direction, sensor_value):
+        self.logger.critical("COLLISION:%s-%s" % (direction, sensor_value))
+
+    def mode_Takeoff(self):
+        self.logger.info("%s" % (Constants.IOSMESSAGE_TAKEOFF))
+
+    def mode_Land(self):
+        self.logger.info("%s" % (Constants.IOSMESSAGE_LAND))
+
+    def mode_hover(self):
+        self.logger.info("%s" % (Constants.IOSMESSAGE_HOVER))
+
+    def mode_flight(self):
+        self.logger.info("%s" % (Constants.IOSMESSAGE_FLIGHTMODE))
+
+    def mode_altitude_hold(self, state):
+        self.logger.info("%s:%s" % (Constants.IOSMESSAGE_HOLDALTITUDE, state))
+    def error(self,msg):
+        self.logger.error("PROCESSING_ERROR:%s"%msg)
+
+

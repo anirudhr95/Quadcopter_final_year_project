@@ -77,15 +77,17 @@ class PID:
         self.min = min
 
 
-# ypr = {'current': [0.0, 0.0, 0.0],
-#        'desired': [0.0, 20.0, 0.0]}
-# motor_Speeds = [0, 0, 0, 0]
-# a = PID(ypr,motor_Speeds,1,1,2,1,1, min = 1200, max = 2000)
-# print a.compute()
-# ypr['current'][1] = 15.0
-# for i in range(10):
-#     ypr['current'][1] +=1
-#     print a.get_current_reference(), a.compute()
-# for i in range(10):
-#     ypr['current'][1] -=1
-#     print a.get_current_reference(), a.compute()
+if __name__ == "__main__":
+
+    ypr = {'current': [0.0, 0.0, 0.0],
+           'desired': [0.0, 20.0, 0.0]}
+    motor_Speeds = [0, 0, 0, 0]
+    a = PID(ypr,motor_Speeds,1,1,2,1,1, min = 1200, max = 2000)
+    print a.compute()
+    ypr['current'][1] = 15.0
+    for i in range(10):
+        ypr['current'][1] +=1
+        print a.get_current_reference(), a.compute()
+    for i in range(10):
+        ypr['current'][1] -=1
+        print a.get_current_reference(), a.compute()

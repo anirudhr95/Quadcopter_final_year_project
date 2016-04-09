@@ -13,24 +13,24 @@ class Middleware_IOS:
     def parseMessage(self, msg):
         if ':' in msg:
             functionName, params = msg.split(':')
-            if functionName == Constants.IOSCOMMAND_SETSPEED:
+            if functionName == Constants.IOSMESSAGE_SETSPEED:
                 self.quadcopter.set_speed(params)
-            elif functionName == Constants.IOSCOMMAND_SETYPR:
+            elif functionName == Constants.IOSMESSAGE_SETYPR:
                 params = map(lambda x: float(x), params.split(";"))
-                self.quadcopter.set_YPR(params)
+                self.quadcopter.set_YPR_Desired(params)
             else:
                 self.erraneous_message(msg)
 
         else:
             # Message is a single line command
-            if msg == Constants.IOSCOMMAND_HOLDALTITUDE:
-                self.quadcopter.set_Mode_Altitude_Hold()
-            elif msg == Constants.IOSCOMMAND_HOVER:
-                self.quadcopter.set_Mode_Hover()
-            elif msg == Constants.IOSCOMMAND_LAND:
+            if msg == Constants.IOSMESSAGE_HOLDALTITUDE:
+                self.quadcopter.mode_Altitude_Hold_Enable()
+            elif msg == Constants.IOSMESSAGE_HOVER:
+                self.quadcopter.mode_Hover_Enable()
+            elif msg == Constants.IOSMESSAGE_LAND:
                 # TODO Add support for off and on
                 self.quadcopter.land()
-            elif msg == Constants.IOSCOMMAND_TAKEOFF:
+            elif msg == Constants.IOSMESSAGE_TAKEOFF:
                 self.quadcopter.takeoff()
             else:
                 self.erraneous_message(msg)
@@ -60,9 +60,9 @@ class Middleware_Arduino:
         if functionName == Constants.ARDUINOSTATUS_DATA:
             # DATA:Y;P;R;Mx;My;Mz;Mh;Al;U1;U2;U3;U4
             y, p, r, mx, my, mz, mh, al, u1, u2, u3, u4 = params.split(';')
-            self.quadcopter.set_current_ypr([y, p, r])
-            self.quadcopter.set_current_altitude(al)
-            self.quadcopter.set_heading(mh)
+            self.quadcopter.sensor_set_YPR_Current([y, p, r])
+            self.quadcopter.sensor_set_Altitude_Current(al)
+            self.quadcopter.set_Heading(mh)
 
             # TODO Handle Ultrasonic Data
 
