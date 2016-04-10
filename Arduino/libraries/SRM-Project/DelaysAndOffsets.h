@@ -17,9 +17,9 @@ Uncomment the transmission rate to use
 //MID = 2 for every other possible type of message
 //LOW = 1 for every other possible type of message
 */
-// #define GYRO_TRANSMISSION_RATE_HIGH
+#define GYRO_TRANSMISSION_RATE_HIGH
 // #define GYRO_TRANSMISSION_RATE_MID 
-#define GYRO_TRANSMISSION_RATE_LOW
+// #define GYRO_TRANSMISSION_RATE_LOW
 
 // PID
 #define Kp 1
@@ -37,12 +37,12 @@ Uncomment the transmission rate to use
 #define ultra_Offset_D 0
 
 //Gyro
-#define gyro_X_Accel_Offset -3481
-#define gyro_Y_Accel_Offset -974
-#define gyro_Z_Accel_Offset 1612
-#define gyro_X_Offset 60
-#define gyro_Y_Offset -23
-#define gyro_Z_Offset 14
+#define gyro_X_Accel_Offset -3558
+#define gyro_Y_Accel_Offset -946
+#define gyro_Z_Accel_Offset 1629
+#define gyro_X_Offset 56
+#define gyro_Y_Offset -33
+#define gyro_Z_Offset 68
 
 
 #define gyro_limit_pitch_pos 45

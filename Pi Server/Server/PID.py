@@ -40,9 +40,9 @@ class PID:
     def change_output_by(self, val):
         if self.error < 0:
             if self.reverse_direction:
-                self.set_output(self.get_current_output() + val)
-            else:
                 self.set_output(self.get_current_output() - val)
+            else:
+                self.set_output(self.get_current_output() + val)
         else:
             if self.reverse_direction:
                 self.set_output(self.get_current_output() - val)

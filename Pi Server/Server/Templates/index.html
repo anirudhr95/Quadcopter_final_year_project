@@ -9,7 +9,7 @@
 <form target="." method="post">
     <table width="100%">
         <tr>
-            <td>
+            <td width="50%">
                 <input type="submit" name="takeoff" value="TAKEOFF" style="width:100%">
             </td>
             <td>
@@ -18,7 +18,7 @@
 
         </tr>
         <tr>
-            <td>
+            <td width="50%">
                 <input type="submit" name="hover" value="HOVER" style="width:100%">
             </td>
             <td>
@@ -26,17 +26,44 @@
             </td>
         </tr>
         <tr>
+            <td colspan="2"><input type="submit" name="reset_baro" value="Reset Baro" style="width:100%"></td>
+        </tr>
+        <tr>
             <td>
-                <input type="text" name="quad_setSpeed_text" placeholder="Enter Speed" style="width:100%">
+                <input type="number" name="quad_setSpeed_text" placeholder="Enter Speed" style="width:100%">
+            </td>
+            <td>
                 <input type="submit" name="quad_setSpeed" value="Set Speed" style="width:100%">
             </td>
+
+        </tr>
+        <tr>
             <td>
-                <input type="text" name="set_ypr_y" placeholder="Enter Yaw" style="width:100%">
-                <input type="text" name="set_ypr_p" placeholder="Enter Pitch" style="width:100%">
-                <input type="text" name="set_ypr_r" placeholder="Enter Roll" style="width:100%">
+                <input type="number" name="set_ypr_y" placeholder="Enter Yaw" style="width:100%">
+                <input type="number" name="set_ypr_p" placeholder="Enter Pitch" style="width:100%">
+                <input type="number" name="set_ypr_r" placeholder="Enter Roll" style="width:100%">
+
+            </td>
+            <td>
                 <input type="submit" name="set_ypr" value="Set YPR" style="width:100%">
+
+            </td>
+
+
+        </tr>
+        <tr>
+            <td>
+                <input type="number" name="set_kp" placeholder="Kp" style="width:100%">
+                <input type="number" name="set_ki" placeholder="Ki" style="width:100%">
+                <input type="number" name="set_kd" placeholder="Kd" style="width:100%">
+
+            </td>
+            <td>
+                <input type="submit" name="change_pid" value="Change PID Constants" style="width:100%">
             </td>
         </tr>
+
+
 
     </table>
 </form>

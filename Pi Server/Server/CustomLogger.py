@@ -1,9 +1,11 @@
 """
 Logs each kind of input differently
 """
-from logging.handlers import RotatingFileHandler
+import logging
+import logging.config
 import os
-import logging, logging.config
+from logging.handlers import RotatingFileHandler
+
 import Constants
 
 
@@ -14,9 +16,11 @@ class ArduinoLogger:
             Constants.LOG_FORMAT_APP)
         handler = RotatingFileHandler(os.path.join(Constants.LOG_LOCATION_APP, Constants.LOG_FILENAME_APP),
                                       maxBytes=10000000, backupCount=5)
-        handler.setLevel(logging.DEBUG)
+
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
+
+        self.logger.setLevel(logging.DEBUG)
 
     def setup_init(self, module):
         self.logger.info("SETUP-INITIALIZING:%s" % module)
@@ -40,7 +44,10 @@ class ArduinoLogger:
         self.logger.debug("GYRO-MAG:%s;%s;%s" % (";".join(gyro), ';'.join(mag), heading))
 
     def data_ultrasound(self, mode, data):
-        self.logger.debug("%s:%s" % (mode, data))
+        if isinstance(data, list):
+            self.logger.debug("%s:%s" % (mode, ';'.join(str(val) for val in data)))
+        else:
+            self.logger.debug("%s:%s" % (mode, data))
 
     def data_altitude(self, data):
         self.logger.debug("ALTITUDE:%s" % data)
@@ -53,21 +60,26 @@ class IOSLogger:
             Constants.LOG_FORMAT_APP)
         handler = RotatingFileHandler(os.path.join(Constants.LOG_LOCATION_APP, Constants.LOG_FILENAME_APP),
                                       maxBytes=10000000, backupCount=5)
-        handler.setLevel(logging.DEBUG)
+
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
 
-    def Takeoff(self):
+        self.logger.setLevel(logging.DEBUG)
+
+    def takeoff(self):
         self.logger.debug("%s" % (Constants.IOSMESSAGE_TAKEOFF))
 
-    def Land(self):
+    def land(self):
         self.logger.debug("%s" % (Constants.IOSMESSAGE_LAND))
 
-    def Set_Speed(self, speed):
+    def set_Speed(self, speed):
         self.logger.debug("%s %s" % (Constants.IOSMESSAGE_SETSPEED, speed))
 
-    def hover(self, state):
-        self.logger.debug("%s:%s" % (Constants.IOSMESSAGE_HOVER, state))
+    def hover(self):
+        self.logger.debug("%s" % (Constants.IOSMESSAGE_HOVER))
+
+    def flight(self):
+        self.logger.debug("%s" % (Constants.IOSMESSAGE_FLIGHTMODE))
 
     def altitude_hold(self, state):
         self.logger.debug("%s:%s" % (Constants.IOSMESSAGE_HOLDALTITUDE, state))
@@ -87,9 +99,11 @@ class PILogger:
             Constants.LOG_FORMAT_APP)
         handler = RotatingFileHandler(os.path.join(Constants.LOG_LOCATION_APP, Constants.LOG_FILENAME_APP),
                                       maxBytes=10000000, backupCount=5)
-        handler.setLevel(logging.DEBUG)
+
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
+
+        self.logger.setLevel(logging.DEBUG)
 
     def data_set_speeds(self, motor_speeds):  # int i 0 to 4
         self.logger.debug("%s:%s" % (Constants.PIMESSAGE_SETSPEEDS, ';'.join(str(val) for val in motor_speeds)))
@@ -97,8 +111,9 @@ class PILogger:
     def state_ultra_mode(self, mode):
         self.logger.info("%s;%s" % (Constants.PIMESSAGE_ULTRAMODE, mode))
 
-    def data_set_altitude(self,altitude):
-        self.logger.debug("SET_ALTITUDE:"%altitude)
+    def data_set_altitude(self, altitude):
+        self.logger.debug("SET_ALTITUDE:%s" % altitude)
+
     def data_set_ypr(self, ypr):
         self.logger.info("%s:%s" % (Constants.IOSMESSAGE_SETYPR, ";".join(str(val) for val in ypr)))
 
@@ -122,7 +137,6 @@ class PILogger:
 
     def mode_altitude_hold(self, state):
         self.logger.info("%s:%s" % (Constants.IOSMESSAGE_HOLDALTITUDE, state))
-    def error(self,msg):
-        self.logger.error("PROCESSING_ERROR:%s"%msg)
 
-
+    def error(self, msg):
+        self.logger.error("PROCESSING_ERROR:%s" % msg)

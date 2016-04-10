@@ -70,6 +70,7 @@ POSSIBLE INPUTS :
 3) ULTRA_MODE:MODE   -> 0,1,2,3 (0:ALL,1:FR,2:FL,3:TOP)
 */
 		input = Serial.readString();
+    
 		if(input.startsWith("MOTOR_SPEEDS")){
 //      M:50;30;20;10
 			first_position = input.indexOf(';');
@@ -82,6 +83,9 @@ POSSIBLE INPUTS :
      refreshMotors(MotorSpeeds);
 
 		}
+   if(input.startsWith("A:")){
+      motor_Set_Speed(input.substring(input.indexOf(':')+1).toInt());
+   }
 		else if(input.startsWith("RESET_BARO")){
 //      RESET BAROMETER
 			baro_setBaseline();
