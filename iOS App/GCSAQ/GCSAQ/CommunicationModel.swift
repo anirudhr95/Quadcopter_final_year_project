@@ -1,0 +1,18 @@
+//
+//  CommunicationModel.swift
+//  GCSAQ
+//
+//  Created by Shyam Ravikumar on 11/04/16.
+//  Copyright © 2016 Shyam Ravikumar. All rights reserved.
+//
+
+import Foundation
+
+//IOSMESSAGE_TAKEOFF = 'TAKEOFF'
+//IOSMESSAGE_LAND = 'LAND'
+//IOSMESSAGE_SETSPEED = 'SET_SPEED'
+//IOSMESSAGE_HOVER = 'MODE_HOVER'
+//IOSMESSAGE_HOLDALTITUDE = 'MODE_ALTITUDE_HOLD'
+//IOSMESSAGE_SETYPR = 'SET_YPR'
+//IOSMESSAGE_ERROR = "ERROR"
+//IOSMESSAGE_FLIGHTMODE = "MODE_FLIGHT"

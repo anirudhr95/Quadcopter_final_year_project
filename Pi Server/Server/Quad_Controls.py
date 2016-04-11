@@ -191,6 +191,7 @@ class Quadcopter:
     def __init__(self, pi_logger):
         self.logger = pi_logger
         self.should_hold_altitude = False
+        self.has_taken_off = False
         self.should_change_yaw = False
         self.__is_mode_Hover__ = False
 
@@ -223,10 +224,12 @@ class Quadcopter:
     def takeoff(self):
         print '\n\nENTERED TAKEOFF'
         self.logger.mode_Takeoff()
+        self.has_taken_off = True
         self.mode_Hover_Enable(Constants.TAKEOFF_PREFERED_ALTITUDE)
 
     def land(self):
         self.logger.mode_Land()
+        self.has_taken_off = False
         self.mode_Altitude_Hold_Enable(0.0)
 
 
@@ -257,11 +260,12 @@ class Quadcopter:
         """
         # self.refresh()
 
-
-        self.PID_YAW_FR.compute()
-        self.PID_YAW_FL.compute()
-        self.PID_YAW_BR.compute()
-        self.PID_YAW_BL.compute()
+        if not self.has_taken_off:
+            return self.motor_Speeds
+        # self.PID_YAW_FR.compute()
+        # self.PID_YAW_FL.compute()
+        # self.PID_YAW_BR.compute()
+        # self.PID_YAW_BL.compute()
 
 
         self.PID_PITCH_FR.compute()

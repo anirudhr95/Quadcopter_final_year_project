@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     info = ServiceInfo("_http._tcp.local.",
                        "Paul's Test Web Site._http._tcp.local.",
-                       socket.inet_aton("192.168.0.108 "), 5000, 0, 0,
+                       "192.168.0.108", 5000, 0, 0,
                        desc, "ash-2.local.")
 
     zeroconf = Zeroconf()

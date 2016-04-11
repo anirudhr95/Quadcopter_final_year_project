@@ -12,6 +12,7 @@ class Middleware_IOS:
         Doesnt require a message handler, because the quadcopter_worker thread handles sending messages to arduino
         :param quadcopter:
         """
+
         self.quadcopter = quadcopter
         self.logger = IOSLogger()
 
@@ -78,37 +79,41 @@ class Middleware_Arduino:
 
     def __init__(self, quadcopter):
         self.quadcopter = quadcopter
-        self.logger = ArduinoLogger
+        self.logger = ArduinoLogger()
 
     def parseMessage(self, msg):
+        try:
+            functionName, params = msg.split(':')
+            if functionName == Constants.ARDUINOMESSAGE_GYRO:
+                # DATA:Y;P;R;Mx;My;Mz;Mh
 
-        functionName, params = msg.split(':')
-        if functionName == Constants.ARDUINOMESSAGE_GYRO:
-            # DATA:Y;P;R;Mx;My;Mz;Mh
-            y, p, r, mx, my, mz, heading, = map(lambda x: float(x), params.split(';'))
-            self.quadcopter.sensor_set_YPR_Current([y, p, r])
+                y, p, r, mx, my, mz, heading, = map(lambda x: float(x), params.split(';'))
+                self.logger.data_gyromag(gyro=[y,p,r],heading=heading,mag=[mx,my,mz])
+                self.quadcopter.sensor_set_YPR_Current([y, p, r])
 
-        elif functionName == Constants.ARDUINOMESSAGE_ALTITUDE:
-            self.quadcopter.sensor_set_Altitude_Current(float(params))
-        elif functionName == Constants.ARDUINOMESSAGE_MOTOR:
-            self.logger.data_motor_speeds(params)
-        elif functionName == Constants.ARDUINOSTATUS_SETUP_INITIALIZING:
-            self.logger.setup_init(params)
-        elif functionName == Constants.ARDUINOSTATUS_SETUP_SUCCESS:
-            self.logger.setup_success(params)
-        elif functionName == Constants.ARDUINOSTATUS_SETUP_FAILURE:
-            self.logger.setup_failure(params)
-        elif functionName == Constants.ARDUINOSTATUS_SETUP_ERRORCODE:
-            self.logger.setup_errorcode(params)
-        elif functionName == Constants.ARDUINOSTATUS_SETUP_MESSAGE:
-            self.logger.setup_message(params)
-        elif functionName == Constants.ARDUINOSTATUS_ULTRA_F:
-            self.logger.data_ultrasound(functionName, params)
-        elif functionName == Constants.ARDUINOSTATUS_ULTRA_ALL:
-            self.logger.data_ultrasound(functionName, params)
-        elif functionName == Constants.ARDUINOSTATUS_ULTRA_L:
-            self.logger.data_ultrasound(functionName, params)
-        elif functionName == Constants.ARDUINOSTATUS_ULTRA_R:
-            self.logger.data_ultrasound(functionName, params)
-        elif functionName == Constants.ARDUINOSTATUS_ULTRA_T:
-            self.logger.data_ultrasound(functionName, params)
+            elif functionName == Constants.ARDUINOMESSAGE_ALTITUDE:
+                self.quadcopter.sensor_set_Altitude_Current(float(params))
+            elif functionName == Constants.ARDUINOMESSAGE_MOTOR:
+                self.logger.data_motor_speeds(params)
+            elif functionName == Constants.ARDUINOSTATUS_SETUP_INITIALIZING:
+                self.logger.setup_init(params)
+            elif functionName == Constants.ARDUINOSTATUS_SETUP_SUCCESS:
+                self.logger.setup_success(params)
+            elif functionName == Constants.ARDUINOSTATUS_SETUP_FAILURE:
+                self.logger.setup_failure(params)
+            elif functionName == Constants.ARDUINOSTATUS_SETUP_ERRORCODE:
+                self.logger.setup_errorcode(params)
+            elif functionName == Constants.ARDUINOSTATUS_SETUP_MESSAGE:
+                self.logger.setup_message(params)
+            elif functionName == Constants.ARDUINOSTATUS_ULTRA_F:
+                self.logger.data_ultrasound(functionName, params)
+            elif functionName == Constants.ARDUINOSTATUS_ULTRA_ALL:
+                self.logger.data_ultrasound(functionName, params)
+            elif functionName == Constants.ARDUINOSTATUS_ULTRA_L:
+                self.logger.data_ultrasound(functionName, params)
+            elif functionName == Constants.ARDUINOSTATUS_ULTRA_R:
+                self.logger.data_ultrasound(functionName, params)
+            elif functionName == Constants.ARDUINOSTATUS_ULTRA_T:
+                self.logger.data_ultrasound(functionName, params)
+        except ValueError as e:
+            print e

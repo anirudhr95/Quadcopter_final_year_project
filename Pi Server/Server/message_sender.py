@@ -1,3 +1,5 @@
+import serial
+
 import Constants
 
 
@@ -5,7 +7,7 @@ class Message_sender:
     def __init__(self, socketio, serial_port):
         self.__message_queue__ = []
         self.socketio = socketio
-        self.serial_port = serial_port
+        self.serial_port = serial.Serial('/dev/cu.usbmodem1421', 115200)
 
     def __send_msg_to_ios__(self, msg):
         print "SENDING '%s' To IOS " % str(msg)

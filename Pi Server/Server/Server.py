@@ -1,3 +1,5 @@
+import threading
+
 async_mode = None
 
 if async_mode is None:
@@ -61,7 +63,7 @@ e = None
 middleware_ios = None
 middleware_arduino = None
 message_sender = None
-
+firstdata = False
 
 def read_from_port(serial_port=None):
     """
@@ -69,11 +71,16 @@ def read_from_port(serial_port=None):
     :param event: Thread.Event to call upon reading data froms serial (Used by IOSSenderThread)
     :param serial_port: serial.Serial() variable specifying serial port of arduino decice
     """
-    # serial_port = serial.Serial('/dev/cu.usbmodem1421', 115200)
+    serial_port = serial.Serial('/dev/cu.usbmodem1421', 115200)
     print "SERIAL WORKER THREAD STARTED with object (%s)" % serial_port
+    global firstdata
     while True:
         reading = serial_port.readline().decode("Utf-8").rstrip()
+        if not firstdata:
+            e.set()
+            firstdata = True
         if reading:
+            print reading
             middleware_arduino.parseMessage(reading)
 
 
@@ -86,9 +93,15 @@ def speed_control():
     import time
     print "PID CONTROL THREAD STARTED"
     speeds, oldspeeds = [0, 0, 0, 0], [0, 0, 0, 0]
+    global e
+    e.wait()
+    e.clear()
+    time.sleep(20)
+    print 'READY TO TAKEOFF'
     while True:
         oldspeeds = speeds[:]
         # print 'BEFORE REFRESH : %s'%(quadcopter)
+
         speeds = quadcopter.refresh()
 
         for i in range(len(speeds)):
@@ -152,6 +165,8 @@ def initialSetup():
 
     middleware_arduino = Middleware_Arduino(quadcopter)
     middleware_ios = Middleware_IOS(quadcopter)
+    global e
+    e= threading.Event()
 
     # TODO Implement Logging
     if Constants.ENABLE_FLASK_LOGGING:
@@ -179,8 +194,7 @@ def initialSetup():
         #     print("FAILED TO CONNECT TO SERIAL PORT : %s"%msg)
         thread = Thread(name="Serial Thread",
                         target=read_from_port,
-                        kwargs={'event': e,
-                                'serial_port': serial_port}
+                        kwargs={'serial_port': serial_port}
                         )
         thread.daemon = True
         thread.start()

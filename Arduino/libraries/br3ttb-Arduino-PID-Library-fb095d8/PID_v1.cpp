@@ -69,7 +69,7 @@ bool PID::Compute()
       /*Remember some variables for next time*/
       lastInput = input;
       lastTime = now;
-	  return true;
+	  return true; 
    }
    else return false;
 }
