@@ -1,0 +1,16 @@
+PODS:
+  - BonjourWeb (0.1.0)
+  - Socket.IO-Client-Swift (6.1.0)
+  - SVProgressHUD (2.0.3)
+
+DEPENDENCIES:
+  - BonjourWeb
+  - Socket.IO-Client-Swift
+  - SVProgressHUD
+
+SPEC CHECKSUMS:
+  BonjourWeb: c19054f9bba2e74a454659935e96d726663b4a8f
+  Socket.IO-Client-Swift: b0ebbd80f039992bad6d0f74730b5a540d979520
+  SVProgressHUD: b0830714205bea1317ea1a2ebc71e5633af334d4
+
+COCOAPODS: 0.39.0

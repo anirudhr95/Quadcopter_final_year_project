@@ -7,14 +7,16 @@ class Message_sender:
     def __init__(self, socketio, serial_port):
         self.__message_queue__ = []
         self.socketio = socketio
-        self.serial_port = serial.Serial('/dev/cu.usbmodem1421', 115200)
+        if Constants.ENABLE_SERIAL:
+            self.serial_port = serial.Serial('/dev/cu.usbmodem1421', 115200)
 
     def __send_msg_to_ios__(self, msg):
         print "SENDING '%s' To IOS " % str(msg)
         self.socketio.emit('message', msg, namespace=Constants.SOCKETIO_NAMESPACE)
 
     def __send_msg_to_arduino__(self, msg):
-        self.serial_port.write(msg)
+        if Constants.ENABLE_SERIAL:
+            self.serial_port.write(msg)
 
     def toIOS_error(self, message):
         self.__send_msg_to_ios__({

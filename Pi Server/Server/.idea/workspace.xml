@@ -2,29 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="14a6cb86-3ccf-448f-8373-ff337c3ac330" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../iOS App/GCSAQ/GCSAQ.xcodeproj/project.xcworkspace/xcuserdata/Shyam.xcuserdatad/UserInterfaceState.xcuserstate" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../iOS App/GCSAQ/GCSAQ.xcodeproj/project.pbxproj" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../iOS App/GCSAQ/GCSAQ.xcodeproj/project.xcworkspace/contents.xcworkspacedata" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../iOS App/GCSAQ/GCSAQ.xcodeproj/xcuserdata/Shyam.xcuserdatad/xcschemes/GCSAQ.xcscheme" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../iOS App/GCSAQ/GCSAQ.xcodeproj/xcuserdata/Shyam.xcuserdatad/xcschemes/xcschememanagement.plist" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../iOS App/GCSAQ/GCSAQ/AppDelegate.swift" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../iOS App/GCSAQ/GCSAQ/Assets.xcassets/AppIcon.appiconset/Contents.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../iOS App/GCSAQ/GCSAQ/Base.lproj/LaunchScreen.storyboard" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../iOS App/GCSAQ/GCSAQ/Base.lproj/Main.storyboard" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../iOS App/GCSAQ/GCSAQ/BonjourModel.swift" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../iOS App/GCSAQ/GCSAQ/CommunicationModel.swift" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../iOS App/GCSAQ/GCSAQ/Info.plist" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../iOS App/GCSAQ/GCSAQ/ViewController.swift" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../iOS App/Helpers/browseBonjour/NSBDelegate.swift" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../iOS App/Quadcopter/Quadcopter.xcworkspace/xcuserdata/Shyam.xcuserdatad/UserInterfaceState.xcuserstate" afterPath="$PROJECT_DIR$/../../iOS App/Quadcopter/Quadcopter.xcworkspace/xcuserdata/Shyam.xcuserdatad/UserInterfaceState.xcuserstate" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Arduino/libraries/br3ttb-Arduino-PID-Library-fb095d8/PID_v1.cpp" afterPath="$PROJECT_DIR$/../../Arduino/libraries/br3ttb-Arduino-PID-Library-fb095d8/PID_v1.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Helpers/zeroconf/BonjourServiceRegister.py" afterPath="$PROJECT_DIR$/../Helpers/zeroconf/BonjourServiceRegister.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../iOS App/Helpers/browseBonjour/browseBonjour.xcodeproj/project.xcworkspace/xcuserdata/Shyam.xcuserdatad/UserInterfaceState.xcuserstate" afterPath="$PROJECT_DIR$/../../iOS App/Helpers/browseBonjour/browseBonjour.xcodeproj/project.xcworkspace/xcuserdata/Shyam.xcuserdatad/UserInterfaceState.xcuserstate" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bonjour.py" afterPath="$PROJECT_DIR$/Bonjour.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Constants.py" afterPath="$PROJECT_DIR$/Constants.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Quad_Controls.py" afterPath="$PROJECT_DIR$/Quad_Controls.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Server.py" afterPath="$PROJECT_DIR$/Server.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/message_sender.py" afterPath="$PROJECT_DIR$/message_sender.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/middleware.py" afterPath="$PROJECT_DIR$/middleware.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../iOS App/Helpers/browseBonjour/browseBonjour/ViewController.swift" afterPath="$PROJECT_DIR$/../../iOS App/Helpers/browseBonjour/browseBonjour/ViewController.swift" />
     </list>
     <ignored path="Server.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -41,7 +24,7 @@
     <SUITE FILE_PATH="coverage/Server$Serial_Comm.coverage" NAME="Serial_Comm Coverage Results" MODIFIED="1459783773612" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Server$PID.coverage" NAME="PID Coverage Results" MODIFIED="1459886143452" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Server$Quad_Controls.coverage" NAME="Quad_Controls Coverage Results" MODIFIED="1460312878153" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Server$Server.coverage" NAME="Server Coverage Results" MODIFIED="1460372326362" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/Server$Server.coverage" NAME="Server Coverage Results" MODIFIED="1460387746143" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -51,14 +34,14 @@
     <favorites_list name="Server" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.39435413">
+    <splitter split-orientation="horizontal" split-proportion="0.546621">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="Server.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="Server.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Server.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="145">
-                  <caret line="99" column="13" selection-start-line="99" selection-start-column="13" selection-end-line="99" selection-end-column="13" />
+                <state relative-caret-position="-905">
+                  <caret line="104" column="23" selection-start-line="104" selection-start-column="23" selection-end-line="104" selection-end-column="23" />
                   <folding>
                     <element signature="e#6185#6211#0" expanded="false" />
                   </folding>
@@ -66,24 +49,24 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="message_sender.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/message_sender.py">
+          <file leaf-file-name="Bonjour.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/Bonjour.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="105">
-                  <caret line="9" column="29" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
-                  <folding>
-                    <element signature="e#0#13#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="120">
+                  <caret line="19" column="61" selection-start-line="19" selection-start-column="61" selection-end-line="19" selection-end-column="61" />
+                  <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="threading.py" pinned="false" current-in-tab="false">
-            <entry file="file://$USER_HOME$/anaconda/envs/quadcopter/lib/python2.7/threading.py">
+          <file leaf-file-name="message_sender.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/message_sender.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="127">
-                  <caret line="753" column="0" selection-start-line="753" selection-start-column="0" selection-end-line="753" selection-end-column="0" />
-                  <folding />
+                <state relative-caret-position="270">
+                  <caret line="18" column="12" selection-start-line="18" selection-start-column="12" selection-end-line="18" selection-end-column="12" />
+                  <folding>
+                    <element signature="e#0#13#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -96,16 +79,6 @@
                   <folding>
                     <element signature="e#44#58#0" expanded="true" />
                   </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Constants.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/Constants.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="307">
-                  <caret line="77" column="0" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
-                  <folding />
                 </state>
               </provider>
             </entry>
@@ -124,11 +97,21 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="Constants.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/Constants.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="345">
+                  <caret line="27" column="20" selection-start-line="27" selection-start-column="20" selection-end-line="27" selection-end-column="20" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
           <file leaf-file-name="Quad_Controls.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Quad_Controls.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1243">
-                  <caret line="268" column="0" selection-start-line="268" selection-start-column="0" selection-end-line="268" selection-end-column="0" />
+                <state relative-caret-position="240">
+                  <caret line="198" column="30" selection-start-line="198" selection-start-column="30" selection-end-line="198" selection-end-column="30" />
                   <folding>
                     <element signature="e#0#16#0" expanded="true" />
                     <element signature="e#205#9781#0" expanded="false" />
@@ -149,10 +132,10 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="middleware.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="middleware.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/middleware.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="307">
+                <state relative-caret-position="1770">
                   <caret line="118" column="12" selection-start-line="118" selection-start-column="12" selection-end-line="118" selection-end-column="12" />
                   <folding>
                     <element signature="e#0#16#0" expanded="true" />
@@ -188,18 +171,18 @@
         <option value="$PROJECT_DIR$/backup.py" />
         <option value="$PROJECT_DIR$/GY_86.py" />
         <option value="$PROJECT_DIR$/reference_quad_controls.cpp" />
-        <option value="$PROJECT_DIR$/Bonjour.py" />
         <option value="$PROJECT_DIR$/PID.py" />
         <option value="$PROJECT_DIR$/ios_send.py" />
         <option value="$PROJECT_DIR$/message_handler.py" />
         <option value="$PROJECT_DIR$/pi_send.py" />
         <option value="$PROJECT_DIR$/CustomLogger.py" />
         <option value="$PROJECT_DIR$/Templates/index.html" />
-        <option value="$PROJECT_DIR$/message_sender.py" />
-        <option value="$PROJECT_DIR$/Constants.py" />
         <option value="$PROJECT_DIR$/Quad_Controls.py" />
         <option value="$PROJECT_DIR$/Server.py" />
         <option value="$PROJECT_DIR$/middleware.py" />
+        <option value="$PROJECT_DIR$/message_sender.py" />
+        <option value="$PROJECT_DIR$/Constants.py" />
+        <option value="$PROJECT_DIR$/Bonjour.py" />
       </list>
     </option>
   </component>
@@ -610,7 +593,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891566" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.50721157" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21274039" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -887,13 +870,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Bonjour.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="23" column="38" selection-start-line="23" selection-start-column="38" selection-end-line="23" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/anaconda/envs/quadcopter/lib/python2.7/ntpath.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -951,28 +927,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Constants.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="307">
-          <caret line="77" column="0" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/message_sender.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="9" column="29" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Quad_Controls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1243">
-          <caret line="268" column="0" selection-start-line="268" selection-start-column="0" selection-end-line="268" selection-end-column="0" />
+        <state relative-caret-position="240">
+          <caret line="198" column="30" selection-start-line="198" selection-start-column="30" selection-end-line="198" selection-end-column="30" />
           <folding>
             <element signature="e#0#16#0" expanded="true" />
             <element signature="e#205#9781#0" expanded="false" />
@@ -982,23 +940,49 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Server.py">
+    <entry file="file://$PROJECT_DIR$/message_sender.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="145">
-          <caret line="99" column="13" selection-start-line="99" selection-start-column="13" selection-end-line="99" selection-end-column="13" />
+        <state relative-caret-position="270">
+          <caret line="18" column="12" selection-start-line="18" selection-start-column="12" selection-end-line="18" selection-end-column="12" />
           <folding>
-            <element signature="e#6185#6211#0" expanded="false" />
+            <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/middleware.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="307">
+        <state relative-caret-position="1770">
           <caret line="118" column="12" selection-start-line="118" selection-start-column="12" selection-end-line="118" selection-end-column="12" />
           <folding>
             <element signature="e#0#16#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Server.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-905">
+          <caret line="104" column="23" selection-start-line="104" selection-start-column="23" selection-end-line="104" selection-end-column="23" />
+          <folding>
+            <element signature="e#6185#6211#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Constants.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="27" column="20" selection-start-line="27" selection-start-column="20" selection-end-line="27" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Bonjour.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="19" column="61" selection-start-line="19" selection-start-column="61" selection-end-line="19" selection-end-column="61" />
+          <folding />
         </state>
       </provider>
     </entry>

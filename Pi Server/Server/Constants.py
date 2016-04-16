@@ -4,8 +4,8 @@ import socket
 ENABLE_FLASK_LOGGING = False
 ENABLE_FLASK_DEBUG_MODE = True
 ENABLE_BONJOUR_REGISTER = True
-ENABLE_SERIAL = True
-ENABLE_PID = True
+ENABLE_SERIAL = False
+ENABLE_PID = False
 
 # SOCKET-IO
 SOCKETIO_NAMESPACE = '/test'
@@ -25,7 +25,7 @@ LOG_FORMAT_APP = "%(asctime)s %(name)s %(levelname)s : %(message)s"
 # BONJOUR SERVICE INFO
 
 BONJOUR_TYPE = "_http._tcp.local."
-BONJOUR_NAME = "quadcopter bonjour service"
+BONJOUR_NAME = "quad"
 BONJOUR_DESC = {'Project_By': 'Shyam, Jo, Anirudh, Kaushik'}
 BONJOUR_SERVICE_NAME = "dont-have-a-server-socool.local."
 BONJOUR_REPLACEMENT_STATICIP = "0.0.0.0"

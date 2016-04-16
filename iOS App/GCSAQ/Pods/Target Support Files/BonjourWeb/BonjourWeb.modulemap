@@ -1,0 +1,6 @@
+framework module BonjourWeb {
+  umbrella header "BonjourWeb-umbrella.h"
+
+  export *
+  module * { export * }
+}

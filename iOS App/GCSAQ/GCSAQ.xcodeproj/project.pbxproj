@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		16108691F0A08A24C1A1D0F0 /* Pods_GCSAQ.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC591D821C884D624E98B243 /* Pods_GCSAQ.framework */; };
+		523D13751CBD616500733637 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 523D13741CBD616500733637 /* art.scnassets */; };
+		523D13791CBD66B000733637 /* OldViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523D13781CBD66B000733637 /* OldViewController.swift */; };
 		52E1473D1CBB882000F5CC9F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E1473C1CBB882000F5CC9F /* AppDelegate.swift */; };
 		52E1473F1CBB882000F5CC9F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E1473E1CBB882000F5CC9F /* ViewController.swift */; };
 		52E147421CBB882000F5CC9F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52E147401CBB882000F5CC9F /* Main.storyboard */; };
@@ -17,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		523D13741CBD616500733637 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
+		523D13781CBD66B000733637 /* OldViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OldViewController.swift; sourceTree = "<group>"; };
 		52E147391CBB882000F5CC9F /* GCSAQ.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GCSAQ.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E1473C1CBB882000F5CC9F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		52E1473E1CBB882000F5CC9F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -26,6 +31,9 @@
 		52E147481CBB882000F5CC9F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52E1474E1CBB88DE00F5CC9F /* BonjourModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BonjourModel.swift; sourceTree = "<group>"; };
 		52E147501CBB88F700F5CC9F /* CommunicationModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunicationModel.swift; sourceTree = "<group>"; };
+		53AF6FE24AE017BBDFFC1800 /* Pods-GCSAQ.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GCSAQ.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GCSAQ/Pods-GCSAQ.debug.xcconfig"; sourceTree = "<group>"; };
+		BC591D821C884D624E98B243 /* Pods_GCSAQ.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GCSAQ.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1BF25FB0F532C317D9F5281 /* Pods-GCSAQ.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GCSAQ.release.xcconfig"; path = "Pods/Target Support Files/Pods-GCSAQ/Pods-GCSAQ.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,17 +41,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16108691F0A08A24C1A1D0F0 /* Pods_GCSAQ.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		523D137A1CBD672000733637 /* Reference Files */ = {
+			isa = PBXGroup;
+			children = (
+				52E1473C1CBB882000F5CC9F /* AppDelegate.swift */,
+				523D13781CBD66B000733637 /* OldViewController.swift */,
+			);
+			name = "Reference Files";
+			sourceTree = "<group>";
+		};
 		52E147301CBB882000F5CC9F = {
 			isa = PBXGroup;
 			children = (
 				52E1473B1CBB882000F5CC9F /* GCSAQ */,
 				52E1473A1CBB882000F5CC9F /* Products */,
+				FB027EE8F4A4743B069D3BEE /* Pods */,
+				7C25B795B18281BD49DB4747 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,9 +78,10 @@
 		52E1473B1CBB882000F5CC9F /* GCSAQ */ = {
 			isa = PBXGroup;
 			children = (
-				52E1473C1CBB882000F5CC9F /* AppDelegate.swift */,
+				523D137A1CBD672000733637 /* Reference Files */,
 				52E1473E1CBB882000F5CC9F /* ViewController.swift */,
 				52E147401CBB882000F5CC9F /* Main.storyboard */,
+				523D13741CBD616500733637 /* art.scnassets */,
 				52E147431CBB882000F5CC9F /* Assets.xcassets */,
 				52E147451CBB882000F5CC9F /* LaunchScreen.storyboard */,
 				52E147481CBB882000F5CC9F /* Info.plist */,
@@ -70,6 +91,23 @@
 			path = GCSAQ;
 			sourceTree = "<group>";
 		};
+		7C25B795B18281BD49DB4747 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BC591D821C884D624E98B243 /* Pods_GCSAQ.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FB027EE8F4A4743B069D3BEE /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				53AF6FE24AE017BBDFFC1800 /* Pods-GCSAQ.debug.xcconfig */,
+				D1BF25FB0F532C317D9F5281 /* Pods-GCSAQ.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -77,9 +115,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 52E1474B1CBB882000F5CC9F /* Build configuration list for PBXNativeTarget "GCSAQ" */;
 			buildPhases = (
+				8A6171A95595788EBB58EFA0 /* Check Pods Manifest.lock */,
 				52E147351CBB882000F5CC9F /* Sources */,
 				52E147361CBB882000F5CC9F /* Frameworks */,
 				52E147371CBB882000F5CC9F /* Resources */,
+				B22287BADCCF8ABCA8B4C4E1 /* Embed Pods Frameworks */,
+				9D8A312E256943A480D4ED7B /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -130,12 +171,61 @@
 			buildActionMask = 2147483647;
 			files = (
 				52E147471CBB882000F5CC9F /* LaunchScreen.storyboard in Resources */,
+				523D13751CBD616500733637 /* art.scnassets in Resources */,
 				52E147441CBB882000F5CC9F /* Assets.xcassets in Resources */,
 				52E147421CBB882000F5CC9F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		8A6171A95595788EBB58EFA0 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		9D8A312E256943A480D4ED7B /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GCSAQ/Pods-GCSAQ-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B22287BADCCF8ABCA8B4C4E1 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GCSAQ/Pods-GCSAQ-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		52E147351CBB882000F5CC9F /* Sources */ = {
@@ -145,6 +235,7 @@
 				52E1473F1CBB882000F5CC9F /* ViewController.swift in Sources */,
 				52E1474F1CBB88DE00F5CC9F /* BonjourModel.swift in Sources */,
 				52E147511CBB88F700F5CC9F /* CommunicationModel.swift in Sources */,
+				523D13791CBD66B000733637 /* OldViewController.swift in Sources */,
 				52E1473D1CBB882000F5CC9F /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -258,6 +349,7 @@
 		};
 		52E1474C1CBB882000F5CC9F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 53AF6FE24AE017BBDFFC1800 /* Pods-GCSAQ.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = GCSAQ/Info.plist;
@@ -269,6 +361,7 @@
 		};
 		52E1474D1CBB882000F5CC9F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1BF25FB0F532C317D9F5281 /* Pods-GCSAQ.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = GCSAQ/Info.plist;
@@ -297,6 +390,7 @@
 				52E1474D1CBB882000F5CC9F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
