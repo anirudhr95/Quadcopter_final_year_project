@@ -8,30 +8,6 @@
 
 import Foundation
 import SocketIOClientSwift
-//IOSMESSAGE_TAKEOFF = 'TAKEOFF'
-//IOSMESSAGE_LAND = 'LAND'
-//IOSMESSAGE_SETSPEED = 'SET_SPEED'
-//IOSMESSAGE_HOVER = 'MODE_HOVER'
-//IOSMESSAGE_HOLDALTITUDE = 'MODE_ALTITUDE_HOLD'
-//IOSMESSAGE_SETYPR = 'SET_YPR'
-//IOSMESSAGE_ERROR = "ERROR"
-//IOSMESSAGE_FLIGHTMODE = "MODE_FLIGHT"
-
-struct Commands {
-	let takeoff = "TAKEOFF"
-	let land = "LAND"
-	let setSpeed = "SET_SPEED:%d"
-	let hover = "MODE_HOVER"
-	let holdAltitude = "MODE_ALTITUDE_HOLD:%d"
-	let setYPR = "SET_YPR:%f%f%f"
-	let flightMode = "MODE_FLIGHT"
-	let error = "ERROR:%@"
-}
-struct Events {
-	let command = "message"
-	let message = "message"
-	let ready = "ready"
-}
 class Communicator {
 	let socketio:SocketIOClient
 	let path: String = "/test/"
@@ -44,7 +20,7 @@ class Communicator {
 		
 		self.socketHandlers()
 		socketio.connect()
-		
+		print("COMPLETE")
 		 
 		
 	}
@@ -52,10 +28,15 @@ class Communicator {
 		socketio.on("connect"){
 			[weak self] data,ack in
 			print("Connected")
+			let notif = NSNotification(name: "connected", object: nil)
+			NSNotificationCenter.defaultCenter().postNotification(notif)
+			
 		}
 		socketio.on("disconnect"){
 			[weak self] data,ack in
 			print("Disconnected")
+			let notif = NSNotification(name: "disconnected", object: nil)
+			NSNotificationCenter.defaultCenter().postNotification(notif)
 		}
 		socketio.on(self.event.message){
 			[weak self] data,ack in

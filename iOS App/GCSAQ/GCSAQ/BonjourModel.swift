@@ -18,7 +18,8 @@ class Bonjour : UIViewController, BonjourBrowserDelegate {
 	var browser : BonjourBrowser!
 	let BType : String = "_http._tcp"
 	let BDomain : String = "local"
-	var ip : String = ""
+	var ip : String?
+	var port: Int = 5000
 	let dictKeys = dictVals()
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -27,25 +28,28 @@ class Bonjour : UIViewController, BonjourBrowserDelegate {
 		self.view.addSubview(self.browser.view)
 		
 	}
-	func copyStringFromDict(dict:Dictionary<String,NSData>, which:String) ->String {
+	func copyStringFromDict(dict:Dictionary<String,NSData>, which:String) ->String? {
 		let data:NSData? = dict[which]
 		if(data != nil){
-			return String(data)
+			return String(data: data!, encoding: NSUTF8StringEncoding)
 		}
-		else{
-			return ""
-		}
+		
+		return nil
+		
 	}
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
 	}
 	@objc func bonjourBrowser(browser: BonjourBrowser!, didSelectService service: NSNetService!) {
+		print(service.TXTRecordData())
 		let dict = NSNetService.dictionaryFromTXTRecordData(service.TXTRecordData()!)
 		self.ip = self.copyStringFromDict(dict, which: self.dictKeys.ip)
-		print(service.TXTRecordData())
+		self.port = service.port
 		print(dict)
-		print(String(self.ip))
-//		performSegueWithIdentifier("hello", sender: self)
+		print(service.hostName)
+		print(service.port)
+		print( self.ip!)
+		performSegueWithIdentifier("scnSegue", sender: self)
 	}
 	@objc func bonjourBrowser(browser: BonjourBrowser!, didResolveInstance service: NSNetService!) {
 		let dict = NSNetService.dictionaryFromTXTRecordData(service.TXTRecordData()!)
@@ -54,7 +58,12 @@ class Bonjour : UIViewController, BonjourBrowserDelegate {
 		let ip = self.copyStringFromDict(dict, which: self.dictKeys.ip)
 		print("RESOLVED HOSTNAME : %@\nIP : %@:%d",host,port,ip)
 		
-		
+	}
+	override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+		if(segue.identifier=="scnSegue"){
+			let vc = segue.destinationViewController as! ViewController
+			vc.ip = String(format: "%@:%d",self.ip!,self.port)
+		}
 	}
 	
 }

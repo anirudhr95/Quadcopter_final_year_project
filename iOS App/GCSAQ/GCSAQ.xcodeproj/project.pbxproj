@@ -10,6 +10,10 @@
 		16108691F0A08A24C1A1D0F0 /* Pods_GCSAQ.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC591D821C884D624E98B243 /* Pods_GCSAQ.framework */; };
 		523D13751CBD616500733637 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 523D13741CBD616500733637 /* art.scnassets */; };
 		523D13791CBD66B000733637 /* OldViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523D13781CBD66B000733637 /* OldViewController.swift */; };
+		52592F001CC4F2470063B1C8 /* buttonNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52592EFF1CC4F2470063B1C8 /* buttonNames.swift */; };
+		52592F021CC4F2860063B1C8 /* CommunicatorStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52592F011CC4F2860063B1C8 /* CommunicatorStructs.swift */; };
+		52592F071CC4F5FD0063B1C8 /* quad3DView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52592F061CC4F5FD0063B1C8 /* quad3DView.swift */; };
+		52592F091CC4F8F50063B1C8 /* YPR.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52592F081CC4F8F50063B1C8 /* YPR.swift */; };
 		52E1473D1CBB882000F5CC9F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E1473C1CBB882000F5CC9F /* AppDelegate.swift */; };
 		52E1473F1CBB882000F5CC9F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E1473E1CBB882000F5CC9F /* ViewController.swift */; };
 		52E147421CBB882000F5CC9F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52E147401CBB882000F5CC9F /* Main.storyboard */; };
@@ -22,6 +26,10 @@
 /* Begin PBXFileReference section */
 		523D13741CBD616500733637 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
 		523D13781CBD66B000733637 /* OldViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OldViewController.swift; sourceTree = "<group>"; };
+		52592EFF1CC4F2470063B1C8 /* buttonNames.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = buttonNames.swift; sourceTree = "<group>"; };
+		52592F011CC4F2860063B1C8 /* CommunicatorStructs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunicatorStructs.swift; sourceTree = "<group>"; };
+		52592F061CC4F5FD0063B1C8 /* quad3DView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = quad3DView.swift; sourceTree = "<group>"; };
+		52592F081CC4F8F50063B1C8 /* YPR.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YPR.swift; sourceTree = "<group>"; };
 		52E147391CBB882000F5CC9F /* GCSAQ.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GCSAQ.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E1473C1CBB882000F5CC9F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		52E1473E1CBB882000F5CC9F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -57,6 +65,16 @@
 			name = "Reference Files";
 			sourceTree = "<group>";
 		};
+		52592F031CC4F29B0063B1C8 /* Structs */ = {
+			isa = PBXGroup;
+			children = (
+				52592EFF1CC4F2470063B1C8 /* buttonNames.swift */,
+				52592F011CC4F2860063B1C8 /* CommunicatorStructs.swift */,
+				52592F081CC4F8F50063B1C8 /* YPR.swift */,
+			);
+			name = Structs;
+			sourceTree = "<group>";
+		};
 		52E147301CBB882000F5CC9F = {
 			isa = PBXGroup;
 			children = (
@@ -80,6 +98,8 @@
 			children = (
 				523D137A1CBD672000733637 /* Reference Files */,
 				52E1473E1CBB882000F5CC9F /* ViewController.swift */,
+				52592F061CC4F5FD0063B1C8 /* quad3DView.swift */,
+				52592F031CC4F29B0063B1C8 /* Structs */,
 				52E147401CBB882000F5CC9F /* Main.storyboard */,
 				523D13741CBD616500733637 /* art.scnassets */,
 				52E147431CBB882000F5CC9F /* Assets.xcassets */,
@@ -232,8 +252,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52592F071CC4F5FD0063B1C8 /* quad3DView.swift in Sources */,
 				52E1473F1CBB882000F5CC9F /* ViewController.swift in Sources */,
+				52592F021CC4F2860063B1C8 /* CommunicatorStructs.swift in Sources */,
 				52E1474F1CBB88DE00F5CC9F /* BonjourModel.swift in Sources */,
+				52592F001CC4F2470063B1C8 /* buttonNames.swift in Sources */,
+				52592F091CC4F8F50063B1C8 /* YPR.swift in Sources */,
 				52E147511CBB88F700F5CC9F /* CommunicationModel.swift in Sources */,
 				523D13791CBD66B000733637 /* OldViewController.swift in Sources */,
 				52E1473D1CBB882000F5CC9F /* AppDelegate.swift in Sources */,

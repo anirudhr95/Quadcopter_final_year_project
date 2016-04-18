@@ -28,19 +28,6 @@
 //class OldViewController: UIViewController {
 //	let updateInterval = 0.3
 //	var ship = SCNNode()
-//	
-//	@IBAction func retryConnection(sender: UIButton) {
-//		connectionStatus.text = "Connecting..."
-//		
-//		establishConnection(10)
-//		if connected{
-//			setConnected()
-//			
-//		}
-//		//        else{
-//		//            setFailed()
-//		//        }
-//	}
 //	@IBOutlet weak var retryIfConnectionFailed: UIButton!
 //	@IBOutlet weak var connectionStatus: UILabel!
 //	@IBOutlet weak var modelView: SCNView!
@@ -203,10 +190,6 @@
 //			
 //			
 //		}
-//		
-//		
-//		
-//		
 //	}
 //	func motionStuff(){
 //		
