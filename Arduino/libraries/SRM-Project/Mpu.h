@@ -27,7 +27,8 @@
  */
 #ifndef Mpu_h
 #define Mpu_h
-#include "printHelper.h" 
+#include "printHelper.h"
+#include "DelaysAndOffsets.h"
 #include <Wire.h>
 
 	// See also MPU-9250 Register Map and Descriptions, Revision 4.0, RM-MPU-9250A-00, Rev. 1.4, 9/9/2013 for registers not listed in
@@ -170,6 +171,7 @@
 
 	// Using the MSENSR-9250 breakout board, ADO is set to 0
 	// Seven-bit device address is 110100 for ADO = 0 and 110101 for ADO = 1
+
 #define ADO 0
 #if ADO
 #define MPU9250_ADDRESS 0x69  // Device address when ADO = 1
@@ -178,13 +180,6 @@
 #define AK8963_ADDRESS 0x0C   //  Address of magnetometer
 #endif
 
-/*Chennai's magnetic declination
- http://www.magnetic-declination.com/India/Chennai/1136292.html
-*/
-#define declination -1.30 
-#define DOSELFTEST true
- #define USE_MADGWICK true
-#define SerialDebug true   // set to true to get Serial output for debugging
 
 	// Set initial input parameters
 enum Ascale {
@@ -252,7 +247,7 @@ uint32_t Now = 0;        // used to calculate integration interval
 float ax, ay, az, gx, gy, gz, mx, my, mz; // variables to hold latest sensor data values
 float q[4] = {1.0f, 0.0f, 0.0f, 0.0f};    // vector to hold quaternion
 float eInt[3] = {0.0f, 0.0f, 0.0f};       // vector to hold integral error for Mahony method
-
+unsigned long last_YPR_CALL = 0;
 float *getYPR();
 void getMres();
 void getGres();
@@ -291,67 +286,68 @@ void gyro_Setup()
 	if (c == 0x71) // WHO_AM_I should always be 0x68
 	{
 			// TODO: Convert next lines to IF CONNECTED/NOT CONNECTED ->Serial print
-		// Serial.println("MPU9250 is online...");
+			// Serial.println("MPU9250 is online...");
 		
-		#if DOSELFTEST
-				MPU9250SelfTest(SelfTest); // Start by performing self test and reporting values
-				Serial.print("x-axis self test: acceleration trim within : "); Serial.print(SelfTest[0],1); Serial.println("% of factory value");
-				Serial.print("y-axis self test: acceleration trim within : "); Serial.print(SelfTest[1],1); Serial.println("% of factory value");
-				Serial.print("z-axis self test: acceleration trim within : "); Serial.print(SelfTest[2],1); Serial.println("% of factory value");
-				Serial.print("x-axis self test: gyration trim within : "); Serial.print(SelfTest[3],1); Serial.println("% of factory value");
-				Serial.print("y-axis self test: gyration trim within : "); Serial.print(SelfTest[4],1); Serial.println("% of factory value");
-				Serial.print("z-axis self test: gyration trim within : "); Serial.print(SelfTest[5],1); Serial.println("% of factory value");
-		#endif
+#if DOSELFTEST
+		MPU9250SelfTest(SelfTest); // Start by performing self test and reporting values
+		Serial.print("x-axis self test: acceleration trim within : "); Serial.print(SelfTest[0],1); Serial.println("% of factory value");
+		Serial.print("y-axis self test: acceleration trim within : "); Serial.print(SelfTest[1],1); Serial.println("% of factory value");
+		Serial.print("z-axis self test: acceleration trim within : "); Serial.print(SelfTest[2],1); Serial.println("% of factory value");
+		Serial.print("x-axis self test: gyration trim within : "); Serial.print(SelfTest[3],1); Serial.println("% of factory value");
+		Serial.print("y-axis self test: gyration trim within : "); Serial.print(SelfTest[4],1); Serial.println("% of factory value");
+		Serial.print("z-axis self test: gyration trim within : "); Serial.print(SelfTest[5],1); Serial.println("% of factory value");
+#endif
 		
 		calibrateMPU9250(gyroBias, accelBias); // Calibrate gyro and accelerometers, load biases in bias registers
 		
-		#if SerialDebug
-			Serial.println("MPU9250 bias");
-			Serial.print(" x   y   z  ");
-			
-			Serial.print((int)(1000*accelBias[0]));
-			Serial.print((int)(1000*accelBias[1]));
-			Serial.print((int)(1000*accelBias[2]));
-			Serial.print("mg");
-			
-			Serial.print(gyroBias[0], 1);
-			Serial.print(gyroBias[1], 1);
-			Serial.print(gyroBias[2], 1);
-			Serial.print("o/s");
-		#endif
-			
+#if SerialDebug
+		Serial.println("MPU9250 bias");
+		Serial.print(" x   y   z  ");
 		
-		// Initialize device for active mode read of acclerometer, gyroscope, and temperature
+		Serial.print((int)(1000*accelBias[0]));
+		Serial.print((int)(1000*accelBias[1]));
+		Serial.print((int)(1000*accelBias[2]));
+		Serial.print("mg");
+		
+		Serial.print(gyroBias[0], 1);
+		Serial.print(gyroBias[1], 1);
+		Serial.print(gyroBias[2], 1);
+		Serial.print("o/s");
+#endif
+		
+		
+			// Initialize device for active mode read of acclerometer, gyroscope, and temperature
 		initMPU9250();
-		// Serial.println("MPU9250 initialized for active data mode...."); 
+			// Serial.println("MPU9250 initialized for active data mode....");
 		
-		// Read the WHO_AM_I register of the magnetometer, this is a good test of communication
-		// byte d = readByte(AK8963_ADDRESS, WHO_AM_I_AK8963);  // Read WHO_AM_I register for AK8963
-		// Serial.print("AK8963 "); Serial.print("I AM "); Serial.print(d, HEX); Serial.print(" I should be "); Serial.println(0x48, HEX);
+			// Read the WHO_AM_I register of the magnetometer, this is a good test of communication
+			// byte d = readByte(AK8963_ADDRESS, WHO_AM_I_AK8963);  // Read WHO_AM_I register for AK8963
+			// Serial.print("AK8963 "); Serial.print("I AM "); Serial.print(d, HEX); Serial.print(" I should be "); Serial.println(0x48, HEX);
 		
 		
 		
 			// Get magnetometer calibration from AK8963 ROM
-		initAK8963(magCalibration); 
-		// Serial.println("AK8963 initialized for active data mode...."); // Initialize device for active mode read of magnetometer
+		initAK8963(magCalibration);
+			// Serial.println("AK8963 initialized for active data mode...."); // Initialize device for active mode read of magnetometer
 		
-		#if SerialDebug
+#if SerialDebug
 		
-    //  Serial.println("Calibration values: ");
-			Serial.print("X-Axis sensitivity adjustment value "); Serial.println(magCalibration[0], 2);
-			Serial.print("Y-Axis sensitivity adjustment value "); Serial.println(magCalibration[1], 2);
-			Serial.print("Z-Axis sensitivity adjustment value "); Serial.println(magCalibration[2], 2);
+			//  Serial.println("Calibration values: ");
+		Serial.print("X-Axis sensitivity adjustment value "); Serial.println(magCalibration[0], 2);
+		Serial.print("Y-Axis sensitivity adjustment value "); Serial.println(magCalibration[1], 2);
+		Serial.print("Z-Axis sensitivity adjustment value "); Serial.println(magCalibration[2], 2);
 		
-		#endif
+#endif
 		sprintf(buf,FORMAT_SETUP_SUCCESS,"MPU9250");
+		delay(200);
 		
 	}
 	else
 	{
 		sprintf(buf,FORMAT_SETUP_FAILURE,"MPU9250");
-		// Serial.print("Could not connect to MPU9250: 0x");
-		// Serial.println(c, HEX);
-		// while(1) ; // Loop forever if communication doesn't happen
+			// Serial.print("Could not connect to MPU9250: 0x");
+			// Serial.println(c, HEX);
+			// while(1) ; // Loop forever if communication doesn't happen
 	}
 	Serial.print(buf);
 }
@@ -402,65 +398,69 @@ float *getYPR()
   // in the LSM9DS0 sensor. This rotation can be modified to allow any convenient orientation convention.
   // This is ok by aircraft orientation standards!
   // Pass gyro rate as rad/s
-	#if USE_MADGWICK
+#if USE_MADGWICK
 	MadgwickQuaternionUpdate(ax, ay, az, gx*PI/180.0f, gy*PI/180.0f, gz*PI/180.0f,  my,  mx, mz);
-	#else
-		 MahonyQuaternionUpdate(ax, ay, az, gx*PI/180.0f, gy*PI/180.0f, gz*PI/180.0f, my, mx, mz);
-	#endif
+#else
+	MahonyQuaternionUpdate(ax, ay, az, gx*PI/180.0f, gy*PI/180.0f, gz*PI/180.0f, my, mx, mz);
+#endif
 	
 	
 	
 	
-		
-		
-		
-			
-				// Define output variables from updated quaternion---these are Tait-Bryan angles, commonly used in aircraft orientation.
-				// In this coordinate system, the positive z-axis is down toward Earth.
-				// Yaw is the angle between Sensor x-axis and Earth magnetic North (or true North if corrected for local declination, looking down on the sensor positive yaw is counterclockwise.
-				// Pitch is angle between sensor x-axis and Earth ground plane, toward the Earth is positive, up toward the sky is negative.
-				// Roll is angle between sensor y-axis and Earth ground plane, y-axis up is positive roll.
-				// These arise from the definition of the homogeneous rotation matrix constructed from quaternions.
-				// Tait-Bryan angles as well as Euler angles are non-commutative; that is, the get the correct orientation the rotations must be
-				// applied in the correct order which for this configuration is yaw, pitch, and then roll.
-				// For more see http://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles which has additional links.
-			ypr[0]   = atan2(2.0f * (q[1] * q[2] + q[0] * q[3]), q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3]);
-			ypr[1] = -asin(2.0f * (q[1] * q[3] - q[0] * q[2]));
-			ypr[2]  = atan2(2.0f * (q[0] * q[1] + q[2] * q[3]), q[0] * q[0] - q[1] * q[1] - q[2] * q[2] + q[3] * q[3]);
-			
-			ypr[1] *= 180.0f / PI;
-			ypr[0]   *= 180.0f / PI;
-			ypr[2]  *= 180.0f / PI;
-			
-			ypr[0]   -= declination; // Declination at Danville, California is 13 degrees 48 minutes and 47 seconds on 2014-04-04
-			
-			
-    // With these settings the filter is updating at a ~145 Hz rate using the Madgwick scheme and
-	// >200 Hz using the Mahony scheme even though the display refreshes at only 2 Hz.
-	// The filter update rate is determined mostly by the mathematical steps in the respective algorithms,
-	// the processor speed (8 MHz for the 3.3V Pro Mini), and the magnetometer ODR:
-	// an ODR of 10 Hz for the magnetometer produce the above rates, maximum magnetometer ODR of 100 Hz produces
-	// filter update rates of 36 - 145 and ~38 Hz for the Madgwick and Mahony schemes, respectively.
-	// This is presumably because the magnetometer read takes longer than the gyro or accelerometer reads.
-	// This filter update rate should be fast enough to maintain accurate platform orientation for
-	// stabilization control of a fast-moving robot or quadcopter. Compare to the update rate of 200 Hz
-	// produced by the on-board Digital Motion Processor of Invensense's MPU6050 6 DoF and MPU9150 9DoF sensors.
-	// The 3.3 V 8 MHz Pro Mini is doing pretty well!
-			
-			
-			count = millis();
-			sumCount = 0;
-			sum = 0;
-  
-
+	
+	
+	
+	
+		// Define output variables from updated quaternion---these are Tait-Bryan angles, commonly used in aircraft orientation.
+		// In this coordinate system, the positive z-axis is down toward Earth.
+		// Yaw is the angle between Sensor x-axis and Earth magnetic North (or true North if corrected for local declination, looking down on the sensor positive yaw is counterclockwise.
+		// Pitch is angle between sensor x-axis and Earth ground plane, toward the Earth is positive, up toward the sky is negative.
+		// Roll is angle between sensor y-axis and Earth ground plane, y-axis up is positive roll.
+		// These arise from the definition of the homogeneous rotation matrix constructed from quaternions.
+		// Tait-Bryan angles as well as Euler angles are non-commutative; that is, the get the correct orientation the rotations must be
+		// applied in the correct order which for this configuration is yaw, pitch, and then roll.
+		// For more see http://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles which has additional links.
+	ypr[0]   = atan2(2.0f * (q[1] * q[2] + q[0] * q[3]), q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3]);
+	ypr[1] = -asin(2.0f * (q[1] * q[3] - q[0] * q[2]));
+	ypr[2]  = atan2(2.0f * (q[0] * q[1] + q[2] * q[3]), q[0] * q[0] - q[1] * q[1] - q[2] * q[2] + q[3] * q[3]);
+	
+	ypr[1] *= 180.0f / PI;
+	ypr[0]   *= 180.0f / PI;
+	ypr[2]  *= 180.0f / PI;
+	
+	ypr[0]   -= declination; // Declination at Danville, California is 13 degrees 48 minutes and 47 seconds on 2014-04-04
+	
+	
+		// With these settings the filter is updating at a ~145 Hz rate using the Madgwick scheme and
+		// >200 Hz using the Mahony scheme even though the display refreshes at only 2 Hz.
+		// The filter update rate is determined mostly by the mathematical steps in the respective algorithms,
+		// the processor speed (8 MHz for the 3.3V Pro Mini), and the magnetometer ODR:
+		// an ODR of 10 Hz for the magnetometer produce the above rates, maximum magnetometer ODR of 100 Hz produces
+		// filter update rates of 36 - 145 and ~38 Hz for the Madgwick and Mahony schemes, respectively.
+		// This is presumably because the magnetometer read takes longer than the gyro or accelerometer reads.
+		// This filter update rate should be fast enough to maintain accurate platform orientation for
+		// stabilization control of a fast-moving robot or quadcopter. Compare to the update rate of 200 Hz
+		// produced by the on-board Digital Motion Processor of Invensense's MPU6050 6 DoF and MPU9150 9DoF sensors.
+		// The 3.3 V 8 MHz Pro Mini is doing pretty well!
+	
+	
+	count = millis();
+	sumCount = 0;
+	sum = 0;
+	
+	
 	return ypr;
+	last_YPR_CALL = millis();
 	
 }
-float getHeading(){
-	getYPR();
+float getHeading()
+{
+	if (millis() - last_YPR_CALL > ypr_refresh_time)
+		getYPR();
 	heading = atan2(my, mx);
-  	if(heading < 0) heading += 2 * M_PI;
-  	heading*= 180/M_PI;
+	if(heading < 0) heading += 2 * M_PI;
+	heading*= 180/M_PI;
+	return heading;
 }
 
 	//===================================================================================================================
@@ -996,95 +996,95 @@ void MadgwickQuaternionUpdate(float ax, float ay, float az, float gx, float gy, 
 }
 #else
 void MahonyQuaternionUpdate(float ax, float ay, float az, float gx, float gy, float gz, float mx, float my, float mz)
-        {
-            float q1 = q[0], q2 = q[1], q3 = q[2], q4 = q[3];   // short name local variable for readability
-            float norm;
-            float hx, hy, bx, bz;
-            float vx, vy, vz, wx, wy, wz;
-            float ex, ey, ez;
-            float pa, pb, pc;
-
-            // Auxiliary variables to avoid repeated arithmetic
-            float q1q1 = q1 * q1;
-            float q1q2 = q1 * q2;
-            float q1q3 = q1 * q3;
-            float q1q4 = q1 * q4;
-            float q2q2 = q2 * q2;
-            float q2q3 = q2 * q3;
-            float q2q4 = q2 * q4;
-            float q3q3 = q3 * q3;
-            float q3q4 = q3 * q4;
-            float q4q4 = q4 * q4;   
-
-            // Normalise accelerometer measurement
-            norm = sqrt(ax * ax + ay * ay + az * az);
-            if (norm == 0.0f) return; // handle NaN
-            norm = 1.0f / norm;        // use reciprocal for division
-            ax *= norm;
-            ay *= norm;
-            az *= norm;
-
-            // Normalise magnetometer measurement
-            norm = sqrt(mx * mx + my * my + mz * mz);
-            if (norm == 0.0f) return; // handle NaN
-            norm = 1.0f / norm;        // use reciprocal for division
-            mx *= norm;
-            my *= norm;
-            mz *= norm;
-
-            // Reference direction of Earth's magnetic field
-            hx = 2.0f * mx * (0.5f - q3q3 - q4q4) + 2.0f * my * (q2q3 - q1q4) + 2.0f * mz * (q2q4 + q1q3);
-            hy = 2.0f * mx * (q2q3 + q1q4) + 2.0f * my * (0.5f - q2q2 - q4q4) + 2.0f * mz * (q3q4 - q1q2);
-            bx = sqrt((hx * hx) + (hy * hy));
-            bz = 2.0f * mx * (q2q4 - q1q3) + 2.0f * my * (q3q4 + q1q2) + 2.0f * mz * (0.5f - q2q2 - q3q3);
-
-            // Estimated direction of gravity and magnetic field
-            vx = 2.0f * (q2q4 - q1q3);
-            vy = 2.0f * (q1q2 + q3q4);
-            vz = q1q1 - q2q2 - q3q3 + q4q4;
-            wx = 2.0f * bx * (0.5f - q3q3 - q4q4) + 2.0f * bz * (q2q4 - q1q3);
-            wy = 2.0f * bx * (q2q3 - q1q4) + 2.0f * bz * (q1q2 + q3q4);
-            wz = 2.0f * bx * (q1q3 + q2q4) + 2.0f * bz * (0.5f - q2q2 - q3q3);  
-
-            // Error is cross product between estimated direction and measured direction of gravity
-            ex = (ay * vz - az * vy) + (my * wz - mz * wy);
-            ey = (az * vx - ax * vz) + (mz * wx - mx * wz);
-            ez = (ax * vy - ay * vx) + (mx * wy - my * wx);
-            if (Ki > 0.0f)
-            {
-                eInt[0] += ex;      // accumulate integral error
-                eInt[1] += ey;
-                eInt[2] += ez;
-            }
-            else
-            {
-                eInt[0] = 0.0f;     // prevent integral wind up
-                eInt[1] = 0.0f;
-                eInt[2] = 0.0f;
-            }
-
-            // Apply feedback terms
-            gx = gx + Kp * ex + Ki * eInt[0];
-            gy = gy + Kp * ey + Ki * eInt[1];
-            gz = gz + Kp * ez + Ki * eInt[2];
-
-            // Integrate rate of change of quaternion
-            pa = q2;
-            pb = q3;
-            pc = q4;
-            q1 = q1 + (-q2 * gx - q3 * gy - q4 * gz) * (0.5f * deltat);
-            q2 = pa + (q1 * gx + pb * gz - pc * gy) * (0.5f * deltat);
-            q3 = pb + (q1 * gy - pa * gz + pc * gx) * (0.5f * deltat);
-            q4 = pc + (q1 * gz + pa * gy - pb * gx) * (0.5f * deltat);
-
-            // Normalise quaternion
-            norm = sqrt(q1 * q1 + q2 * q2 + q3 * q3 + q4 * q4);
-            norm = 1.0f / norm;
-            q[0] = q1 * norm;
-            q[1] = q2 * norm;
-            q[2] = q3 * norm;
-            q[3] = q4 * norm;
+{
+	float q1 = q[0], q2 = q[1], q3 = q[2], q4 = q[3];   // short name local variable for readability
+	float norm;
+	float hx, hy, bx, bz;
+	float vx, vy, vz, wx, wy, wz;
+	float ex, ey, ez;
+	float pa, pb, pc;
+	
+		// Auxiliary variables to avoid repeated arithmetic
+	float q1q1 = q1 * q1;
+	float q1q2 = q1 * q2;
+	float q1q3 = q1 * q3;
+	float q1q4 = q1 * q4;
+	float q2q2 = q2 * q2;
+	float q2q3 = q2 * q3;
+	float q2q4 = q2 * q4;
+	float q3q3 = q3 * q3;
+	float q3q4 = q3 * q4;
+	float q4q4 = q4 * q4;
+	
+		// Normalise accelerometer measurement
+	norm = sqrt(ax * ax + ay * ay + az * az);
+	if (norm == 0.0f) return; // handle NaN
+	norm = 1.0f / norm;        // use reciprocal for division
+	ax *= norm;
+	ay *= norm;
+	az *= norm;
+	
+		// Normalise magnetometer measurement
+	norm = sqrt(mx * mx + my * my + mz * mz);
+	if (norm == 0.0f) return; // handle NaN
+	norm = 1.0f / norm;        // use reciprocal for division
+	mx *= norm;
+	my *= norm;
+	mz *= norm;
+	
+		// Reference direction of Earth's magnetic field
+	hx = 2.0f * mx * (0.5f - q3q3 - q4q4) + 2.0f * my * (q2q3 - q1q4) + 2.0f * mz * (q2q4 + q1q3);
+	hy = 2.0f * mx * (q2q3 + q1q4) + 2.0f * my * (0.5f - q2q2 - q4q4) + 2.0f * mz * (q3q4 - q1q2);
+	bx = sqrt((hx * hx) + (hy * hy));
+	bz = 2.0f * mx * (q2q4 - q1q3) + 2.0f * my * (q3q4 + q1q2) + 2.0f * mz * (0.5f - q2q2 - q3q3);
+	
+		// Estimated direction of gravity and magnetic field
+	vx = 2.0f * (q2q4 - q1q3);
+	vy = 2.0f * (q1q2 + q3q4);
+	vz = q1q1 - q2q2 - q3q3 + q4q4;
+	wx = 2.0f * bx * (0.5f - q3q3 - q4q4) + 2.0f * bz * (q2q4 - q1q3);
+	wy = 2.0f * bx * (q2q3 - q1q4) + 2.0f * bz * (q1q2 + q3q4);
+	wz = 2.0f * bx * (q1q3 + q2q4) + 2.0f * bz * (0.5f - q2q2 - q3q3);
+	
+		// Error is cross product between estimated direction and measured direction of gravity
+	ex = (ay * vz - az * vy) + (my * wz - mz * wy);
+	ey = (az * vx - ax * vz) + (mz * wx - mx * wz);
+	ez = (ax * vy - ay * vx) + (mx * wy - my * wx);
+	if (Ki > 0.0f)
+	{
+		eInt[0] += ex;      // accumulate integral error
+		eInt[1] += ey;
+		eInt[2] += ez;
+	}
+	else
+	{
+		eInt[0] = 0.0f;     // prevent integral wind up
+		eInt[1] = 0.0f;
+		eInt[2] = 0.0f;
+	}
+	
+		// Apply feedback terms
+	gx = gx + Kp * ex + Ki * eInt[0];
+	gy = gy + Kp * ey + Ki * eInt[1];
+	gz = gz + Kp * ez + Ki * eInt[2];
+	
+		// Integrate rate of change of quaternion
+	pa = q2;
+	pb = q3;
+	pc = q4;
+	q1 = q1 + (-q2 * gx - q3 * gy - q4 * gz) * (0.5f * deltat);
+	q2 = pa + (q1 * gx + pb * gz - pc * gy) * (0.5f * deltat);
+	q3 = pb + (q1 * gy - pa * gz + pc * gx) * (0.5f * deltat);
+	q4 = pc + (q1 * gz + pa * gy - pb * gx) * (0.5f * deltat);
+	
+		// Normalise quaternion
+	norm = sqrt(q1 * q1 + q2 * q2 + q3 * q3 + q4 * q4);
+	norm = 1.0f / norm;
+	q[0] = q1 * norm;
+	q[1] = q2 * norm;
+	q[2] = q3 * norm;
+	q[3] = q4 * norm;
  
-        }
+}
 #endif
 #endif /* Mpu_h */
