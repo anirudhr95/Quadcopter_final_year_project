@@ -40,14 +40,13 @@ class ArduinoLogger:
     def data_motor_speeds(self, speeds):
         self.logger.debug("MOTOR-SPEED:%s" % (";".join(speeds)))
 
-    def data_gyromag(self, gyro, mag, heading):
-        self.logger.debug("GYRO-MAG:%s;%s;%s" % (";".join(gyro), ';'.join(mag), heading))
+    def data_gyromag(self, gyro,heading):
+        self.logger.debug("GYRO-MAG:%s;%s" % (";".join(gyro), heading))
 
-    def data_ultrasound(self, mode, data):
-        if isinstance(data, list):
-            self.logger.debug("%s:%s" % (mode, ';'.join(str(val) for val in data)))
-        else:
-            self.logger.debug("%s:%s" % (mode, data))
+    def data_ultrasound(self, data):
+        assert isinstance(data, list)
+        self.logger.debug("%s" % (';'.join(str(val) for val in data)))
+
 
     def data_altitude(self, data):
         self.logger.debug("ALTITUDE:%s" % data)
@@ -108,17 +107,13 @@ class PILogger:
     def data_set_speeds(self, motor_speeds):  # int i 0 to 4
         self.logger.debug("%s:%s" % (Constants.PIMESSAGE_SETSPEEDS, ';'.join(str(val) for val in motor_speeds)))
 
-    def state_ultra_mode(self, mode):
-        self.logger.info("%s;%s" % (Constants.PIMESSAGE_ULTRAMODE, mode))
+
 
     def data_set_altitude(self, altitude):
         self.logger.debug("SET_ALTITUDE:%s" % altitude)
 
     def data_set_ypr(self, ypr):
         self.logger.info("%s:%s" % (Constants.IOSMESSAGE_SETYPR, ";".join(str(val) for val in ypr)))
-
-    def state_reset_baro(self):
-        self.logger.info("%s" % Constants.PIMESSAGE_RESETBAROREFERENCE)
 
     def warn_collision(self, direction, sensor_value):
         self.logger.critical("COLLISION:%s-%s" % (direction, sensor_value))
@@ -140,3 +135,7 @@ class PILogger:
 
     def error(self, msg):
         self.logger.error("PROCESSING_ERROR:%s" % msg)
+
+    def data_ultrasound(self, data):
+        assert isinstance(data, list)
+        self.logger.debug("%s" % (';'.join(str(val) for val in data)))

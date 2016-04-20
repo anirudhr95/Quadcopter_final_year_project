@@ -20,11 +20,13 @@ uint8_t currentSensor = 0;          // Keeps track of which sensor is active.
 
 
 NewPing sonar[SONAR_NUM] = {     // Sensor object array.
-	NewPing(ultra_Trig_Pin_Top, ultra_Echo_Pin_Top, MAX_DISTANCE),
+	// ORDER : BOTTOM, TOP,FRONT,RIGHT,LEFT
+	
 	NewPing(ultra_Trig_Pin_Bottom, ultra_Echo_Pin_Bottom, MAX_DISTANCE),
+	NewPing(ultra_Trig_Pin_Top, ultra_Echo_Pin_Top, MAX_DISTANCE),
 	NewPing(ultra_Trig_Pin_Front, ultra_Echo_Pin_Front, MAX_DISTANCE), // Each sensor's trigger pin, echo pin, and max distance to ping.
 	NewPing(ultra_Trig_Pin_Right, ultra_Echo_Pin_Right, MAX_DISTANCE),
-	NewPing(ultra_Trig_Pin_Left, ultra_Echo_Pin_Left, MAX_DISTANCE),
+	NewPing(ultra_Trig_Pin_Left, ultra_Echo_Pin_Left, MAX_DISTANCE)
 	
 	
 };
@@ -75,7 +77,7 @@ void ultra_Compute()
 }
 void echoCheck() { // If ping received, set the sensor distance to array.
 	if (sonar[currentSensor].check_timer())
-		cm[currentSensor] = sonar[currentSensor].ping_result / US_ROUNDTRIP_CM + ultra_Offsets[currentSensor];
+		cm[currentSensor] = sonar[currentSensor].ping_result / US_ROUNDTRIP_CM;
 }
 
 void ultra_on_Compute_Complete() {

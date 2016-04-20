@@ -42,5 +42,4 @@ class Message_sender:
         msg = '%s:%s;%s;%s;%s' % (Constants.PIMESSAGE_SETSPEEDS, speeds[0], speeds[1], speeds[2], speeds[3])
         self.__send_msg_to_arduino__(msg)
 
-    def toArduino_reset_baro(self):
-        self.__send_msg_to_arduino__(Constants.PIMESSAGE_RESETBAROREFERENCE)
+

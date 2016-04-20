@@ -36,10 +36,6 @@ Ultrasound
 
 #define PING_INTERVAL 33 // Milliseconds between sensor pings (29ms is about the min to avoid cross-sensor echo).
 #define MAX_DISTANCE 200 // Maximum distance (in cm) to ping.
-
-// Order : Front, Right, Left, Top, Bottom
-// Offset is the value to add, so that measurement is correct.Provide offsets for correct number of sensors
-const int ultra_Offsets[] = {0,0,0,0,0};
 #define SONAR_NUM     5 // Number of sensors.
 
 

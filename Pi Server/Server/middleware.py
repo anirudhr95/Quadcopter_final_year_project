@@ -65,16 +65,9 @@ class Middleware_Arduino:
     // MOTORS
     const char* FORMAT_MOTOR_SPEEDS = "MOTOR:%d;%d;%d;%d\n"; // MOTOR SPEEDS
     // GYRO+MAG
-    const char* FORMAT_GYROMAG = "GYROMAG:%d;%d;%d;%d;%d;%d;%d\n"; //YPR,MAG(x,y,z),heading
+    const char* FORMAT_GYROMAG = "GYROMAG:%d;%d;%d;%d\n"; //YPR,MAG(x,y,z),heading
     // ULTRASOUND
-
-    const char* FORMAT_ULTRA_F = "ULTRA_F:%d\n";
-    const char* FORMAT_ULTRA_ALL = "ULTRA_ALL:%d;%d;%d;%d\n";
-    const char* FORMAT_ULTRA_L = "ULTRA_L:%d\n";
-    const char* FORMAT_ULTRA_R = "ULTRA_R:%d\n";
-    const char* FORMAT_ULTRA_T = "ULTRA_T:%d\n";
-
-    const char* FORMAT_BARO = "ALTITUDE:%d\n";
+    const char* FORMAT_ULTRA_ALL = "ULTRA:%d;%d;%d;%d;%d\n";
     """
 
     def __init__(self, quadcopter):
@@ -87,12 +80,17 @@ class Middleware_Arduino:
             if functionName == Constants.ARDUINOMESSAGE_GYRO:
                 # DATA:Y;P;R;Mx;My;Mz;Mh
 
-                y, p, r, mx, my, mz, heading, = map(lambda x: float(x), params.split(';'))
-                self.logger.data_gyromag(gyro=[y,p,r],heading=heading,mag=[mx,my,mz])
+                y, p, r, heading = map(lambda x: float(x), params.split(';'))
+                self.logger.data_gyromag(gyro=[y,p,r],heading=heading)
                 self.quadcopter.sensor_set_YPR_Current([y, p, r])
+            elif functionName == Constants.ARDUINOSTATUS_ULTRA:
+                self.logger.data_ultrasound(params)
+                #     TODO HANDLE ULTRASONIC DATA
+                # ORDER: BOTTOM, TOP, FRONT, RIGHT, LEFT
+                bottom,top,front,right,left = map(lambda x: float(x), params.split(';'))
+                self.quadcopter.sensor_set_Altitude_Current(bottom)
+                self.quadcopter.sensor_set_ultra(F=front,L=left,R=right,T=top)
 
-            elif functionName == Constants.ARDUINOMESSAGE_ALTITUDE:
-                self.quadcopter.sensor_set_Altitude_Current(float(params))
             elif functionName == Constants.ARDUINOMESSAGE_MOTOR:
                 self.logger.data_motor_speeds(params)
             elif functionName == Constants.ARDUINOSTATUS_SETUP_INITIALIZING:
@@ -105,15 +103,7 @@ class Middleware_Arduino:
                 self.logger.setup_errorcode(params)
             elif functionName == Constants.ARDUINOSTATUS_SETUP_MESSAGE:
                 self.logger.setup_message(params)
-            elif functionName == Constants.ARDUINOSTATUS_ULTRA_F:
-                self.logger.data_ultrasound(functionName, params)
-            elif functionName == Constants.ARDUINOSTATUS_ULTRA_ALL:
-                self.logger.data_ultrasound(functionName, params)
-            elif functionName == Constants.ARDUINOSTATUS_ULTRA_L:
-                self.logger.data_ultrasound(functionName, params)
-            elif functionName == Constants.ARDUINOSTATUS_ULTRA_R:
-                self.logger.data_ultrasound(functionName, params)
-            elif functionName == Constants.ARDUINOSTATUS_ULTRA_T:
-                self.logger.data_ultrasound(functionName, params)
+
+
         except ValueError as e:
             print e

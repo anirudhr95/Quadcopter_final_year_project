@@ -12,7 +12,7 @@ const char* FORMAT_MOTOR_SPEEDS = "MOTOR:%d;%d;%d;%d\n"; // MOTOR SPEEDS
 char buf[100];
 void SEND_MSG_ULTRA(unsigned int cm[], int SONAM_NUM)
 {
-	
+	// ORDER : TOP,BOTTOM,FRONT,RIGHT,LEFT
 	Serial.print("ULTRA:");
 	for (uint8_t i = 0; i < SONAR_NUM-1; i++) {
 		Serial.print(cm[i]);
