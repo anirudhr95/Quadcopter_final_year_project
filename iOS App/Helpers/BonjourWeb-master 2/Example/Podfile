@@ -1,0 +1,12 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+target 'BonjourWeb_Example', :exclusive => true do
+  pod "BonjourWeb", :path => "../"
+end
+
+target 'BonjourWeb_Tests', :exclusive => true do
+  pod "BonjourWeb", :path => "../"
+
+  pod 'Specta'
+  pod 'Expecta'
+end

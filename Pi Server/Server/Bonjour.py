@@ -15,10 +15,9 @@ class Bonjour(object):
         """
 
         self.zeroconf = Zeroconf()
-
         self.info = ServiceInfo(type = Constants.BONJOUR_TYPE,
                                 name = Constants.BONJOUR_NAME + '.' + Constants.BONJOUR_TYPE,
-                                address = socket.inet_aton(Constants.SERVER_IP),
+                                address = Constants.SERVER_IP,
                                 port = Constants.SERVER_PORT,
                                 weight= Constants.BONJOUR_WEIGHT,
                                 priority= Constants.BONJOUR_PRIORITY,

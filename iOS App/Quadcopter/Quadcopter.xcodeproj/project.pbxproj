@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		522554241CB64761009597A0 /* SocketIOClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522554231CB64761009597A0 /* SocketIOClient.swift */; };
 		523DC7CF1CB0EC8B00C4D7D2 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 523DC7CE1CB0EC8B00C4D7D2 /* art.scnassets */; };
 		523DC7D21CB0EE8700C4D7D2 /* FlightViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523DC7D11CB0EE8700C4D7D2 /* FlightViewController.swift */; };
+		5271448A1CB52E8B007694D7 /* BonjourNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527144891CB52E8B007694D7 /* BonjourNetworkManager.swift */; };
+		5271448C1CB6340E007694D7 /* SocketIOManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5271448B1CB6340E007694D7 /* SocketIOManager.swift */; };
 		5273AB641CB0448E00436D14 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5273AB631CB0448E00436D14 /* AppDelegate.swift */; };
 		5273AB661CB0448E00436D14 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5273AB651CB0448E00436D14 /* ViewController.swift */; };
 		5273AB691CB0448E00436D14 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5273AB671CB0448E00436D14 /* Main.storyboard */; };
@@ -18,8 +21,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		522554231CB64761009597A0 /* SocketIOClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketIOClient.swift; sourceTree = "<group>"; };
 		523DC7CE1CB0EC8B00C4D7D2 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
 		523DC7D11CB0EE8700C4D7D2 /* FlightViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightViewController.swift; sourceTree = "<group>"; };
+		527144891CB52E8B007694D7 /* BonjourNetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BonjourNetworkManager.swift; sourceTree = "<group>"; };
+		5271448B1CB6340E007694D7 /* SocketIOManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SocketIOManager.swift; path = ../SocketIOManager.swift; sourceTree = "<group>"; };
 		5273AB601CB0448E00436D14 /* Quadcopter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Quadcopter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5273AB631CB0448E00436D14 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5273AB651CB0448E00436D14 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -61,6 +67,33 @@
 			name = Extra;
 			sourceTree = "<group>";
 		};
+		5271448D1CB6342E007694D7 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				5271448B1CB6340E007694D7 /* SocketIOManager.swift */,
+				527144891CB52E8B007694D7 /* BonjourNetworkManager.swift */,
+				522554231CB64761009597A0 /* SocketIOClient.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		5271448E1CB6344A007694D7 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				5273AB671CB0448E00436D14 /* Main.storyboard */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		5271448F1CB6346C007694D7 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				5273AB651CB0448E00436D14 /* ViewController.swift */,
+				523DC7D11CB0EE8700C4D7D2 /* FlightViewController.swift */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
 		5273AB571CB0448E00436D14 = {
 			isa = PBXGroup;
 			children = (
@@ -82,10 +115,10 @@
 		5273AB621CB0448E00436D14 /* Quadcopter */ = {
 			isa = PBXGroup;
 			children = (
+				5271448D1CB6342E007694D7 /* Models */,
 				523DC7D01CB0EC9300C4D7D2 /* Extra */,
-				5273AB651CB0448E00436D14 /* ViewController.swift */,
-				523DC7D11CB0EE8700C4D7D2 /* FlightViewController.swift */,
-				5273AB671CB0448E00436D14 /* Main.storyboard */,
+				5271448E1CB6344A007694D7 /* View */,
+				5271448F1CB6346C007694D7 /* Controller */,
 				523DC7CE1CB0EC8B00C4D7D2 /* art.scnassets */,
 				5273AB6A1CB0448E00436D14 /* Assets.xcassets */,
 				5273AB6C1CB0448E00436D14 /* LaunchScreen.storyboard */,
@@ -227,6 +260,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				5273AB661CB0448E00436D14 /* ViewController.swift in Sources */,
+				5271448C1CB6340E007694D7 /* SocketIOManager.swift in Sources */,
+				5271448A1CB52E8B007694D7 /* BonjourNetworkManager.swift in Sources */,
+				522554241CB64761009597A0 /* SocketIOClient.swift in Sources */,
 				5273AB641CB0448E00436D14 /* AppDelegate.swift in Sources */,
 				523DC7D21CB0EE8700C4D7D2 /* FlightViewController.swift in Sources */,
 			);

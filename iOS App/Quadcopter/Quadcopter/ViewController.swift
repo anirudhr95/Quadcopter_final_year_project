@@ -9,11 +9,13 @@
 import UIKit
 import Starscream
 import SVProgressHUD
-
 class ViewController: UIViewController {
-	
+	var socketIO : SocketIOManager?
+	private var IPAddress : NSURL = NSURL(string: "ws://192.168.0.108")!
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		socketIO = SocketIOManager(IP_Address: IPAddress)
+		
 		
 		// Do any additional setup after loading the view, typically from a nib.
 	}

@@ -1,7 +1,7 @@
 #include <DelaysAndOffsets.h>
 #include <PinoutConfig.h>
 #include <UltrasoundSense.h>
-
+unsigned int *vals;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin (115200);
@@ -9,6 +9,7 @@ void setup() {
 }
 
 void loop() {
+<<<<<<< HEAD
   
   // put your main code here, to run repeatedly:
   Serial.println(ultragetB());
@@ -22,4 +23,7 @@ delay(1000);
   
     
 
+=======
+  ultra_Compute();
+>>>>>>> develop
 }

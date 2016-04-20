@@ -15,11 +15,12 @@ if __name__ == '__main__':
         assert sys.argv[1:] == ['--debug']
         logging.getLogger('zeroconf').setLevel(logging.DEBUG)
 
-    desc = {'path': '/~paulsm/'}
+    desc = {'path': '/~paulsm/',
+            'ip': '192.168.0.1'}
 
     info = ServiceInfo("_http._tcp.local.",
                        "Paul's Test Web Site._http._tcp.local.",
-                       socket.inet_aton("127.0.0.1"), 80, 0, 0,
+                       "192.168.0.108", 5000, 0, 0,
                        desc, "ash-2.local.")
 
     zeroconf = Zeroconf()

@@ -1,15 +1,25 @@
+POSSIBLE INPUTS : 
+1) MOTOR_SPEEDS:A;B;C;D     -> Set Motor Speeds to Values
+2) RESET_BARO
+3) ULTRA_MODE:MODE   -> 0,1,2,3 (0:ALL,1:FR,2:FL,3:TOP)
 
-// FROM GYRO.h
-bool check_ypr_goodness(float *new_ypr){
-	if (new_ypr[1] > gyro_limit_pitch_pos)
-		return false;
-	if (new_ypr[1] < gyro_limit_pitch_neg)
-		return false;
-	if (new_ypr[2] > gyro_limit_roll_pos)
-		return false;
-	if (new_ypr[2] < gyro_limit_roll_neg)
-		return false;
 
-	return true;
+POSSIBLE OUTPUTS : 
+1) FORMAT_SETUP_INIT = "SETUP_INITIALIZING:%s\n"; //(MOTOR/GYRO)
+2) FORMAT_SETUP_SUCCESS = "SETUP_SUCCESS:%s\n"; // (MOTOR/GYRO)
+3) FORMAT_SETUP_FAILURE = "SETUP_FAILURE:%s\n"; // (MOTOR/GYRO)
+4) FORMAT_SETUP_ERRORCODE = "SETUP_ERRORCODE:%d\n"; // (MOTOR/GYRO)
+5) FORMAT_SETUP_MESSAGE = "SETUP_MESSAGE:%s\n"; // (MESSAGE)
+// MOTORS
+6) FORMAT_MOTOR_SPEEDS = "MOTOR:%d;%d;%d;%d\n"; // MOTOR SPEEDS
+// GYRO+MAG
+7) FORMAT_GYROMAG = "GYROMAG:%d;%d;%d;%d;%d;%d;%d\n"; //YPR,MAG(x,y,z),heading
+// ULTRASOUND
 
-}
+8) FORMAT_ULTRA_F = "ULTRA_F:%d\n";
+9) FORMAT_ULTRA_ALL = "ULTRA_ALL:%d;%d;%d;%d\n";
+10) FORMAT_ULTRA_L = "ULTRA_L:%d\n";
+11) FORMAT_ULTRA_R = "ULTRA_R:%d\n";
+12) FORMAT_ULTRA_T = "ULTRA_T:%d\n";
+
+13) const char* FORMAT_BARO = "ALTITUDE:%d\n";
