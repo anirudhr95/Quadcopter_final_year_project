@@ -21,20 +21,17 @@ Uncomment the transmission rate to use
 // #define GYRO_TRANSMISSION_RATE_MID 
 // #define GYRO_TRANSMISSION_RATE_LOW
 
-// PID
-#define Kp 1
-#define Ki 1
-#define Kd 1
-
 //	Ultrasound
 #define ultra_DelayBetweenReads 200
-// #define ultra_toWingtipOffset 25
-#define ultra_toWingtipOffset 0
-#define ultra_safe_distance_from_wingtip 20
-#define ultra_Offset_A 2
-#define ultra_Offset_B 2
-#define ultra_Offset_C 3
-#define ultra_Offset_D 0
+#define ultra_toWingtipOffset 25
+#define ultra_noObjectDetected_Return_Value -1
+#define ultra_pulseIn_max_wait 50
+// Extra Distance to add to get actual distance (Due to inaccuracies in sensor)
+#define ultra_Offset_Front 2
+#define ultra_Offset_Right 2
+#define ultra_Offset_Left 3
+#define ultra_Offset_Top 0
+#define ultra_Offset_Bottom 0
 
 //Gyro
 #define gyro_X_Accel_Offset -3558

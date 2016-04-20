@@ -183,24 +183,24 @@
                                 <exclude reference="7SS-v8-5ms"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="8UE-a4-hZw"/>
+                                <exclude reference="eHV-uf-DiK"/>
+                                <exclude reference="EvZ-5G-P1K"/>
+                                <exclude reference="eQH-Df-o8H"/>
+                                <exclude reference="eda-mx-1sL"/>
+                                <exclude reference="TSq-Fs-K3s"/>
+                                <exclude reference="U9v-B3-siX"/>
+                                <exclude reference="WLh-I6-b8d"/>
+                                <exclude reference="byF-a7-Q0f"/>
+                                <exclude reference="rHq-JX-ZeO"/>
                                 <exclude reference="7bC-WA-dCU"/>
                                 <exclude reference="B9B-p0-dlN"/>
                                 <exclude reference="R4P-cU-rDT"/>
                                 <exclude reference="RVi-sr-vEv"/>
                                 <exclude reference="ZOW-iz-ig3"/>
                                 <exclude reference="yIy-U0-ha7"/>
-                                <exclude reference="8UE-a4-hZw"/>
-                                <exclude reference="eHV-uf-DiK"/>
-                                <exclude reference="byF-a7-Q0f"/>
-                                <exclude reference="rHq-JX-ZeO"/>
-                                <exclude reference="EvZ-5G-P1K"/>
-                                <exclude reference="eQH-Df-o8H"/>
-                                <exclude reference="eda-mx-1sL"/>
                                 <exclude reference="bge-JR-vFv"/>
                                 <exclude reference="r0y-BI-DP3"/>
-                                <exclude reference="TSq-Fs-K3s"/>
-                                <exclude reference="U9v-B3-siX"/>
-                                <exclude reference="WLh-I6-b8d"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=compact">
@@ -215,24 +215,24 @@
                                 <include reference="7SS-v8-5ms"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="8UE-a4-hZw"/>
+                                <exclude reference="eHV-uf-DiK"/>
+                                <include reference="EvZ-5G-P1K"/>
+                                <include reference="eQH-Df-o8H"/>
+                                <include reference="eda-mx-1sL"/>
+                                <include reference="TSq-Fs-K3s"/>
+                                <include reference="U9v-B3-siX"/>
+                                <include reference="WLh-I6-b8d"/>
+                                <include reference="byF-a7-Q0f"/>
+                                <include reference="rHq-JX-ZeO"/>
                                 <include reference="7bC-WA-dCU"/>
                                 <exclude reference="B9B-p0-dlN"/>
                                 <exclude reference="R4P-cU-rDT"/>
                                 <include reference="RVi-sr-vEv"/>
                                 <include reference="ZOW-iz-ig3"/>
                                 <include reference="yIy-U0-ha7"/>
-                                <include reference="8UE-a4-hZw"/>
-                                <exclude reference="eHV-uf-DiK"/>
-                                <include reference="byF-a7-Q0f"/>
-                                <include reference="rHq-JX-ZeO"/>
-                                <include reference="EvZ-5G-P1K"/>
-                                <include reference="eQH-Df-o8H"/>
-                                <include reference="eda-mx-1sL"/>
                                 <include reference="bge-JR-vFv"/>
                                 <include reference="r0y-BI-DP3"/>
-                                <include reference="TSq-Fs-K3s"/>
-                                <include reference="U9v-B3-siX"/>
-                                <include reference="WLh-I6-b8d"/>
                             </mask>
                         </variation>
                     </view>

@@ -13,72 +13,78 @@
 
 
 int *Ultra_Values;
-float ultrainternalDistanceMeasure(int echo_pin){
-  int	duration = pulseIn(echo_pin, HIGH) ; //sensor stops reading after some time - adding delay 26/03
-  // Serial.println(duration);
-  int distance = (duration/2) / 29.1;
-  
-  if(distance >=200 || distance <= 0){
-  	return -1;
-  }
-  
-  
-  return distance;
-  
-}
+int	duration, distance;
 void ultra_Setup(){
 	char buf[100];
 	sprintf(buf,FORMAT_SETUP_INIT,"ULTRASOUND");
 	Serial.print(buf);
-	pinMode(ultra_Trig_Pin_A, OUTPUT);
-	pinMode(ultra_Trig_Pin_B, OUTPUT);
-	pinMode(ultra_Trig_Pin_C, OUTPUT);
-	pinMode(ultra_Trig_Pin_D, OUTPUT);
-	pinMode(ultra_Echo_Pin_A  , INPUT);
-	pinMode(ultra_Echo_Pin_B  , INPUT);
-	pinMode(ultra_Echo_Pin_C  , INPUT);	
-	pinMode(ultra_Echo_Pin_D  , INPUT);
+	pinMode(ultra_Trig_Pin_Front, OUTPUT);
+	pinMode(ultra_Trig_Pin_Right, OUTPUT);
+	pinMode(ultra_Trig_Pin_Left, OUTPUT);
+	pinMode(ultra_Trig_Pin_Top, OUTPUT);
+	pinMode(ultra_Trig_Pin_Bottom, OUTPUT);
+	pinMode(ultra_Echo_Pin_Front  , INPUT);
+	pinMode(ultra_Echo_Pin_Right  , INPUT);
+	pinMode(ultra_Echo_Pin_Left  , INPUT);	
+	pinMode(ultra_Echo_Pin_Top  , INPUT);
+	pinMode(ultra_Echo_Pin_Bottom  , INPUT);
 	sprintf(buf,FORMAT_SETUP_SUCCESS,"ULTRASOUND");
 	Serial.print(buf);
 	
 }
-void ultrainternalTrigger(int trig_pin){
+void __ultrainternalTrigger__(int trig_pin){
 	digitalWrite(trig_pin, LOW);
 	delayMicroseconds(2);
 	digitalWrite(trig_pin, HIGH);
 	delayMicroseconds(10);
 	digitalWrite(trig_pin, LOW);
 }
-int getDistance(int trig_pin, int echo_pin){
-	ultrainternalTrigger(trig_pin);
-	return ultrainternalDistanceMeasure(echo_pin);
+int __getDistance__(int trig_pin, int echo_pin){
+	__ultrainternalTrigger__(trig_pin);
+	duration = pulseIn(echo_pin, HIGH, ultra_pulseIn_max_wait) ; //sensor stops reading after some time - adding delay 26/03
+	// Serial.println(duration);
+	distance = (duration/2) / 29.1;
+	if(distance >=200 || distance <= 0){
+		return ultra_noObjectDetected_Return_Value;
+	}
+	return distance;
 }
-int get_Ultra_A() {
-	Ultra_Values[0] = (getDistance(ultra_Trig_Pin_A,ultra_Echo_Pin_A ) - ultra_toWingtipOffset + ultra_Offset_A);
+int __get_Ultra_Distance__(int trig_pin, int echo_pin_pin, int offset=0){
+	int temp = __getDistance__(trig_pin,echo_pin);
+	if(temp == ultra_noObjectDetected_Return_Value){
+		return ultra_noObjectDetected_Return_Value;
+	}
+	temp += offset - ultra_toWingtipOffset;
+	return temp;
+}
+int get_Ultra_Front() {
+	Ultra_Values[0] = __get_Ultra_Distance__(ultra_Trig_Pin_Front,ultra_Echo_Pin_Front,ultra_Offset_Front);
 	return Ultra_Values[0];
 }
-int get_Ultra_B() {
-	Ultra_Values[1] = (getDistance(ultra_Trig_Pin_B,ultra_Echo_Pin_B) - ultra_toWingtipOffset + ultra_Offset_B);
+int get_Ultra_Right() {
+	Ultra_Values[1] = __get_Ultra_Distance__(ultra_Trig_Pin_Right,ultra_Echo_Pin_Right,ultra_Offset_Right);
 	return Ultra_Values[1];
 }
-int get_Ultra_C() {
-	Ultra_Values[2] = (getDistance(ultra_Trig_Pin_C,ultra_Echo_Pin_C ) - ultra_toWingtipOffset + ultra_Offset_C);
+int get_Ultra_Left() {
+	Ultra_Values[2] = __get_Ultra_Distance__(ultra_Trig_Pin_Left,ultra_Echo_Pin_Left,ultra_Offset_Left);
 	return Ultra_Values[2];
 }
-int get_Ultra_D() {
-	Ultra_Values[3] = (getDistance(ultra_Trig_Pin_D,ultra_Echo_Pin_D ) - ultra_toWingtipOffset + ultra_Offset_D);
+int get_Ultra_Top() {
+	Ultra_Values[3] = __get_Ultra_Distance__(ultra_Trig_Pin_Top,ultra_Echo_Pin_Top,ultra_Offset_Top);
 	return Ultra_Values[3];
 }
-
+int get_Ultra_Bottom() {
+	Ultra_Values[4] = __get_Ultra_Distance__(ultra_Trig_Pin_Bottom,ultra_Echo_Pin_Bottom,ultra_Offset_Bottom);
+	return Ultra_Values[4];
+}
 int* get_Ultra_ABCD()
 {
-	
 	// The following order & delay is important, as the pairs of functions should not have echo/trigger pins same
-	
-	get_Ultra_A();
-	get_Ultra_B();	
-	get_Ultra_C();
-	get_Ultra_D();
+	get_Ultra_Front();
+	get_Ultra_Right();	
+	get_Ultra_Left();
+	get_Ultra_Top();
+	get_Ultra_Bottom();
 	return Ultra_Values;
 }
 

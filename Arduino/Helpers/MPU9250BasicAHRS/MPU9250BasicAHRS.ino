@@ -25,10 +25,9 @@
  We have disabled the internal pull-ups used by the Wire library in the Wire.h/twi.c utility file.
  We are also using the 400 kHz fast I2C mode by setting the TWI_FREQ  to 400000L /twi.h utility file.
  */
-#include <SPI.h>
+
 #include <Wire.h>   
-#include <Adafruit_GFX.h>
-#include <Adafruit_PCD8544.h>
+
 
 // Using NOKIA 5110 monochrome 84 x 48 pixel display
 // pin 9 - Serial clock out (SCLK)
@@ -36,7 +35,7 @@
 // pin 7 - Data/Command select (D/C)
 // pin 5 - LCD chip select (CS)
 // pin 6 - LCD reset (RST)
-Adafruit_PCD8544 display = Adafruit_PCD8544(9, 8, 7, 5, 6);
+//Adafruit_PCD8544 display = Adafruit_PCD8544(9, 8, 7, 5, 6);
 
 // See also MPU-9250 Register Map and Descriptions, Revision 4.0, RM-MPU-9250A-00, Rev. 1.4, 9/9/2013 for registers not listed in 
 // above document; the MPU9250 and MPU9150 are virtually identical but the latter has a different register map
@@ -189,7 +188,7 @@ Adafruit_PCD8544 display = Adafruit_PCD8544(9, 8, 7, 5, 6);
 
 // Using the MSENSR-9250 breakout board, ADO is set to 0 
 // Seven-bit device address is 110100 for ADO = 0 and 110101 for ADO = 1
-#define ADO 1
+#define ADO 0
 #if ADO
 #define MPU9250_ADDRESS 0x69  // Device address when ADO = 1
 #else
@@ -271,16 +270,25 @@ float eInt[3] = {0.0f, 0.0f, 0.0f};       // vector to hold integral error for M
 void setup()
 {
   Wire.begin();
-  TWBR = 12;  // 400 kbit/sec I2C speed
+//  TWBR = 12;  // 400 kbit/sec I2C speed
   Serial.begin(38400);
   
   // Set up the interrupt pin, its set as active high, push-pull
   pinMode(intPin, INPUT);
   digitalWrite(intPin, LOW);
- 
+  pinMode(myLed, OUTPUT);
+  digitalWrite(myLed, HIGH);
+  
+  
+  
+  
+
+
+
   // Read the WHO_AM_I register, this is a good test of communication
   byte c = readByte(MPU9250_ADDRESS, WHO_AM_I_MPU9250);  // Read WHO_AM_I register for MPU-9250
   Serial.print("MPU9250 "); Serial.print("I AM "); Serial.print(c, HEX); Serial.print(" I should be "); Serial.println(0x71, HEX);
+  delay(1000); 
 
   if (c == 0x71) // WHO_AM_I should always be 0x68
   {  
@@ -295,7 +303,22 @@ void setup()
     Serial.print("z-axis self test: gyration trim within : "); Serial.print(SelfTest[5],1); Serial.println("% of factory value");
  
     calibrateMPU9250(gyroBias, accelBias); // Calibrate gyro and accelerometers, load biases in bias registers
-    delay(1000); 
+    
+     
+    Serial.println("MPU9250 bias");
+    Serial.print(" x   y   z  ");
+
+    Serial.print((int)(1000*accelBias[0])); 
+    Serial.print((int)(1000*accelBias[1])); 
+    Serial.print((int)(1000*accelBias[2])); 
+    Serial.print("mg");
+    
+    Serial.print(gyroBias[0], 1); 
+    Serial.print(gyroBias[1], 1); 
+     Serial.print(gyroBias[2], 1); 
+    Serial.print("o/s");   
+  
+    
   
     initMPU9250(); 
     Serial.println("MPU9250 initialized for active data mode...."); // Initialize device for active mode read of acclerometer, gyroscope, and temperature
@@ -303,7 +326,8 @@ void setup()
     // Read the WHO_AM_I register of the magnetometer, this is a good test of communication
     byte d = readByte(AK8963_ADDRESS, WHO_AM_I_AK8963);  // Read WHO_AM_I register for AK8963
     Serial.print("AK8963 "); Serial.print("I AM "); Serial.print(d, HEX); Serial.print(" I should be "); Serial.println(0x48, HEX);
-    delay(1000); 
+    
+    
   
     // Get magnetometer calibration from AK8963 ROM
     initAK8963(magCalibration); Serial.println("AK8963 initialized for active data mode...."); // Initialize device for active mode read of magnetometer
@@ -315,7 +339,7 @@ void setup()
     Serial.print("Z-Axis sensitivity adjustment value "); Serial.println(magCalibration[2], 2);
   }
   
-    delay(1000);  
+  
   }
   else
   {
@@ -402,9 +426,8 @@ void loop()
     Serial.print("Temperature is ");  Serial.print(temperature, 1);  Serial.println(" degrees C"); // Print T values to tenths of s degree C
     }
     
-   
-    
     count = millis();
+    digitalWrite(myLed, !digitalRead(myLed));  // toggle led
     }
     }
     else {
@@ -458,8 +481,18 @@ void loop()
     Serial.print("rate = "); Serial.print((float)sumCount/sum, 2); Serial.println(" Hz");
     }
    
-      
   
+    // With these settings the filter is updating at a ~145 Hz rate using the Madgwick scheme and 
+    // >200 Hz using the Mahony scheme even though the display refreshes at only 2 Hz.
+    // The filter update rate is determined mostly by the mathematical steps in the respective algorithms, 
+    // the processor speed (8 MHz for the 3.3V Pro Mini), and the magnetometer ODR:
+    // an ODR of 10 Hz for the magnetometer produce the above rates, maximum magnetometer ODR of 100 Hz produces
+    // filter update rates of 36 - 145 and ~38 Hz for the Madgwick and Mahony schemes, respectively. 
+    // This is presumably because the magnetometer read takes longer than the gyro or accelerometer reads.
+    // This filter update rate should be fast enough to maintain accurate platform orientation for 
+    // stabilization control of a fast-moving robot or quadcopter. Compare to the update rate of 200 Hz
+    // produced by the on-board Digital Motion Processor of Invensense's MPU6050 6 DoF and MPU9150 9DoF sensors.
+    // The 3.3 V 8 MHz Pro Mini is doing pretty well!
     
 
     count = millis(); 
@@ -919,3 +952,94 @@ void MPU9250SelfTest(float * destination) // Should return percent deviation fro
         dest[i++] = Wire.read(); }         // Put read results in the Rx buffer
 }
 
+void MadgwickQuaternionUpdate(float ax, float ay, float az, float gx, float gy, float gz, float mx, float my, float mz)
+        {
+            float q1 = q[0], q2 = q[1], q3 = q[2], q4 = q[3];   // short name local variable for readability
+            float norm;
+            float hx, hy, _2bx, _2bz;
+            float s1, s2, s3, s4;
+            float qDot1, qDot2, qDot3, qDot4;
+
+            // Auxiliary variables to avoid repeated arithmetic
+            float _2q1mx;
+            float _2q1my;
+            float _2q1mz;
+            float _2q2mx;
+            float _4bx;
+            float _4bz;
+            float _2q1 = 2.0f * q1;
+            float _2q2 = 2.0f * q2;
+            float _2q3 = 2.0f * q3;
+            float _2q4 = 2.0f * q4;
+            float _2q1q3 = 2.0f * q1 * q3;
+            float _2q3q4 = 2.0f * q3 * q4;
+            float q1q1 = q1 * q1;
+            float q1q2 = q1 * q2;
+            float q1q3 = q1 * q3;
+            float q1q4 = q1 * q4;
+            float q2q2 = q2 * q2;
+            float q2q3 = q2 * q3;
+            float q2q4 = q2 * q4;
+            float q3q3 = q3 * q3;
+            float q3q4 = q3 * q4;
+            float q4q4 = q4 * q4;
+
+            // Normalise accelerometer measurement
+            norm = sqrt(ax * ax + ay * ay + az * az);
+            if (norm == 0.0f) return; // handle NaN
+            norm = 1.0f/norm;
+            ax *= norm;
+            ay *= norm;
+            az *= norm;
+
+            // Normalise magnetometer measurement
+            norm = sqrt(mx * mx + my * my + mz * mz);
+            if (norm == 0.0f) return; // handle NaN
+            norm = 1.0f/norm;
+            mx *= norm;
+            my *= norm;
+            mz *= norm;
+
+            // Reference direction of Earth's magnetic field
+            _2q1mx = 2.0f * q1 * mx;
+            _2q1my = 2.0f * q1 * my;
+            _2q1mz = 2.0f * q1 * mz;
+            _2q2mx = 2.0f * q2 * mx;
+            hx = mx * q1q1 - _2q1my * q4 + _2q1mz * q3 + mx * q2q2 + _2q2 * my * q3 + _2q2 * mz * q4 - mx * q3q3 - mx * q4q4;
+            hy = _2q1mx * q4 + my * q1q1 - _2q1mz * q2 + _2q2mx * q3 - my * q2q2 + my * q3q3 + _2q3 * mz * q4 - my * q4q4;
+            _2bx = sqrt(hx * hx + hy * hy);
+            _2bz = -_2q1mx * q3 + _2q1my * q2 + mz * q1q1 + _2q2mx * q4 - mz * q2q2 + _2q3 * my * q4 - mz * q3q3 + mz * q4q4;
+            _4bx = 2.0f * _2bx;
+            _4bz = 2.0f * _2bz;
+
+            // Gradient decent algorithm corrective step
+            s1 = -_2q3 * (2.0f * q2q4 - _2q1q3 - ax) + _2q2 * (2.0f * q1q2 + _2q3q4 - ay) - _2bz * q3 * (_2bx * (0.5f - q3q3 - q4q4) + _2bz * (q2q4 - q1q3) - mx) + (-_2bx * q4 + _2bz * q2) * (_2bx * (q2q3 - q1q4) + _2bz * (q1q2 + q3q4) - my) + _2bx * q3 * (_2bx * (q1q3 + q2q4) + _2bz * (0.5f - q2q2 - q3q3) - mz);
+            s2 = _2q4 * (2.0f * q2q4 - _2q1q3 - ax) + _2q1 * (2.0f * q1q2 + _2q3q4 - ay) - 4.0f * q2 * (1.0f - 2.0f * q2q2 - 2.0f * q3q3 - az) + _2bz * q4 * (_2bx * (0.5f - q3q3 - q4q4) + _2bz * (q2q4 - q1q3) - mx) + (_2bx * q3 + _2bz * q1) * (_2bx * (q2q3 - q1q4) + _2bz * (q1q2 + q3q4) - my) + (_2bx * q4 - _4bz * q2) * (_2bx * (q1q3 + q2q4) + _2bz * (0.5f - q2q2 - q3q3) - mz);
+            s3 = -_2q1 * (2.0f * q2q4 - _2q1q3 - ax) + _2q4 * (2.0f * q1q2 + _2q3q4 - ay) - 4.0f * q3 * (1.0f - 2.0f * q2q2 - 2.0f * q3q3 - az) + (-_4bx * q3 - _2bz * q1) * (_2bx * (0.5f - q3q3 - q4q4) + _2bz * (q2q4 - q1q3) - mx) + (_2bx * q2 + _2bz * q4) * (_2bx * (q2q3 - q1q4) + _2bz * (q1q2 + q3q4) - my) + (_2bx * q1 - _4bz * q3) * (_2bx * (q1q3 + q2q4) + _2bz * (0.5f - q2q2 - q3q3) - mz);
+            s4 = _2q2 * (2.0f * q2q4 - _2q1q3 - ax) + _2q3 * (2.0f * q1q2 + _2q3q4 - ay) + (-_4bx * q4 + _2bz * q2) * (_2bx * (0.5f - q3q3 - q4q4) + _2bz * (q2q4 - q1q3) - mx) + (-_2bx * q1 + _2bz * q3) * (_2bx * (q2q3 - q1q4) + _2bz * (q1q2 + q3q4) - my) + _2bx * q2 * (_2bx * (q1q3 + q2q4) + _2bz * (0.5f - q2q2 - q3q3) - mz);
+            norm = sqrt(s1 * s1 + s2 * s2 + s3 * s3 + s4 * s4);    // normalise step magnitude
+            norm = 1.0f/norm;
+            s1 *= norm;
+            s2 *= norm;
+            s3 *= norm;
+            s4 *= norm;
+
+            // Compute rate of change of quaternion
+            qDot1 = 0.5f * (-q2 * gx - q3 * gy - q4 * gz) - beta * s1;
+            qDot2 = 0.5f * (q1 * gx + q3 * gz - q4 * gy) - beta * s2;
+            qDot3 = 0.5f * (q1 * gy - q2 * gz + q4 * gx) - beta * s3;
+            qDot4 = 0.5f * (q1 * gz + q2 * gy - q3 * gx) - beta * s4;
+
+            // Integrate to yield quaternion
+            q1 += qDot1 * deltat;
+            q2 += qDot2 * deltat;
+            q3 += qDot3 * deltat;
+            q4 += qDot4 * deltat;
+            norm = sqrt(q1 * q1 + q2 * q2 + q3 * q3 + q4 * q4);    // normalise quaternion
+            norm = 1.0f/norm;
+            q[0] = q1 * norm;
+            q[1] = q2 * norm;
+            q[2] = q3 * norm;
+            q[3] = q4 * norm;
+
+        }
