@@ -21,22 +21,11 @@
 	//Ultrasound Sensors ( 4 Gnd, 4 VCC, 2 Dig each)
 	//Front, Right, Left, Top, Bottom
 
-<<<<<<< HEAD
-#define ultra_Trig_Pin_A 11
-#define ultra_Trig_Pin_B 4
-#define ultra_Trig_Pin_C 8
-#define ultra_Trig_Pin_D 9
-#define ultra_Echo_Pin_A 14
-#define ultra_Echo_Pin_B 15
-#define ultra_Echo_Pin_C 16
-#define ultra_Echo_Pin_D 17
-=======
 #define ultra_Trig_Pin_Top 3
 #define ultra_Trig_Pin_Bottom 4
 #define ultra_Trig_Pin_Front 5
 #define ultra_Trig_Pin_Right 6
 #define ultra_Trig_Pin_Left 7
->>>>>>> develop
 
 #define ultra_Echo_Pin_Top 8
 #define ultra_Echo_Pin_Bottom 14
