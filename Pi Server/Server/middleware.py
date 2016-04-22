@@ -104,7 +104,9 @@ class Middleware_Arduino:
                 self.logger.setup_errorcode(params)
             elif functionName == Constants.ARDUINOSTATUS_SETUP_MESSAGE:
                 self.logger.setup_message(params)
-
+            elif functionName == "SETUP COMPLETED":
+                return True
+            return False
 
         except ValueError as e:
             print e

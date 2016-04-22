@@ -5,6 +5,7 @@ ENABLE_FLASK_LOGGING = False
 ENABLE_FLASK_DEBUG_MODE = True
 ENABLE_BONJOUR_REGISTER = True
 ENABLE_SERIAL = True
+# Following line is useless, as PID operation thread doesnt work till it gets a value from Serial
 ENABLE_PID = True
 
 # SOCKET-IO

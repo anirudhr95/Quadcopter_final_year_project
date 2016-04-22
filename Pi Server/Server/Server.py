@@ -1,4 +1,5 @@
 import threading
+import multiprocessing
 
 async_mode = None
 
@@ -59,61 +60,60 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 serial_port = None
 quadcopter = None
-e = None
 middleware_ios = None
 middleware_arduino = None
 message_sender = None
-firstdata = False
+queue = None
 
-def read_from_port(serial_port=None):
+
+def read_from_port(port, baud_rate, queue):
     """
 
     :param event: Thread.Event to call upon reading data froms serial (Used by IOSSenderThread)
     :param serial_port: serial.Serial() variable specifying serial port of arduino decice
     """
-    serial_port = serial.Serial('/dev/cu.usbmodem1421', 115200)
+    serial_port = serial.Serial(port, baud_rate, queue)
     print "SERIAL WORKER THREAD STARTED with object (%s)" % serial_port
-    global firstdata
     while True:
         reading = serial_port.readline().decode("Utf-8").rstrip()
-        if not firstdata:
-            e.set()
-            firstdata = True
         if reading:
-            print 'READING:',reading
+            try:
+                queue.put(reading)
+            except:
+                while not queue.empty():
+                    queue.get()
+
+
+def speed_control(queue, quadcopter, message_sender, middleware_arduino):
+    """
+        Requires middleware_arduino, quadcopter, message_sender params
+    """
+    print "PID CONTROL THREAD STARTED : Waiting for first reading"
+    import time
+
+    # Wait for Serial Setup to complete (Marked by "SETUP COMPLETED:" MESSAGE)
+
+    reading = queue.get()
+    while not middleware_arduino.parseMessage(reading):
+        reading = queue.get()
+        middleware_arduino.parseMessage(reading)
+    # TODO BROADCAST Ready message
+    print "SETUP COMPLETED"
+
+    speeds, oldspeeds = [0, 0, 0, 0], [0, 0, 0, 0]
+    while True:
+        # CHECK MESSAGE QUEUE FOR ARDUINO INPUTS
+        if queue.empty():
+            # TODO: This means that no data is being received from arduino, which means quad needs to go into hover mode/land, because of some serial error
+            quadcopter.land()
+        while not queue.empty():
+            reading = queue.get_nowait()
             middleware_arduino.parseMessage(reading)
 
-
-def speed_control():
-    """
-
-    """
-    global quadcopter, message_sender
-
-    import time
-    print "PID CONTROL THREAD STARTED"
-    speeds, oldspeeds = [0, 0, 0, 0], [0, 0, 0, 0]
-    global e
-    # Wait for First read from serial
-    e.wait()
-    e.clear()
-    # TODO BROADCAST Ready message
-
-    # time.sleep(20)
-
-    print 'READY TO TAKEOFF'
-    while True:
         oldspeeds = speeds[:]
-        # print 'BEFORE REFRESH : %s'%(quadcopter)
-
         speeds = quadcopter.refresh()
-
-        for i in range(len(speeds)):
-            if oldspeeds[i] != speeds[i]:
-                # print 'AFTER REFRESH : %s' % (quadcopter)
-                if Constants.ENABLE_SERIAL:
-                    message_sender.toArduino_set_speed(speeds)
-                break
+        if oldspeeds != speeds:
+            message_sender.toArduino_set_speed(speeds)
         time.sleep(Constants.REFRESH_PID_TIME)
 
 
@@ -144,14 +144,14 @@ def index():
         elif 'reset_baro' in request.form:
             message_sender.toArduino_reset_baro()
         elif 'change_pid' in request.form:
-            p,i,d = 0.0,0.0,0.0
+            p, i, d = 0.0, 0.0, 0.0
             if request.form['set_kp'] != '':
                 p = float(request.form['set_kp'])
             if request.form['set_ki'] != '':
                 i = float(request.form['set_ki'])
             if request.form['set_kd'] != '':
                 d = float(request.form['set_kd'])
-            quadcopter.__TEST_SET_PID__(p,i,d)
+            quadcopter.__TEST_SET_PID__(p, i, d)
     print 'INSIDE INDEX: %s' % (quadcopter)
     return render_template("index.html")
 
@@ -169,8 +169,6 @@ def initialSetup():
 
     middleware_arduino = Middleware_Arduino(quadcopter)
     middleware_ios = Middleware_IOS(quadcopter)
-    global e
-    e= threading.Event()
 
     # TODO Implement Logging
     if Constants.ENABLE_FLASK_LOGGING:
@@ -189,25 +187,27 @@ def initialSetup():
     # SERIAL SERVICE
     # from Serial_Comm import read_from_port
 
-
+    global queue
+    queue = multiprocessing.Queue()
 
     if Constants.ENABLE_SERIAL:
         global serial_port
         serial_port = serial.Serial(Constants.ARDUINO_PORT, Constants.ARDUINO_BAUDRATE, timeout=0)
-        serial_port.write("HELLO")
-        # except serial.SerialException():
-        #     print("FAILED TO CONNECT TO SERIAL PORT : %s"%msg)
-        thread = Thread(name="Serial Thread",
-                        target=read_from_port,
-                        kwargs={'serial_port': serial_port}
-                        )
+        thread = multiprocessing.Process(name="Serial Thread",
+                                         target=read_from_port,
+                                         kwargs={'port': Constants.ARDUINO_PORT,
+                                                 'baud_rate': Constants.ARDUINO_BAUDRATE,
+                                                 'queue': queue})
         thread.daemon = True
         thread.start()
     if Constants.ENABLE_PID:
         # PID THREAD
-
-        thread3 = Thread(name="PID Thread",
-                         target=speed_control)
+        thread3 = multiprocessing.Process(name="PID Thread",
+                                          target=speed_control,
+                                          kwargs={'queue': queue,
+                                                  'quadcopter': quadcopter,
+                                                  'message_sender': message_sender,
+                                                  'middleware_arduino': middleware_arduino})
         thread3.daemon = True
         thread3.start()
 
