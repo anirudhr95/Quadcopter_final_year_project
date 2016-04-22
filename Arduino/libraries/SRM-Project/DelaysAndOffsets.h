@@ -16,9 +16,9 @@
 // #define SET_TRANSMISSION_RATE_MID 
 // #define SET_TRANSMISSION_RATE_LOW
 
-#define UPDATE_FREQUENCY_RATE_HIGH 50
-#define UPDATE_FREQUENCY_RATE_MID 200
-#define UPDATE_FREQUENCY_RATE_LOW 400
+#define UPDATE_FREQUENCY_RATE_HIGH 100
+#define UPDATE_FREQUENCY_RATE_MID 300
+#define UPDATE_FREQUENCY_RATE_LOW 800
 
 
 /* GYRO TRANSMISSION RATE 
@@ -34,7 +34,7 @@ LOW = 1 for every other possible type of message
 Ultrasound
 */
 
-#define PING_INTERVAL 33 // Milliseconds between sensor pings (29ms is about the min to avoid cross-sensor echo).
+// USES UPDATE FREQUENCY RATE OF GYRO
 #define MAX_DISTANCE 200 // Maximum distance (in cm) to ping.
 #define SONAR_NUM     5 // Number of sensors.
 

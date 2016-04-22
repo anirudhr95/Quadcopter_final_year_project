@@ -410,6 +410,7 @@ class Quadcopter:
         self.ypr = {'current': [0.0, 0.0, 0.0],
                     'desired': [0.0, 0.0, 0.0]}
         self.__init_PID__()
+        self.__init__ULTRA_PID__()
         self.PIDS_Pitch = [self.PID_PITCH_FR,
                            self.PID_PITCH_FL,
                            self.PID_PITCH_BR,
@@ -460,15 +461,39 @@ class Quadcopter:
             if self.ultra_values['current'][i] != 0:
                 self.ultra_values['current'][i] -= Constants.ULTRASOUND_TOWINGTIP_OFFSET
 
-        self.logger.data_ultrasound(self.ultra_values)
+        self.logger.data_ultrasound(self.ultra_values['current'])
 
     def takeoff(self):
         print '\n\nENTERED TAKEOFF'
         self.logger.mode_Takeoff()
+        # To make sure speed doesnt reach lesser than min rotation speed(Instant crash)
+        for PID in self.PIDS_Pitch:
+            PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_MIN)
+        for PID in self.PIDS_Yaw:
+            PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_MIN)
+        for PID in self.PIDS_Roll:
+            PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_MIN)
+        for PID in self.PIDS_Altitude:
+            PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_MIN)
+        for PID_TYPE in self.PIDS_ULTRA:
+            for PID in PID_TYPE:
+                PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_MIN)
+
         self.mode_Hover_Enable(Constants.TAKEOFF_PREFERED_ALTITUDE)
 
     def land(self):
         self.logger.mode_Land()
+        for PID in self.PIDS_Pitch:
+            PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_ABSOLUTE__MIN)
+        for PID in self.PIDS_Yaw:
+            PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_ABSOLUTE__MIN)
+        for PID in self.PIDS_Roll:
+            PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_ABSOLUTE__MIN)
+        for PID in self.PIDS_Altitude:
+            PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_ABSOLUTE__MIN)
+        for PID_TYPE in self.PIDS_ULTRA:
+            for PID in PID_TYPE:
+                PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_ABSOLUTE__MIN)
         self.mode_Altitude_Hold_Enable(0.0)
 
     # COLLISION MODE STUFF
@@ -510,7 +535,7 @@ class Quadcopter:
             if (self.ultra_values['current'][i] != 0) and (
                         self.ultra_values['current'][i] < Constants.ULTRASOUND_SAFE_DISTANCE):
                 self.mode_Collision_Avoid_Enable()
-                self.logger.warn_collision(i,self.ultra_values['current'][i])
+                self.logger.warn_collision(i, self.ultra_values['current'][i])
                 for pid in self.PIDS_ULTRA[i]:
                     pid.compute()
 
@@ -543,10 +568,6 @@ class Quadcopter:
         :returns Motorspeeds: The new motor speeds to set
         """
         return self.__compute__()
-
-
-
-
 
     def __TEST_SET_PID__(self, p, i, d):
         for PID in self.PIDS_Pitch:
@@ -606,10 +627,6 @@ class Quadcopter:
     def is_mode_Hover(self):
         return self.__is_mode_Hover__
 
-
-
-
-
     def __check_YPR_Goodness__(self, ypr):
         return (ypr[1] <= Constants.MAX_PITCH and ypr[1] >= -Constants.MAX_PITCH) \
                and (ypr[2] <= Constants.MAX_ROLL and ypr[2] >= -Constants.MAX_ROLL)
@@ -653,7 +670,8 @@ class Quadcopter:
             self.mode_Altitude_Hold_Disable()
         else:
             self.altitudes['current'] = altitude
-            self.mode_Altitude_Hold_Enable()
+            if not self.is_mode_Altitude_Hold():
+                self.mode_Altitude_Hold_Enable(self.get_Altitude_Desired())
 
     def get_Altitude_Current(self):
         return self.altitudes['current']

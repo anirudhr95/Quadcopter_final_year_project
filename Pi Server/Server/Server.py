@@ -80,7 +80,7 @@ def read_from_port(serial_port=None):
             e.set()
             firstdata = True
         if reading:
-            print reading
+            print 'READING:',reading
             middleware_arduino.parseMessage(reading)
 
 
@@ -94,9 +94,13 @@ def speed_control():
     print "PID CONTROL THREAD STARTED"
     speeds, oldspeeds = [0, 0, 0, 0], [0, 0, 0, 0]
     global e
+    # Wait for First read from serial
     e.wait()
     e.clear()
-    time.sleep(20)
+    # TODO BROADCAST Ready message
+
+    # time.sleep(20)
+
     print 'READY TO TAKEOFF'
     while True:
         oldspeeds = speeds[:]
@@ -106,7 +110,7 @@ def speed_control():
 
         for i in range(len(speeds)):
             if oldspeeds[i] != speeds[i]:
-                print 'AFTER REFRESH : %s' % (quadcopter)
+                # print 'AFTER REFRESH : %s' % (quadcopter)
                 if Constants.ENABLE_SERIAL:
                     message_sender.toArduino_set_speed(speeds)
                 break
@@ -190,6 +194,7 @@ def initialSetup():
     if Constants.ENABLE_SERIAL:
         global serial_port
         serial_port = serial.Serial(Constants.ARDUINO_PORT, Constants.ARDUINO_BAUDRATE, timeout=0)
+        serial_port.write("HELLO")
         # except serial.SerialException():
         #     print("FAILED TO CONNECT TO SERIAL PORT : %s"%msg)
         thread = Thread(name="Serial Thread",

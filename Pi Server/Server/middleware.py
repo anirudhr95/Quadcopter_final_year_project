@@ -84,7 +84,8 @@ class Middleware_Arduino:
                 self.logger.data_gyromag(gyro=[y,p,r],heading=heading)
                 self.quadcopter.sensor_set_YPR_Current([y, p, r])
             elif functionName == Constants.ARDUINOSTATUS_ULTRA:
-                self.logger.data_ultrasound(params)
+                # print type(params)
+                self.logger.data_ultrasound(params.split(';'))
                 #     TODO HANDLE ULTRASONIC DATA
                 # ORDER: BOTTOM, TOP, FRONT, RIGHT, LEFT
                 bottom,top,front,right,left = map(lambda x: float(x), params.split(';'))
@@ -92,7 +93,7 @@ class Middleware_Arduino:
                 self.quadcopter.sensor_set_ultra(F=front,L=left,R=right,T=top)
 
             elif functionName == Constants.ARDUINOMESSAGE_MOTOR:
-                self.logger.data_motor_speeds(params)
+                self.logger.data_motor_speeds(params.split(';'))
             elif functionName == Constants.ARDUINOSTATUS_SETUP_INITIALIZING:
                 self.logger.setup_init(params)
             elif functionName == Constants.ARDUINOSTATUS_SETUP_SUCCESS:

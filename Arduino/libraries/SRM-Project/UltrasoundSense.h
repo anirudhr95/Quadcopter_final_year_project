@@ -13,7 +13,7 @@
 #include "printHelper.h"
 #include <NewPing.h>
 
-
+int PING_INTERVAL;
 unsigned long pingTimer[SONAR_NUM]; // Holds the times when the next ping should happen for each sensor.
 unsigned int cm[SONAR_NUM];         // Where the ping distances are stored.
 uint8_t currentSensor = 0;          // Keeps track of which sensor is active.
@@ -47,6 +47,14 @@ void ultra_Setup(){
 		pingTimer[i] = pingTimer[i - 1] + PING_INTERVAL;
 	sprintf(buf,FORMAT_SETUP_SUCCESS,"ULTRASOUND");
 	Serial.print(buf);
+	#ifdef SET_TRANSMISSION_RATE_HIGH
+		PING_INTERVAL = UPDATE_FREQUENCY_RATE_HIGH;
+	#elif defined SET_TRANSMISSION_RATE_MID
+		PING_INTERVAL = UPDATE_FREQUENCY_RATE_MID;
+	#elif defined SET_TRANSMISSION_RATE_LOW
+		PING_INTERVAL = UPDATE_FREQUENCY_RATE_LOW;
+	#endif
+
 	
 }
 void ultra_Compute()

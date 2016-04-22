@@ -41,11 +41,13 @@ class ArduinoLogger:
         self.logger.debug("MOTOR-SPEED:%s" % (";".join(speeds)))
 
     def data_gyromag(self, gyro,heading):
-        self.logger.debug("GYRO-MAG:%s;%s" % (";".join(gyro), heading))
+        self.logger.debug("GYRO-MAG:%s;%s" % (";".join(str(val) for val in gyro), heading))
 
     def data_ultrasound(self, data):
+        # print data
+        self.logger.debug("ULTRA:%s" % (';'.join(str(val) for val in data)))
         assert isinstance(data, list)
-        self.logger.debug("%s" % (';'.join(str(val) for val in data)))
+
 
 
     def data_altitude(self, data):
@@ -137,5 +139,5 @@ class PILogger:
         self.logger.error("PROCESSING_ERROR:%s" % msg)
 
     def data_ultrasound(self, data):
-        assert isinstance(data, list)
+        # assert isinstance(data, list)
         self.logger.debug("%s" % (';'.join(str(val) for val in data)))
