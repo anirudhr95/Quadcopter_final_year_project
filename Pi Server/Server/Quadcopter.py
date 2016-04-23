@@ -12,7 +12,7 @@ class Quadcopter:
     """
 
     # TODO When switching from Flight mode to hover, set ypr_desired to reverse(current ypr) with high kp,ki,kd
-    def __init_PID__(self):
+    def __init_pid__(self):
         """
         Tilt forward = +ve pitch
         Tilt left = +ve roll
@@ -195,8 +195,6 @@ class Quadcopter:
                               min=Constants.MOTOR_MIN,
                               reverse_direction=False
                               )
-
-    def __init__ULTRA_PID__(self):
         self.PID_ULTRA_FRONT_FR = PID(reference=self.ultra_values,
                                       output=self.motor_Speeds,
                                       reference_index_to_use=0,
@@ -392,6 +390,7 @@ class Quadcopter:
         self.should_change_yaw = False
         self.__is_mode_Hover__ = False
         self.__is_mode_Collision_Avoid = False
+        self.__has_taken_off__ = False
 
         self.altitudes = {'current': 0.0,
                           'desired': 0.0}
@@ -409,8 +408,7 @@ class Quadcopter:
 
         self.ypr = {'current': [0.0, 0.0, 0.0],
                     'desired': [0.0, 0.0, 0.0]}
-        self.__init_PID__()
-        self.__init__ULTRA_PID__()
+        self.__init_pid__()
         self.PIDS_Pitch = [self.PID_PITCH_FR,
                            self.PID_PITCH_FL,
                            self.PID_PITCH_BR,
@@ -448,15 +446,15 @@ class Quadcopter:
                            self.PIDS_ULTRA_Left,
                            self.PIDS_ULTRA_Top]
 
-    def get_ultra_values(self):
-        return self.ultra_values
+    def get_ultra_values_current(self):
+        return self.ultra_values['current']
 
-    def sensor_set_ultra(self, F, R, L, T):
+    def set_sensor_ultra_values(self, front, right, left, top):
 
-        self.ultra_values['current'][0] = F
-        self.ultra_values['current'][1] = R
-        self.ultra_values['current'][2] = L
-        self.ultra_values['current'][3] = T
+        self.ultra_values['current'][0] = front
+        self.ultra_values['current'][1] = right
+        self.ultra_values['current'][2] = left
+        self.ultra_values['current'][3] = top
         for i in range(len(self.ultra_values['current'])):
             if self.ultra_values['current'][i] != 0:
                 self.ultra_values['current'][i] -= Constants.ULTRASOUND_TOWINGTIP_OFFSET
@@ -466,6 +464,7 @@ class Quadcopter:
     def takeoff(self):
         print '\n\nENTERED TAKEOFF'
         self.logger.mode_Takeoff()
+        self.__has_taken_off__ = True
         # To make sure speed doesnt reach lesser than min rotation speed(Instant crash)
         for PID in self.PIDS_Pitch:
             PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_MIN)
@@ -479,7 +478,7 @@ class Quadcopter:
             for PID in PID_TYPE:
                 PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_MIN)
 
-        self.mode_Hover_Enable(Constants.TAKEOFF_PREFERED_ALTITUDE)
+        self.set_mode_hover_enable(Constants.TAKEOFF_PREFERED_ALTITUDE)
 
     def land(self):
         self.logger.mode_Land()
@@ -494,53 +493,56 @@ class Quadcopter:
         for PID_TYPE in self.PIDS_ULTRA:
             for PID in PID_TYPE:
                 PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_ABSOLUTE__MIN)
-        self.mode_Altitude_Hold_Enable(0.0)
+        self.set_mode_altitude_hold_enable(0.0)
 
     # COLLISION MODE STUFF
-    def mode_Collision_Avoid_Enable(self):
+    def set_mode_collision_avoid_enable(self):
         self.__is_mode_Collision_Avoid = True
 
-    def mode_Collision_Avoid_Disable(self):
+    def set_mode_collision_avoid_disable(self):
         self.__is_mode_Collision_Avoid = False
 
-    def is_mode_Collision_Avoid(self):
+    def is_mode_collision_avoid(self):
         return self.__is_mode_Collision_Avoid
 
     # ALTITUDE HOLD
-    def mode_Altitude_Hold_Enable(self, height=None):
-        if not self.is_mode_Altitude_Hold():
+    def set_mode_altitude_hold_enable(self, height=None):
+        if not self.is_mode_altitude_hold():
             self.logger.mode_altitude_hold(1)
             self.should_hold_altitude = True
-            # TODO Fix Altitude Algorithm (Getting None Value)
-        if height != None:
-            self.__set_Altitude_Desired__(height)
-        else:
-            self.__set_Altitude_Desired__(self.get_Altitude_Current())
 
-    def mode_Altitude_Hold_Disable(self):
-        if self.is_mode_Altitude_Hold():
+        if height != None:
+            self.__set_altitude_desired__(height)
+        else:
+            self.__set_altitude_desired__(self.get_altitude_current())
+
+    def set_mode_altitude_hold_disable(self):
+        if self.is_mode_altitude_hold():
             self.logger.mode_altitude_hold(0)
             self.should_hold_altitude = False
 
-    def is_mode_Altitude_Hold(self):
+    def is_mode_altitude_hold(self):
         return self.should_hold_altitude
 
     def __compute__(self):
         """
         Modifies motor speeds
         """
+        # Check for bad angles
+        # TODO: Change PID Algorithm -> If reference parameters cross threshold, modify PID to bring it under control, then set pid to normal (Useful in case of wind)
+
         # CHECK FOR COLLISION
-        self.mode_Collision_Avoid_Disable()
-        for i in range(len(self.ultra_values['current'])):
-            if (self.ultra_values['current'][i] != 0) and (
-                        self.ultra_values['current'][i] < Constants.ULTRASOUND_SAFE_DISTANCE):
-                self.mode_Collision_Avoid_Enable()
+        self.set_mode_collision_avoid_disable()
+        val = self.ultra_values['current']
+        for i in range(len(val)):
+            if (val[i] != 0) and (val[i] < Constants.ULTRASOUND_SAFE_DISTANCE):
+                self.set_mode_collision_avoid_enable()
                 self.logger.warn_collision(i, self.ultra_values['current'][i])
                 for pid in self.PIDS_ULTRA[i]:
                     pid.compute()
 
         # If collision possible, return the newly computed speeds, and return result without computing other PIDs except Altitude.
-        if not self.is_mode_Collision_Avoid():
+        if not self.is_mode_collision_avoid():
             for pid in self.PIDS_Yaw:
                 pid.compute()
 
@@ -550,26 +552,45 @@ class Quadcopter:
                 pid.compute()
 
         # Allow Altitude hold to ensure that quad doesnt crash into the ground
-        if self.is_mode_Altitude_Hold():
+        if self.is_mode_altitude_hold():
             for pid in self.PIDS_Altitude:
                 pid.compute()
-        # Dont use this (uses 10KB for running a 40iteration simulation)
+        # TODO: Remove this line, after testing completed. Dont use this (uses 10KB for running a 40iteration simulation)
         self.logger.data_set_speeds(self.motor_Speeds)
+
+        # Check if land target speed reached
+
+
         return self.motor_Speeds
 
     def __str__(self):
         return "ALTITUDES : %s,\nYPRS : %s,\nMotorSpeeds : %s\nMode:%s" % (self.altitudes, self.ypr, self.motor_Speeds,
-                                                                           {'Hover': self.is_mode_Hover(),
-                                                                            'AltitudeHold': self.is_mode_Altitude_Hold(),
-                                                                            'Flight': self.is_mode_Flight()})
+                                                                           {'Hover': self.is_mode_hover(),
+                                                                            'AltitudeHold': self.is_mode_altitude_hold(),
+                                                                            'Flight': self.is_mode_flight()})
+
+    def has_landed(self):
+        return True if not filter(lambda x: x < Constants.MOTOR_MIN, self.motor_Speeds) else False
+
+    def has_taken_off(self):
+        return self.__has_taken_off__
 
     def refresh(self):
         """
         :returns Motorspeeds: The new motor speeds to set
         """
-        return self.__compute__()
+        # Return existing speed if takeoff command has not been given
+        if not self.has_taken_off():
+            return self.motor_Speeds
+        # Compute new motor speeds
+        self.__compute__()
 
-    def __TEST_SET_PID__(self, p, i, d):
+        if self.has_landed():
+            self.__has_taken_off__ = False
+
+        return self.motor_Speeds
+
+    def __set_pid_test__(self, p, i, d):
         for PID in self.PIDS_Pitch:
             PID.change_pid(p, i, d)
         for PID in self.PIDS_Yaw:
@@ -577,17 +598,17 @@ class Quadcopter:
         for PID in self.PIDS_Roll:
             PID.change_pid(p, i, d)
 
-    def mode_Flight_Enable(self, hold_altitude=True):
-        if not self.is_mode_Flight():
+    def set_mode_flight_enable(self, hold_altitude=True):
+        if not self.is_mode_flight():
             self.logger.mode_flight()
             if hold_altitude:
-                self.mode_Altitude_Hold_Enable()
+                self.set_mode_altitude_hold_enable()
             else:
-                self.mode_Altitude_Hold_Disable()
-            self.__mode_Flight_SET_PID__()
+                self.set_mode_altitude_hold_disable()
+            self.__set_pid_flight__()
             self.__is_mode_Hover__ = False
 
-    def __mode_Flight_SET_PID__(self):
+    def __set_pid_flight__(self):
         for PID in self.PIDS_Pitch:
             PID.change_pid(Constants.KP_FLIGHTMODE, Constants.KI_FLIGHTMODE, Constants.KD_NORMAL)
 
@@ -596,26 +617,26 @@ class Quadcopter:
         for PID in self.PIDS_Roll:
             PID.change_pid(Constants.KP_FLIGHTMODE, Constants.KI_FLIGHTMODE, Constants.KD_NORMAL)
 
-    def is_mode_Flight(self):
+    def is_mode_flight(self):
         return not self.__is_mode_Hover__
 
-    def mode_Hover_Enable(self, height=None, disable_Altitude_Hold=False):
+    def set_mode_hover_enable(self, height=None, disable_Altitude_Hold=False):
         """
 
         :param height:
         :param disable_Altitude_Hold: Used by set_speed to prevent reduction in speeds by PID
         """
-        if not self.is_mode_Hover():
+        if not self.is_mode_hover():
             self.logger.mode_hover()
-        self.set_YPR_Desired(Constants.YPR_STATIONARY)
+        self.set_ypr_desired([self.get_ypr_current()[0], 0, 0])
         if not disable_Altitude_Hold:
-            self.mode_Altitude_Hold_Enable(height)
+            self.set_mode_altitude_hold_enable(height)
         else:
-            self.mode_Altitude_Hold_Disable()
-        self.__mode_Hover_SET_PID_()
+            self.set_mode_altitude_hold_disable()
+        self.__set_pid_hover__()
         self.__is_mode_Hover__ = True
 
-    def __mode_Hover_SET_PID_(self):
+    def __set_pid_hover__(self):
         for PID in self.PIDS_Pitch:
             PID.change_pid(Constants.KP_NORMAL, Constants.KI_NORMAL, Constants.KD_NORMAL)
 
@@ -624,17 +645,17 @@ class Quadcopter:
         for PID in self.PIDS_Roll:
             PID.change_pid(Constants.KP_NORMAL, Constants.KI_NORMAL, Constants.KD_NORMAL)
 
-    def is_mode_Hover(self):
+    def is_mode_hover(self):
         return self.__is_mode_Hover__
 
-    def __check_YPR_Goodness__(self, ypr):
+    def __check_ypr_goodness__(self, ypr):
         return (ypr[1] <= Constants.MAX_PITCH and ypr[1] >= -Constants.MAX_PITCH) \
                and (ypr[2] <= Constants.MAX_ROLL and ypr[2] >= -Constants.MAX_ROLL)
 
-    def get_YPR_Current(self):
+    def get_ypr_current(self):
         return self.ypr['current']
 
-    def sensor_set_YPR_Current(self, ypr):
+    def sensor_set_ypr_current(self, ypr):
         """
         Called only by sensors
         :param ypr:
@@ -642,24 +663,24 @@ class Quadcopter:
         """
         self.ypr['current'] = ypr
 
-    def get_YPR_Desired(self):
+    def get_ypr_desired(self):
         return self.ypr['desired']
 
-    def set_YPR_Desired(self, ypr):
+    def set_ypr_desired(self, ypr):
         self.logger.data_set_ypr(ypr)
-        if self.__check_YPR_Goodness__(ypr):
+        if self.__check_ypr_goodness__(ypr):
             self.ypr['desired'] = ypr
-            if ypr != Constants.YPR_STATIONARY:
+            if ypr != [self.get_ypr_current()[0], 0, 0]:
+                #
                 # Helps prevent infinite loop while calling else condition
-                self.mode_Flight_Enable()
+                self.set_mode_flight_enable()
             return True
         else:
-            # TODO Check
             self.logger.error("DESIRED YPR UNSUITABLE : %s" % ypr)
-            self.mode_Hover_Enable()
+            self.set_mode_hover_enable()
             return False
 
-    def sensor_set_Altitude_Current(self, altitude):
+    def set_sensor_altitude_current(self, altitude):
         """
         Should be called only by sensors.. Use set_altitude_desired for moving quad
         :param altitude:
@@ -667,25 +688,25 @@ class Quadcopter:
         """
         if altitude == 0:
             # Sensor cant find floor(Ultrasound)
-            self.mode_Altitude_Hold_Disable()
+            self.set_mode_altitude_hold_disable()
         else:
             self.altitudes['current'] = altitude
-            if not self.is_mode_Altitude_Hold():
-                self.mode_Altitude_Hold_Enable(self.get_Altitude_Desired())
+            if not self.is_mode_altitude_hold():
+                self.set_mode_altitude_hold_enable(self.get_altitude_desired())
 
-    def get_Altitude_Current(self):
+    def get_altitude_current(self):
         return self.altitudes['current']
 
-    def __set_Altitude_Desired__(self, altitude):
+    def __set_altitude_desired__(self, altitude):
         """
-        Should be called only by mode_Altitude_Hold_Enable
+        Should be called only by set_mode_altitude_hold_enable
         :param altitude:
         :return:
         """
         self.logger.data_set_altitude(altitude)
         self.altitudes['desired'] = altitude
 
-    def get_Altitude_Desired(self):
+    def get_altitude_desired(self):
         return self.altitudes['desired']
 
     def set_speed(self, speed):
@@ -694,7 +715,7 @@ class Quadcopter:
         for i in range(4):
             self.motor_Speeds[i] = speed if speed < Constants.MOTOR_MIN else Constants.MOTOR_MIN
             self.motor_Speeds[i] = speed if speed > Constants.MOTOR_MAX else Constants.MOTOR_MAX
-        self.mode_Hover_Enable(disable_Altitude_Hold=True)
+        self.set_mode_hover_enable(disable_Altitude_Hold=True)
 
 
 def sim_1(a, ypr=None):
@@ -704,22 +725,22 @@ def sim_1(a, ypr=None):
     :return:
     """
     if ypr:
-        a.set_YPR_Desired(ypr)
+        a.set_ypr_desired(ypr)
     else:
-        a.set_YPR_Desired([0, 20.0, 10.0])
-    # a.sensor_set_Altitude_Current(20.0)
-    # a.__set_Altitude_Desired__(20.0)
+        a.set_ypr_desired([0, 20.0, 10.0])
+    # a.set_sensor_altitude_current(20.0)
+    # a.__set_altitude_desired__(20.0)
 
     for i in range(20):
-        print a.get_YPR_Current(), a.refresh()
+        print a.get_ypr_current(), a.refresh()
         # INCREASE YPR BY [0,2,1]
-        a.sensor_set_YPR_Current([x + y for x, y in zip(a.get_YPR_Current(), [0, 2, 1])])
+        a.sensor_set_ypr_current([x + y for x, y in zip(a.get_ypr_current(), [0, 2, 1])])
 
     print 'Decreasing PITCH, setting hover mode'
-    a.mode_Hover_Enable()
+    a.set_mode_hover_enable()
     for i in range(20):
-        print a.get_YPR_Current(), a.refresh()
-        a.sensor_set_YPR_Current([x + y for x, y in zip(a.get_YPR_Current(), [0, -3, -0.5])])
+        print a.get_ypr_current(), a.refresh()
+        a.sensor_set_ypr_current([x + y for x, y in zip(a.get_ypr_current(), [0, -3, -0.5])])
 
 
 def sim_2(a):
@@ -731,14 +752,28 @@ def sim_2(a):
     a.takeoff()
     for i in range(20):
         b = a.refresh()
-        a.sensor_set_Altitude_Current(a.get_Altitude_Current() + 3)
+        a.set_sensor_altitude_current(a.get_altitude_current() + 3)
         print a.altitudes, b
     a.land()
     a.set_speed(2000.0)
     for i in range(20):
         b = a.refresh()
-        a.sensor_set_Altitude_Current(a.get_Altitude_Current() - 3)
+        a.set_sensor_altitude_current(a.get_altitude_current() - 3)
         print a.altitudes, b
+
+
+def sim_3(a):
+    """
+    Simulates Ultrasound detection
+    :param a:
+    :return:
+    """
+    a.takeoff()
+    sensor_vals = [1, 2, 3, 4]
+    a = Quadcopter()
+    a.set_sensor_ultra_values(25, 60, 60, 60)
+    for i in range(20):
+        b = a.refresh()
 
 
 if __name__ == '__main__':

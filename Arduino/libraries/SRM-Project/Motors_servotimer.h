@@ -8,49 +8,63 @@
 
 #ifndef Motors_h
 #define Motors_h
-#include <ServoTimer2.h>
+
+
 #include "DelaysAndOffsets.h"
 #include "PinoutConfig.h"
 #include "printHelper.h"
 
-ServoTimer2 a,b,c,d;
+#if USE_SERVOTIMER2
+	#include <ServoTimer2.h>
+	ServoTimer2 motor[4];
+
+#else
+	#include<Servo.h>
+	Servo motor[4];
+#endif
 
 
 
 
 
-int motor_Get_Speed_FR(){
-	return a.read();
+// int motor_Get_Speed_FR(){
+// 	return a.read();
+// }
+// int motor_Get_Speed_FL(){
+// 	return b.read();
+// }
+// int motor_Get_Speed_BR(){
+// 	return c.read();
+// }
+// int motor_Get_Speed_BL(){
+// 	return d.read();
+// }
+// int *motor_Get_Speed(){
+// 	int as[4];
+// 	as[0] = motor_Get_Speed_FR();
+// 	as[1] = motor_Get_Speed_FL();
+// 	as[2] = motor_Get_Speed_BR();
+// 	as[3] = motor_Get_Speed_BL();
+// 	return as;
+// }
+void __motor_set_speed__(int index, int speed){
+	#if USE_SERVOTIMER2
+	motor[index].write(speed + motor_offsets[index]);
+	#else
+	motor[index].writeMicroseconds(speed + motor_offsets[index]);
+	#endif
 }
-int motor_Get_Speed_FL(){
-	return b.read();
-}
-int motor_Get_Speed_BR(){
-	return c.read();
-}
-int motor_Get_Speed_BL(){
-	return d.read();
-}
-int *motor_Get_Speed(){
-	int as[4];
-	as[0] = motor_Get_Speed_FR();
-	as[1] = motor_Get_Speed_FL();
-	as[2] = motor_Get_Speed_BR();
-	as[3] = motor_Get_Speed_BL();
-	return as;
-}
-
 void motor_Set_Speed_FR(int n){
-	a.write(n + motor_FR_Offset);
+	__motor_set_speed__(0,n);
 }
 void motor_Set_Speed_FL(int n){
-	b.write(n + motor_FL_Offset);
+	__motor_set_speed__(1,n);
 }
 void motor_Set_Speed_BR(int n){
-	c.write(n + motor_BR_Offset);
+	__motor_set_speed__(2,n);
 }
 void motor_Set_Speed_BL(int n){
-	d.write(n + motor_BL_Offset);
+	__motor_set_speed__(3,n);
 }
 void refreshMotors(int MotorSpeeds[]){
 	motor_Set_Speed_FR(MotorSpeeds[0]);
@@ -85,10 +99,10 @@ void motor_setup(){
 	Serial.print(buf);
 	
 	
-	a.attach(motor_FR_Pin);  //the pin for the servo control
-	b.attach(motor_FL_Pin);
-	c.attach(motor_BR_Pin);
-	d.attach(motor_BL_Pin);
+	motor[0].attach(motor_FR_Pin);  //the pin for the servo control
+	motor[1].attach(motor_FL_Pin);
+	motor[2].attach(motor_BR_Pin);
+	motor[3].attach(motor_BL_Pin);
 	
 		// Arming speed should be LOW for sometime, to instruct the ESC that it is in "WORKING" mode
 	motor_Set_Speed(1000);
@@ -101,10 +115,10 @@ void motor_setup(){
  To calibrate motors, use motor_calibrate() function.. Concept : max(2000) microsecond pulse is applied, and power is connected. After some time, a musical note will be heard, signifying that calibration has started. Now apply Min(1000) pulse.Wait for 5 seconds, and remove power.
  */
 void motor_calibrate(){
-	a.attach(motor_FR_Pin);  //the pin for the servo control
-	b.attach(motor_FL_Pin);
-	c.attach(motor_BR_Pin);
-	d.attach(motor_BL_Pin);
+	motor[0].attach(motor_FR_Pin);  //the pin for the servo control
+	motor[1].attach(motor_FL_Pin);
+	motor[2].attach(motor_BR_Pin);
+	motor[3].attach(motor_BL_Pin);
 	Serial.println(F("Beginning Calibration.."));
 	Serial.println(F("Please remove power to motors.. Once done, press any key.."));
 	while(!Serial.available());

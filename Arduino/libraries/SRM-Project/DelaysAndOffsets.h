@@ -12,6 +12,8 @@
 
 #define BAUD_RATE 115200
 #define PRINT_MOTOR_CHANGES true
+
+
 #define SET_TRANSMISSION_RATE_HIGH
 // #define SET_TRANSMISSION_RATE_MID 
 // #define SET_TRANSMISSION_RATE_LOW
@@ -28,16 +30,17 @@ MID = 2 for every other possible type of message
 LOW = 1 for every other possible type of message
 */
 
-
-
+// Pitch is -Roll, Roll is -Pitch
+#define GYRO_ANGLES_REVERSED true
+#define GYRO_PITCH_OFFSET 0
+#define GYRO_ROLL_OFFSET 0
 /*	
 Ultrasound
 */
 
 // USES UPDATE FREQUENCY RATE OF GYRO
-#define MAX_DISTANCE 200 // Maximum distance (in cm) to ping.
+#define MAX_DISTANCE 300 // Maximum distance (in cm) to ping.
 #define SONAR_NUM     5 // Number of sensors.
-
 
 
 
@@ -51,10 +54,8 @@ Ultrasound
 
 
 //Motors
-#define motor_FR_Offset 0
-#define motor_FL_Offset 0
-#define motor_BR_Offset 0
-#define motor_BL_Offset 0
+#define USE_SERVOTIMER2 false
+static const int motor_offsets[] = {0,0,0,0};
 
 #define motor_Arm_Delay 4000
 #define motor_Min_Speed 1000

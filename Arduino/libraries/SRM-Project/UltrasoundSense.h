@@ -38,6 +38,14 @@ void ultra_on_Compute_Complete() ;
 
 void ultra_Setup(){
 	char buf[100];
+	#ifdef SET_TRANSMISSION_RATE_HIGH
+		PING_INTERVAL = UPDATE_FREQUENCY_RATE_HIGH;
+	#elif defined SET_TRANSMISSION_RATE_MID
+		PING_INTERVAL = UPDATE_FREQUENCY_RATE_MID;
+	#elif defined SET_TRANSMISSION_RATE_LOW
+		PING_INTERVAL = UPDATE_FREQUENCY_RATE_LOW;
+	#endif
+	
 	sprintf(buf,FORMAT_SETUP_INIT,"ULTRASOUND");
 	Serial.print(buf);
 		// First ping starts at 75ms, gives time for the Arduino to chill before starting.
@@ -47,13 +55,7 @@ void ultra_Setup(){
 		pingTimer[i] = pingTimer[i - 1] + PING_INTERVAL;
 	sprintf(buf,FORMAT_SETUP_SUCCESS,"ULTRASOUND");
 	Serial.print(buf);
-	#ifdef SET_TRANSMISSION_RATE_HIGH
-		PING_INTERVAL = UPDATE_FREQUENCY_RATE_HIGH;
-	#elif defined SET_TRANSMISSION_RATE_MID
-		PING_INTERVAL = UPDATE_FREQUENCY_RATE_MID;
-	#elif defined SET_TRANSMISSION_RATE_LOW
-		PING_INTERVAL = UPDATE_FREQUENCY_RATE_LOW;
-	#endif
+	
 
 	
 }

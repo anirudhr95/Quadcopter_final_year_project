@@ -23,6 +23,9 @@ void setup() {
 	ultra_Setup();
   sprintf(buf,FORMAT_SETUP_SUCCESS,"ARDUINO");
 	Serial.print(buf);
+//  TOO LAZY TO FORMAT FOLLOWING LINE.. NEED IT IN THIS FORMAT, for PID THREAD IN SERVER TO START
+  Serial.println("SETUP COMPLETED:");
+//  motor_Set_Speed(1500);
 
 }
 
@@ -31,17 +34,17 @@ void sendYPR(){
   #ifdef SET_TRANSMISSION_RATE_HIGH
 	if(millis() - last_sent >= UPDATE_FREQUENCY_RATE_HIGH){
     last_sent = millis();
-    SEND_MSG_GYROMAG(ypr, getHeading());
+//    SEND_MSG_GYROMAG(ypr, getHeading());
 	}
 	#elif defined SET_TRANSMISSION_RATE_MID
 	if(millis() - last_sent >= UPDATE_FREQUENCY_RATE_MID){
     last_sent = millis();
-    SEND_MSG_GYROMAG(ypr, getHeading());
+//    SEND_MSG_GYROMAG(ypr, getHeading());
   }
   #elif defined SET_TRANSMISSION_RATE_LOW
 	if(millis() - last_sent >= UPDATE_FREQUENCY_RATE_LOW){
     last_sent = millis();
-    SEND_MSG_GYROMAG(ypr, getHeading());
+//    SEND_MSG_GYROMAG(ypr, getHeading());
   }
   #endif
 
@@ -49,16 +52,14 @@ void sendYPR(){
 }
 void loop() {
   
-  ultra_Compute();
-  getYPR();
   
-  sendYPR();
   
 	if(Serial.available()){
 /*
 POSSIBLE INPUTS : 
 1) MOTOR_SPEEDS:A;B;C;D     -> Set Motor Speeds to Values
 */
+   
 		input = Serial.readString();
     
 		if(input.startsWith("MOTOR_SPEEDS")){
@@ -73,5 +74,9 @@ POSSIBLE INPUTS :
      refreshMotors(MotorSpeeds);
 		}
 	}
+ ultra_Compute();
+  getYPR();
+  
+  sendYPR();
 }
 

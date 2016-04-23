@@ -447,7 +447,14 @@ float *getYPR()
 	count = millis();
 	sumCount = 0;
 	sum = 0;
-	
+	#if GYRO_ANGLES_REVERSED
+		float temp = ypr[1];
+		ypr[1] = -ypr[2];
+		ypr[2] = -temp;
+	#endif
+
+	ypr[1]  += GYRO_PITCH_OFFSET;
+	ypr[2] += GYRO_ROLL_OFFSET;
 	
 	return ypr;
 	last_YPR_CALL = millis();

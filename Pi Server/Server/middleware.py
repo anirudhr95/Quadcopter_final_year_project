@@ -25,15 +25,15 @@ class Middleware_IOS:
             elif functionName == Constants.IOSMESSAGE_SETYPR:
                 self.logger.set_ypr(params)
                 params = map(lambda x: float(x), params.split(";"))
-                self.quadcopter.set_YPR_Desired(params)
+                self.quadcopter.set_ypr_desired(params)
             elif functionName == Constants.IOSMESSAGE_HOLDALTITUDE:
 
                 if int(params) == 1:
                     self.logger.altitude_hold(1)
-                    self.quadcopter.mode_Altitude_Hold_Enable()
+                    self.quadcopter.set_mode_altitude_hold_enable()
                 else:
                     self.logger.altitude_hold(0)
-                    self.quadcopter.mode_Altitude_Hold_Disable()
+                    self.quadcopter.set_mode_altitude_hold_disable()
 
             elif functionName == Constants.IOSMESSAGE_ERROR:
                 self.logger.error(params)
@@ -43,7 +43,7 @@ class Middleware_IOS:
 
             if msg == Constants.IOSMESSAGE_HOVER:
                 self.logger.hover()
-                self.quadcopter.mode_Hover_Enable()
+                self.quadcopter.set_mode_hover_enable()
             elif msg == Constants.IOSMESSAGE_LAND:
                 self.logger.land()
                 self.quadcopter.land()
@@ -71,26 +71,26 @@ class Middleware_Arduino:
     """
 
     def __init__(self, quadcopter):
+
         self.quadcopter = quadcopter
         self.logger = ArduinoLogger()
 
     def parseMessage(self, msg):
         try:
+
             functionName, params = msg.split(':')
             if functionName == Constants.ARDUINOMESSAGE_GYRO:
                 # DATA:Y;P;R;Mx;My;Mz;Mh
 
                 y, p, r, heading = map(lambda x: float(x), params.split(';'))
                 self.logger.data_gyromag(gyro=[y,p,r],heading=heading)
-                self.quadcopter.sensor_set_YPR_Current([y, p, r])
+                self.quadcopter.sensor_set_ypr_current([y, p, r])
             elif functionName == Constants.ARDUINOSTATUS_ULTRA:
-                # print type(params)
                 self.logger.data_ultrasound(params.split(';'))
-                #     TODO HANDLE ULTRASONIC DATA
                 # ORDER: BOTTOM, TOP, FRONT, RIGHT, LEFT
                 bottom,top,front,right,left = map(lambda x: float(x), params.split(';'))
-                self.quadcopter.sensor_set_Altitude_Current(bottom)
-                self.quadcopter.sensor_set_ultra(F=front,L=left,R=right,T=top)
+                self.quadcopter.set_sensor_altitude_current(bottom)
+                self.quadcopter.set_sensor_ultra_values(front=front, left=left, right=right, top=top)
 
             elif functionName == Constants.ARDUINOMESSAGE_MOTOR:
                 self.logger.data_motor_speeds(params.split(';'))

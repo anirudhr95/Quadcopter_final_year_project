@@ -1,4 +1,3 @@
-import threading
 import multiprocessing
 
 async_mode = None
@@ -38,17 +37,11 @@ elif async_mode == 'gevent':
 import logging
 import os
 from logging.handlers import RotatingFileHandler
-
-from flask import render_template
-
-from Quad_Controls import Quadcopter
-
-from threading import Thread
+from Quadcopter import Quadcopter
 
 import serial
-from flask import Flask, request
+from flask import Flask, request, render_template
 from flask_socketio import SocketIO
-
 import Constants
 
 # Socket-io server example
@@ -95,6 +88,7 @@ def speed_control(queue, quadcopter, message_sender, middleware_arduino):
 
     reading = queue.get()
     while not middleware_arduino.parseMessage(reading):
+        # parseMessage returns true, when setup is completed
         reading = queue.get()
         middleware_arduino.parseMessage(reading)
     # TODO BROADCAST Ready message
@@ -119,6 +113,7 @@ def speed_control(queue, quadcopter, message_sender, middleware_arduino):
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
+
     if request.method == "POST":
         if 'quad_setSpeed' in request.form:
             quadcopter.set_speed(int(request.form["quad_setSpeed_text"]))
@@ -138,9 +133,9 @@ def index():
         elif 'land' in request.form:
             quadcopter.land()
         elif 'hover' in request.form:
-            quadcopter.mode_Hover_Enable()
+            quadcopter.set_Mode_Hover_Enable()
         elif 'hold_altitude' in request.form:
-            quadcopter.mode_Altitude_Hold_Enable()
+            quadcopter.set_Mode_Altitude_Hold_Enable()
         elif 'reset_baro' in request.form:
             message_sender.toArduino_reset_baro()
         elif 'change_pid' in request.form:
@@ -151,8 +146,7 @@ def index():
                 i = float(request.form['set_ki'])
             if request.form['set_kd'] != '':
                 d = float(request.form['set_kd'])
-            quadcopter.__TEST_SET_PID__(p, i, d)
-    print 'INSIDE INDEX: %s' % (quadcopter)
+            quadcopter.__set_PID_Test__(p, i, d)
     return render_template("index.html")
 
 
