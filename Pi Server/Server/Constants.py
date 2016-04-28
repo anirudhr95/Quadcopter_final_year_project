@@ -7,10 +7,10 @@ ENABLE_BONJOUR_REGISTER = True
 ENABLE_SERIAL = True
 # Following line is useless, as PID operation thread doesnt work till it gets a value from Serial
 ENABLE_PID = True
-
+USE_MULTIPROCESSING = False
 # SOCKET-IO
 SOCKETIO_NAMESPACE = '/test'
-
+# SOCKETIO_NAMESPACE = None
 # SERVER INFO
 SERVER_IP = socket.gethostbyname(socket.gethostname())
 SERVER_PORT = 5000
@@ -26,8 +26,9 @@ LOG_FORMAT_APP = "%(asctime)s %(name)s %(levelname)s : %(message)s"
 # BONJOUR SERVICE INFO
 
 BONJOUR_TYPE = "_http._tcp.local."
-BONJOUR_NAME = "quad"
-BONJOUR_DESC = {'Project_By': 'Shyam, Jo, Anirudh, Kaushik'}
+BONJOUR_NAME = "quadasds"
+BONJOUR_DESC = {'Project_By': 'Shyam, Jo, Anirudh, Kaushik',
+                'ip':SERVER_IP}
 BONJOUR_SERVICE_NAME = "dont-have-a-server-socool.local."
 BONJOUR_REPLACEMENT_STATICIP = "0.0.0.0"
 BONJOUR_WEIGHT = 0

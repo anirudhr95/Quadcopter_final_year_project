@@ -32,8 +32,8 @@ LOW = 1 for every other possible type of message
 
 // Pitch is -Roll, Roll is -Pitch
 #define GYRO_ANGLES_REVERSED true
-#define GYRO_PITCH_OFFSET 0
-#define GYRO_ROLL_OFFSET 0
+#define GYRO_PITCH_OFFSET -8.5
+#define GYRO_ROLL_OFFSET 8.8
 /*	
 Ultrasound
 */

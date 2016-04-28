@@ -46,13 +46,15 @@ import Constants
 
 # Socket-io server example
 # https://github.com/miguelgrinberg/Flask-SocketIO/blob/v2.2/example/app.py
+
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'secret!'
 
 socketio = SocketIO(app)
-serial_port = None
 quadcopter = None
+thread = None
+thread3 = None
 middleware_ios = None
 middleware_arduino = None
 message_sender = None
@@ -65,14 +67,18 @@ def read_from_port(port, baud_rate, queue):
     :param event: Thread.Event to call upon reading data froms serial (Used by IOSSenderThread)
     :param serial_port: serial.Serial() variable specifying serial port of arduino decice
     """
-    serial_port = serial.Serial(port, baud_rate, queue)
+
+    serial_port = serial.Serial(port, baud_rate)
+    # queue.put("HELLO")
     print "SERIAL WORKER THREAD STARTED with object (%s)" % serial_port
     while True:
         reading = serial_port.readline().decode("Utf-8").rstrip()
+        print "RECEIVED: %s" % reading
         if reading:
             try:
                 queue.put(reading)
-            except:
+            except Exception as e:
+                print 'Exception while reading : %s' % e
                 while not queue.empty():
                     queue.get()
 
@@ -90,7 +96,7 @@ def speed_control(queue, quadcopter, message_sender, middleware_arduino):
     while not middleware_arduino.parseMessage(reading):
         # parseMessage returns true, when setup is completed
         reading = queue.get()
-        middleware_arduino.parseMessage(reading)
+        # middleware_arduino.parseMessage(reading)
     # TODO BROADCAST Ready message
     print "SETUP COMPLETED"
 
@@ -106,14 +112,17 @@ def speed_control(queue, quadcopter, message_sender, middleware_arduino):
 
         oldspeeds = speeds[:]
         speeds = quadcopter.refresh()
-        if oldspeeds != speeds:
+        if should_send_new_motor_speed(oldspeeds, speeds):
             message_sender.toArduino_set_speed(speeds)
         time.sleep(Constants.REFRESH_PID_TIME)
 
 
+def should_send_new_motor_speed(old_speed, new_speed):
+    return old_speed != new_speed
+
+
 @app.route("/", methods=['GET', 'POST'])
 def index():
-
     if request.method == "POST":
         if 'quad_setSpeed' in request.form:
             quadcopter.set_speed(int(request.form["quad_setSpeed_text"]))
@@ -126,16 +135,16 @@ def index():
                 ypr[1] = float(request.form['set_ypr_p'])
             if request.form['set_ypr_r'] != '':
                 ypr[2] = float(request.form['set_ypr_r'])
-            quadcopter.set_YPR_Desired(ypr)
+            quadcopter.set_ypr_desired(ypr)
 
         elif 'takeoff' in request.form:
             quadcopter.takeoff()
         elif 'land' in request.form:
             quadcopter.land()
         elif 'hover' in request.form:
-            quadcopter.set_Mode_Hover_Enable()
+            quadcopter.set_mode_hover_enable()
         elif 'hold_altitude' in request.form:
-            quadcopter.set_Mode_Altitude_Hold_Enable()
+            quadcopter.set_mode_altitude_hold_enable()
         elif 'reset_baro' in request.form:
             message_sender.toArduino_reset_baro()
         elif 'change_pid' in request.form:
@@ -146,7 +155,8 @@ def index():
                 i = float(request.form['set_ki'])
             if request.form['set_kd'] != '':
                 d = float(request.form['set_kd'])
-            quadcopter.__set_PID_Test__(p, i, d)
+            quadcopter.__set_pid_test__(p, i, d)
+    # return '%s' % queue.get()
     return render_template("index.html")
 
 
@@ -159,7 +169,7 @@ def initialSetup():
     quadcopter = Quadcopter(PILogger())
 
     from message_sender import Message_sender
-    message_sender = Message_sender(socketio, serial_port)
+    message_sender = Message_sender(socketio)
 
     middleware_arduino = Middleware_Arduino(quadcopter)
     middleware_ios = Middleware_IOS(quadcopter)
@@ -180,67 +190,88 @@ def initialSetup():
 
     # SERIAL SERVICE
     # from Serial_Comm import read_from_port
-
+    import threading
     global queue
-    queue = multiprocessing.Queue()
+    global thread, thread3
 
-    if Constants.ENABLE_SERIAL:
-        global serial_port
-        serial_port = serial.Serial(Constants.ARDUINO_PORT, Constants.ARDUINO_BAUDRATE, timeout=0)
-        thread = multiprocessing.Process(name="Serial Thread",
-                                         target=read_from_port,
-                                         kwargs={'port': Constants.ARDUINO_PORT,
-                                                 'baud_rate': Constants.ARDUINO_BAUDRATE,
-                                                 'queue': queue})
-        thread.daemon = True
-        thread.start()
-    if Constants.ENABLE_PID:
-        # PID THREAD
+    if Constants.USE_MULTIPROCESSING:
+        queue = multiprocessing.Queue()
+        if Constants.ENABLE_SERIAL:
+            # thread = threading.Thread(name="Serial Thread",
+            thread = multiprocessing.Process(name="Serial Thread",
+
+                                             target=read_from_port,
+                                             kwargs={'port': Constants.ARDUINO_PORT,
+                                                     'baud_rate': Constants.ARDUINO_BAUDRATE,
+                                                     'queue': queue},
+                                             )
+            print 'yoa'
+            thread.daemon = True
+            thread.start()
+            print 'yoas'
+            # thread3 = threading.Thread(name="PID Thread",
         thread3 = multiprocessing.Process(name="PID Thread",
+
                                           target=speed_control,
                                           kwargs={'queue': queue,
                                                   'quadcopter': quadcopter,
                                                   'message_sender': message_sender,
                                                   'middleware_arduino': middleware_arduino})
+
         thread3.daemon = True
         thread3.start()
+    else:
 
-        # TEST USING A BACKGROUND THREAD
-        # thread3 = Thread(target=background_thread)
-        # thread3.daemon = True
-        # thread3.start()
+        queue = eventlet.Queue()
 
+        if Constants.ENABLE_SERIAL:
+            print 'yo'
 
-# def background_thread():
-#     """Example of how to send server generated events to clients."""
-#     count = 0
-#     import time
-#     while True:
-#         time.sleep(10)
-#         count += 1
-#         socketio.emit('my response',
-#                       {'data': 'Server generated event', 'count': count},
-#                       namespace='/test')
+            thread = threading.Thread(name="Serial Thread",
+
+                                      target=read_from_port,
+                                      kwargs={'port': Constants.ARDUINO_PORT,
+                                              'baud_rate': Constants.ARDUINO_BAUDRATE,
+                                              'queue': queue},
+                                      )
+            print 'yoa'
+            thread.daemon = True
+            thread.start()
+            print 'yoas'
+        thread3 = threading.Thread(name="PID Thread",
+
+                                   target=speed_control,
+                                   kwargs={'queue': queue,
+                                           'quadcopter': quadcopter,
+                                           'message_sender': message_sender,
+                                           'middleware_arduino': middleware_arduino})
+
+        thread3.daemon = True
+        thread3.start()
 
 
 @socketio.on('connect', namespace=Constants.SOCKETIO_NAMESPACE)
 def test_connect():
-    print('Client connected : ', request.sid)
+    print 'Client connected : %s' % request
     return True
 
 
 @socketio.on('disconnect', namespace=Constants.SOCKETIO_NAMESPACE)
 def test_disconnect():
-    print('Client disconnected : ', request.sid)
+    print 'Client disconnected : %s' % request
     return True
 
 
 @socketio.on('message', namespace=Constants.SOCKETIO_NAMESPACE)
 def handle_message(data):
+    print data
+    socketio.emit('message', 'HELLOAGAIN')
+    global middleware_ios
     middleware_ios.parseMessage(data)
 
 
 if __name__ == '__main__':
+    # initialSetup()
     socketio.run(app,
                  debug=Constants.ENABLE_FLASK_DEBUG_MODE,
                  host=Constants.SERVER_IP,

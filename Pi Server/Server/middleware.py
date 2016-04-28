@@ -50,6 +50,8 @@ class Middleware_IOS:
             elif msg == Constants.IOSMESSAGE_TAKEOFF:
                 self.logger.takeoff()
                 self.quadcopter.takeoff()
+            else:
+                self.logger.error(msg)
 
 
 class Middleware_Arduino:
@@ -74,7 +76,6 @@ class Middleware_Arduino:
 
         self.quadcopter = quadcopter
         self.logger = ArduinoLogger()
-
     def parseMessage(self, msg):
         try:
 

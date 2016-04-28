@@ -4,11 +4,11 @@ import Constants
 
 
 class Message_sender:
-    def __init__(self, socketio, serial_port):
+    def __init__(self, socketio):
         self.__message_queue__ = []
         self.socketio = socketio
         if Constants.ENABLE_SERIAL:
-            self.serial_port = serial.Serial('/dev/cu.usbmodem1421', 115200)
+            self.serial_port = serial.Serial(Constants.ARDUINO_PORT, Constants.ARDUINO_BAUDRATE)
 
     def __send_msg_to_ios__(self, msg):
         print "SENDING '%s' To IOS " % str(msg)

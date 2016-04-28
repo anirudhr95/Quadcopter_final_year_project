@@ -34,17 +34,17 @@ void sendYPR(){
   #ifdef SET_TRANSMISSION_RATE_HIGH
 	if(millis() - last_sent >= UPDATE_FREQUENCY_RATE_HIGH){
     last_sent = millis();
-//    SEND_MSG_GYROMAG(ypr, getHeading());
+    SEND_MSG_GYROMAG(ypr, getHeading());
 	}
 	#elif defined SET_TRANSMISSION_RATE_MID
 	if(millis() - last_sent >= UPDATE_FREQUENCY_RATE_MID){
     last_sent = millis();
-//    SEND_MSG_GYROMAG(ypr, getHeading());
+    SEND_MSG_GYROMAG(ypr, getHeading());
   }
   #elif defined SET_TRANSMISSION_RATE_LOW
 	if(millis() - last_sent >= UPDATE_FREQUENCY_RATE_LOW){
     last_sent = millis();
-//    SEND_MSG_GYROMAG(ypr, getHeading());
+    SEND_MSG_GYROMAG(ypr, getHeading());
   }
   #endif
 

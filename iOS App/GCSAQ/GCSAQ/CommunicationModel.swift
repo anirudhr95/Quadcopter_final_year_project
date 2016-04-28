@@ -10,13 +10,14 @@ import Foundation
 import SocketIOClientSwift
 class Communicator {
 	let socketio:SocketIOClient
-	let path: String = "/test/"
+	let path: String = "/test"
 	let event = Events()
 	let commands = Commands()
 	
 	
 	init(url : NSURL){
 		socketio = SocketIOClient(socketURL: url, options: [SocketIOClientOption.Log(true),SocketIOClientOption.Path(path)])
+//		socketio = SocketIOClient(socketURL: url, options: [SocketIOClientOption.Log(true)])
 		
 		self.socketHandlers()
 		socketio.connect()

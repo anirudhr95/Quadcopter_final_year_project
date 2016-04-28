@@ -2,13 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="14a6cb86-3ccf-448f-8373-ff337c3ac330" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Arduino/Project/Project.ino" afterPath="$PROJECT_DIR$/../../Arduino/Project/Project.ino" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Arduino/libraries/SRM-Project/DelaysAndOffsets.h" afterPath="$PROJECT_DIR$/../../Arduino/libraries/SRM-Project/DelaysAndOffsets.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Arduino/libraries/SRM-Project/Mpu.h" afterPath="$PROJECT_DIR$/../../Arduino/libraries/SRM-Project/Mpu.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Arduino/libraries/SRM-Project/PinoutConfig.h" afterPath="$PROJECT_DIR$/../../Arduino/libraries/SRM-Project/PinoutConfig.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Arduino/libraries/SRM-Project/UltrasoundSense.h" afterPath="$PROJECT_DIR$/../../Arduino/libraries/SRM-Project/UltrasoundSense.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Arduino/libraries/SRM-Project/printHelper.h" afterPath="$PROJECT_DIR$/../../Arduino/libraries/SRM-Project/printHelper.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../iOS App/GCSAQ/GCSAQ.xcworkspace/xcuserdata/Shyam.xcuserdatad/UserInterfaceState.xcuserstate" afterPath="$PROJECT_DIR$/../../iOS App/GCSAQ/GCSAQ.xcworkspace/xcuserdata/Shyam.xcuserdatad/UserInterfaceState.xcuserstate" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Constants.py" afterPath="$PROJECT_DIR$/Constants.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Server.py" afterPath="$PROJECT_DIR$/Server.py" />
     </list>
     <ignored path="Server.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,7 +22,7 @@
     <SUITE FILE_PATH="coverage/Server$Serial_Comm.coverage" NAME="Serial_Comm Coverage Results" MODIFIED="1459783773612" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Server$PID.coverage" NAME="PID Coverage Results" MODIFIED="1459886143452" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Server$Quad_Controls.coverage" NAME="Quad_Controls Coverage Results" MODIFIED="1461220095041" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Server$Server.coverage" NAME="Server Coverage Results" MODIFIED="1461404934280" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/Server$Server.coverage" NAME="Server Coverage Results" MODIFIED="1461834507864" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -36,14 +33,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Server.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Server.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+            <state relative-caret-position="165">
+              <caret line="30" column="27" selection-start-line="30" selection-start-column="27" selection-end-line="30" selection-end-column="27" />
               <folding>
-                <element signature="e#7055#7081#0" expanded="false" />
+                <element signature="e#70#430#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="message_sender.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/message_sender.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="540">
+              <caret line="38" column="10" selection-start-line="38" selection-start-column="10" selection-end-line="38" selection-end-column="10" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -133,21 +140,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Constants.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Constants.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1410">
-              <caret line="94" column="18" selection-start-line="94" selection-start-column="18" selection-end-line="94" selection-end-column="18" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="CustomLogger.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CustomLogger.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="630">
-              <caret line="47" column="20" selection-start-line="47" selection-start-column="20" selection-end-line="47" selection-end-column="20" />
+            <state relative-caret-position="405">
+              <caret line="27" column="36" selection-start-line="27" selection-start-column="36" selection-end-line="27" selection-end-column="36" />
               <folding>
                 <element signature="e#44#58#0" expanded="true" />
               </folding>
@@ -155,31 +152,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PID.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/PID.py">
+      <file leaf-file-name="Constants.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Constants.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="945">
-              <caret line="63" column="54" selection-start-line="63" selection-start-column="54" selection-end-line="63" selection-end-column="54" />
+            <state relative-caret-position="135">
+              <caret line="9" column="27" selection-start-line="9" selection-start-column="27" selection-end-line="9" selection-end-column="27" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Templates/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="930">
-              <caret line="62" column="17" selection-start-line="62" selection-start-column="17" selection-end-line="62" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="middleware.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="middleware.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/middleware.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="352">
-              <caret line="88" column="62" selection-start-line="88" selection-start-column="62" selection-end-line="88" selection-end-column="62" />
+            <state relative-caret-position="1410">
+              <caret line="94" column="0" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="0" />
               <folding>
                 <element signature="e#0#16#0" expanded="true" />
               </folding>
@@ -218,13 +205,13 @@
         <option value="$PROJECT_DIR$/pi_send.py" />
         <option value="$PROJECT_DIR$/Templates/index.html" />
         <option value="$PROJECT_DIR$/Bonjour.py" />
-        <option value="$PROJECT_DIR$/message_sender.py" />
         <option value="$PROJECT_DIR$/CustomLogger.py" />
-        <option value="$PROJECT_DIR$/middleware.py" />
-        <option value="$PROJECT_DIR$/Constants.py" />
         <option value="$PROJECT_DIR$/Quad_Controls.py" />
-        <option value="$PROJECT_DIR$/Server.py" />
         <option value="$PROJECT_DIR$/Quadcopter.py" />
+        <option value="$PROJECT_DIR$/message_sender.py" />
+        <option value="$PROJECT_DIR$/middleware.py" />
+        <option value="$PROJECT_DIR$/Server.py" />
+        <option value="$PROJECT_DIR$/Constants.py" />
       </list>
     </option>
   </component>
@@ -263,7 +250,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -284,7 +271,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -293,6 +280,7 @@
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="FullScreen" value="true" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/untitled" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -620,7 +608,7 @@
     <frame x="0" y="0" width="1440" height="900" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16809729" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17238913" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18192771" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -630,7 +618,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891566" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22115384" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32091346" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -686,6 +674,21 @@
           <line>495</line>
           <option name="timeStamp" value="36" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/middleware.py</url>
+          <line>40</line>
+          <option name="timeStamp" value="38" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/Server.py</url>
+          <line>269</line>
+          <option name="timeStamp" value="39" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/middleware.py</url>
+          <line>19</line>
+          <option name="timeStamp" value="40" />
+        </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
@@ -700,7 +703,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="37" />
+      <option name="time" value="41" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
@@ -808,7 +811,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="615">
           <caret line="41" column="38" selection-start-line="41" selection-start-column="38" selection-end-line="41" selection-end-column="38" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -825,7 +827,7 @@
         <state relative-caret-position="2175">
           <caret line="147" column="19" selection-start-line="147" selection-start-column="19" selection-end-line="147" selection-end-column="19" />
           <folding>
-            <element signature="e#7055#7081#0" expanded="false" />
+            <element signature="e#70#430#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -861,7 +863,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#7055#7081#0" expanded="false" />
+            <element signature="e#70#430#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -901,7 +903,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#7055#7081#0" expanded="false" />
+            <element signature="e#70#430#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1024,13 +1026,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/message_sender.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="34" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/anaconda/envs/quadcopter/lib/python2.7/site-packages/serial/serialposix.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="244">
@@ -1040,9 +1035,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Templates/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="930">
+        <state relative-caret-position="748">
           <caret line="62" column="17" selection-start-line="62" selection-start-column="17" selection-end-line="62" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1050,16 +1044,23 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="945">
           <caret line="63" column="54" selection-start-line="63" selection-start-column="54" selection-end-line="63" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/message_sender.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="38" column="10" selection-start-line="38" selection-start-column="10" selection-end-line="38" selection-end-column="10" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CustomLogger.py">
+    <entry file="file://$PROJECT_DIR$/middleware.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="47" column="20" selection-start-line="47" selection-start-column="20" selection-end-line="47" selection-end-column="20" />
+        <state relative-caret-position="1410">
+          <caret line="94" column="0" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="0" />
           <folding>
-            <element signature="e#44#58#0" expanded="true" />
+            <element signature="e#0#16#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1147,30 +1148,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/CustomLogger.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="27" column="36" selection-start-line="27" selection-start-column="36" selection-end-line="27" selection-end-column="36" />
+          <folding>
+            <element signature="e#44#58#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Constants.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1410">
-          <caret line="94" column="18" selection-start-line="94" selection-start-column="18" selection-end-line="94" selection-end-column="18" />
+        <state relative-caret-position="135">
+          <caret line="9" column="27" selection-start-line="9" selection-start-column="27" selection-end-line="9" selection-end-column="27" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+        <state relative-caret-position="165">
+          <caret line="30" column="27" selection-start-line="30" selection-start-column="27" selection-end-line="30" selection-end-column="27" />
           <folding>
-            <element signature="e#7055#7081#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/middleware.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="88" column="62" selection-start-line="88" selection-start-column="62" selection-end-line="88" selection-end-column="62" />
-          <folding>
-            <element signature="e#0#16#0" expanded="true" />
+            <element signature="e#70#430#0" expanded="false" />
           </folding>
         </state>
       </provider>

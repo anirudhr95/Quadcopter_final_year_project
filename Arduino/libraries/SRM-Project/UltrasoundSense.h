@@ -14,7 +14,7 @@
 #include <NewPing.h>
 
 int PING_INTERVAL;
-unsigned long pingTimer[SONAR_NUM]; // Holds the times when the next ping should happen for each sensor.
+unsigned long pingTimer[SONAR_NUM],setuptime; // Holds the times when the next ping should happen for each sensor.
 unsigned int cm[SONAR_NUM];         // Where the ping distances are stored.
 uint8_t currentSensor = 0;          // Keeps track of which sensor is active.
 
@@ -53,8 +53,14 @@ void ultra_Setup(){
 		// Set the starting time for each sensor.
 	for (uint8_t i = 1; i < SONAR_NUM; i++)
 		pingTimer[i] = pingTimer[i - 1] + PING_INTERVAL;
+	
+	setuptime = millis();
+	while(millis()-setuptime <5000){
+		ultra_Compute();
+	}
 	sprintf(buf,FORMAT_SETUP_SUCCESS,"ULTRASOUND");
 	Serial.print(buf);
+
 	
 
 	
