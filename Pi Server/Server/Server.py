@@ -1,48 +1,50 @@
-import multiprocessing
-
 async_mode = None
-
+queue = None
 if async_mode is None:
     try:
-        import eventlet
+        from gevent import monkey, Timeout
 
-        async_mode = 'eventlet'
+        async_mode = 'gevent'
+
     except ImportError:
         pass
 
-    if async_mode is None:
-        try:
-            from gevent import monkey
-
-            async_mode = 'gevent'
-        except ImportError:
-            pass
-
-    if async_mode is None:
-        async_mode = 'threading'
+    # if async_mode is None:
+    #     try:
+    #         import eventlet
+    #
+    #         async_mode = 'eventlet'
+    #
+    #     except ImportError:
+    #         pass
+    #
+    # if async_mode is None:
+    #     async_mode = 'threading'
 
     print('async_mode is ' + async_mode)
 
 # monkey patching is necessary because this application uses a background
 # thread
-if async_mode == 'eventlet':
-    import eventlet
-
-    eventlet.monkey_patch()
-elif async_mode == 'gevent':
+if async_mode == 'gevent':
     from gevent import monkey
 
     monkey.patch_all()
+# elif async_mode == 'eventlet':
+#     from eventlet import monkey_patch
+#
+#     monkey_patch()
 
 import logging
 import os
 from logging.handlers import RotatingFileHandler
-from Quadcopter import Quadcopter
 
+import gipc
 import serial
 from flask import Flask, request, render_template
 from flask_socketio import SocketIO
-import Constants
+
+import constants
+from quadcopter import Quadcopter
 
 # Socket-io server example
 # https://github.com/miguelgrinberg/Flask-SocketIO/blob/v2.2/example/app.py
@@ -58,63 +60,80 @@ thread3 = None
 middleware_ios = None
 middleware_arduino = None
 message_sender = None
-queue = None
+pi_logger = None
 
 
-def read_from_port(port, baud_rate, queue):
+def read_from_port(port, baud_rate, sender, logger):
     """
 
     :param event: Thread.Event to call upon reading data froms serial (Used by IOSSenderThread)
     :param serial_port: serial.Serial() variable specifying serial port of arduino decice
     """
 
-    serial_port = serial.Serial(port, baud_rate)
+    name = "ArduinoReaderSubroutine"
+    logger.setup_init(name)
+    try:
+        serial_port = serial.Serial(port, baud_rate)
+    except Exception as e:
+        logger.error(e)
+        logger.setup_failure(name)
+        return
+    logger.setup_success(name)
     # queue.put("HELLO")
-    print "SERIAL WORKER THREAD STARTED with object (%s)" % serial_port
+    logger.setup_message("SERIAL WORKER THREAD STARTED with object (%s)" % serial_port)
+
     while True:
         reading = serial_port.readline().decode("Utf-8").rstrip()
-        print "RECEIVED: %s" % reading
+        print reading
         if reading:
             try:
-                queue.put(reading)
+                sender.put(reading)
             except Exception as e:
-                print 'Exception while reading : %s' % e
-                while not queue.empty():
-                    queue.get()
+                logger.error(e)
 
 
-def speed_control(queue, quadcopter, message_sender, middleware_arduino):
+def speed_control(reader, quadcopter, message_sender, middleware_arduino, logger):
     """
-        Requires middleware_arduino, quadcopter, message_sender params
+        Requires middleware_arduino, Quadcopter, Message_sender params
     """
-    print "PID CONTROL THREAD STARTED : Waiting for first reading"
     import time
-
     # Wait for Serial Setup to complete (Marked by "SETUP COMPLETED:" MESSAGE)
+    name = "QuadController"
+    logger.setup_init(name)
 
-    reading = queue.get()
+    logger.setup_message("Waiting for first reading")
+    reading = reader.get()
     while not middleware_arduino.parseMessage(reading):
         # parseMessage returns true, when setup is completed
-        reading = queue.get()
+        reading = reader.get()
         # middleware_arduino.parseMessage(reading)
-    # TODO BROADCAST Ready message
-    print "SETUP COMPLETED"
+    logger.setup_success(name)
 
     speeds, oldspeeds = [0, 0, 0, 0], [0, 0, 0, 0]
     while True:
         # CHECK MESSAGE QUEUE FOR ARDUINO INPUTS
-        if queue.empty():
+        reading = None
+        with Timeout(constants.ARDUINO_MESSAGE_REFRESHTIME,False) as t:
+            reading = reader.get(timeout=t)
+        if reading is None:
             # TODO: This means that no data is being received from arduino, which means quad needs to go into hover mode/land, because of some serial error
-            quadcopter.land()
-        while not queue.empty():
-            reading = queue.get_nowait()
+            logger.error("ARDUINO NOT SENDING DATA..")
+        else:
             middleware_arduino.parseMessage(reading)
-
+            while True:
+                reading = None
+                with Timeout(0.02, False) as t:
+                    reading = reader.get(timeout=t)
+                if reading is not None:
+                    middleware_arduino.parseMessage(reading)
+                else:
+                    break
         oldspeeds = speeds[:]
         speeds = quadcopter.refresh()
         if should_send_new_motor_speed(oldspeeds, speeds):
+            print speeds
             message_sender.toArduino_set_speed(speeds)
-        time.sleep(Constants.REFRESH_PID_TIME)
+        time.sleep(constants.REFRESH_PID_TIME)
 
 
 def should_send_new_motor_speed(old_speed, new_speed):
@@ -160,13 +179,14 @@ def index():
     return render_template("index.html")
 
 
-@app.before_first_request
+# @app.before_first_request
 def initialSetup():
-    global quadcopter, middleware_arduino, middleware_ios, message_sender
+    global quadcopter, middleware_arduino, middleware_ios, message_sender, pi_logger
     from middleware import Middleware_IOS, Middleware_Arduino
 
-    from CustomLogger import PILogger
-    quadcopter = Quadcopter(PILogger())
+    from customlogger import pi_logger
+    pi_logger = pi_logger()
+    quadcopter = Quadcopter(pi_logger)
 
     from message_sender import Message_sender
     message_sender = Message_sender(socketio)
@@ -175,105 +195,73 @@ def initialSetup():
     middleware_ios = Middleware_IOS(quadcopter)
 
     # TODO Implement Logging
-    if Constants.ENABLE_FLASK_LOGGING:
+    if constants.ENABLE_FLASK_LOGGING:
         formatter = logging.Formatter(
-            Constants.LOG_FORMAT_FLASK)
-        handler = RotatingFileHandler(os.path.join(Constants.LOG_LOCATION_FLASK, Constants.LOG_FILENAME_FLASK),
+            constants.LOG_FORMAT_FLASK)
+        handler = RotatingFileHandler(os.path.join(constants.LOG_LOCATION_FLASK, constants.LOG_FILENAME_FLASK),
                                       maxBytes=10000000, backupCount=5)
         handler.setLevel(logging.DEBUG)
         handler.setFormatter(formatter)
         app.logger.addHandler(handler)
 
-    import Bonjour
-    service = Bonjour.Bonjour()
+    import bonjour
+    service = bonjour.Bonjour(pi_logger)
     service.publish()
 
-    # SERIAL SERVICE
-    # from Serial_Comm import read_from_port
-    import threading
-    global queue
+
+    # global queue
+    # from gevent import queue
+    # queue = queue.Queue()
+    # http://www.gevent.org/gevent.queue.html
+    reader,sender = gipc.pipe()
     global thread, thread3
 
-    if Constants.USE_MULTIPROCESSING:
-        queue = multiprocessing.Queue()
-        if Constants.ENABLE_SERIAL:
-            # thread = threading.Thread(name="Serial Thread",
-            thread = multiprocessing.Process(name="Serial Thread",
 
-                                             target=read_from_port,
-                                             kwargs={'port': Constants.ARDUINO_PORT,
-                                                     'baud_rate': Constants.ARDUINO_BAUDRATE,
-                                                     'queue': queue},
-                                             )
-            print 'yoa'
-            thread.daemon = True
-            thread.start()
-            print 'yoas'
-            # thread3 = threading.Thread(name="PID Thread",
-        thread3 = multiprocessing.Process(name="PID Thread",
+    if constants.ENABLE_SERIAL:
+        # thread = threading.Thread(name="Serial Thread",
 
-                                          target=speed_control,
-                                          kwargs={'queue': queue,
-                                                  'quadcopter': quadcopter,
-                                                  'message_sender': message_sender,
-                                                  'middleware_arduino': middleware_arduino})
+        thread = gipc.start_process(name="Serial Thread",
+                                    daemon=True,
 
-        thread3.daemon = True
-        thread3.start()
-    else:
+                                    target=read_from_port,
+                                    kwargs={'port': constants.ARDUINO_PORT,
+                                            'baud_rate': constants.ARDUINO_BAUDRATE,
+                                            'sender': sender,
+                                            'logger': pi_logger}
+                                    )
 
-        queue = eventlet.Queue()
+    thread3 = gipc.start_process(name="PID Thread",
+                                 daemon=True,
+                                 target=speed_control,
+                                 kwargs={'reader': reader,
+                                         'quadcopter': quadcopter,
+                                         'message_sender': message_sender,
+                                         'middleware_arduino': middleware_arduino, 'logger': pi_logger},
 
-        if Constants.ENABLE_SERIAL:
-            print 'yo'
+                                 )
 
-            thread = threading.Thread(name="Serial Thread",
+    @socketio.on('connect', namespace=constants.SOCKETIO_NAMESPACE)
+    def test_connect():
+        print 'Client connected : %s' % request
+        return True
 
-                                      target=read_from_port,
-                                      kwargs={'port': Constants.ARDUINO_PORT,
-                                              'baud_rate': Constants.ARDUINO_BAUDRATE,
-                                              'queue': queue},
-                                      )
-            print 'yoa'
-            thread.daemon = True
-            thread.start()
-            print 'yoas'
-        thread3 = threading.Thread(name="PID Thread",
+    @socketio.on('disconnect', namespace=constants.SOCKETIO_NAMESPACE)
+    def test_disconnect():
+        print 'Client disconnected : %s' % request
+        return True
 
-                                   target=speed_control,
-                                   kwargs={'queue': queue,
-                                           'quadcopter': quadcopter,
-                                           'message_sender': message_sender,
-                                           'middleware_arduino': middleware_arduino})
-
-        thread3.daemon = True
-        thread3.start()
-
-
-@socketio.on('connect', namespace=Constants.SOCKETIO_NAMESPACE)
-def test_connect():
-    print 'Client connected : %s' % request
-    return True
-
-
-@socketio.on('disconnect', namespace=Constants.SOCKETIO_NAMESPACE)
-def test_disconnect():
-    print 'Client disconnected : %s' % request
-    return True
-
-
-@socketio.on('message', namespace=Constants.SOCKETIO_NAMESPACE)
-def handle_message(data):
-    print data
-    socketio.emit('message', 'HELLOAGAIN')
-    global middleware_ios
-    middleware_ios.parseMessage(data)
+    @socketio.on('message', namespace=constants.SOCKETIO_NAMESPACE)
+    def handle_message(data):
+        print data
+        socketio.emit('message', 'HELLOAGAIN')
+        global middleware_ios
+        middleware_ios.parseMessage(data)
 
 
 if __name__ == '__main__':
-    # initialSetup()
+    initialSetup()
     socketio.run(app,
-                 debug=Constants.ENABLE_FLASK_DEBUG_MODE,
-                 host=Constants.SERVER_IP,
-                 port=Constants.SERVER_PORT,
+                 debug=constants.ENABLE_FLASK_DEBUG_MODE,
+                 host=constants.SERVER_IP,
+                 port=constants.SERVER_PORT,
                  use_reloader=False)

@@ -17,7 +17,7 @@
 #define motor_BL_Pin 13
 	//Ultrasound Sensors ( 4 Gnd, 4 VCC, 2 Dig each)
 	// ORDER BOTTOM,TOP,FRONT,RIGHT,LEFT
-#define ultra_Trig_Pin_Bottom 7
+#define ultra_Trig_Pin_Bottom 9
 #define ultra_Trig_Pin_Top 3
 #define ultra_Trig_Pin_Front 4
 #define ultra_Trig_Pin_Right 5

@@ -1,5 +1,5 @@
-import Constants
-from PID import PID
+import constants
+from pid import PID
 
 
 class Quadcopter:
@@ -23,187 +23,187 @@ class Quadcopter:
                               output=self.motor_Speeds,
                               reference_index_to_use=0,
                               output_index_to_use=0,
-                              Kp=Constants.KP_NORMAL,
-                              Kd=Constants.KD_NORMAL,
-                              Ki=Constants.KI_NORMAL,
-                              max=Constants.MOTOR_MAX,
-                              min=Constants.MOTOR_MIN,
-                              reverse_direction=not Constants.WING_FR_ANTICLOCKWISE
+                              Kp=constants.KP_NORMAL,
+                              Kd=constants.KD_NORMAL,
+                              Ki=constants.KI_NORMAL,
+                              max=constants.MOTOR_MAX,
+                              min=constants.MOTOR_MIN,
+                              reverse_direction=not constants.WING_FR_ANTICLOCKWISE
                               )
         self.PID_YAW_FL = PID(reference=self.ypr,
                               output=self.motor_Speeds,
                               reference_index_to_use=0,
                               output_index_to_use=1,
-                              Kp=Constants.KP_NORMAL,
-                              Kd=Constants.KD_NORMAL,
-                              Ki=Constants.KI_NORMAL,
-                              max=Constants.MOTOR_MAX,
-                              min=Constants.MOTOR_MIN,
-                              reverse_direction=Constants.WING_FR_ANTICLOCKWISE
+                              Kp=constants.KP_NORMAL,
+                              Kd=constants.KD_NORMAL,
+                              Ki=constants.KI_NORMAL,
+                              max=constants.MOTOR_MAX,
+                              min=constants.MOTOR_MIN,
+                              reverse_direction=constants.WING_FR_ANTICLOCKWISE
                               )
         self.PID_YAW_BR = PID(reference=self.ypr,
                               output=self.motor_Speeds,
                               reference_index_to_use=0,
                               output_index_to_use=2,
-                              Kp=Constants.KP_NORMAL,
-                              Kd=Constants.KD_NORMAL,
-                              Ki=Constants.KI_NORMAL,
-                              max=Constants.MOTOR_MAX,
-                              min=Constants.MOTOR_MIN,
-                              reverse_direction=Constants.WING_FR_ANTICLOCKWISE
+                              Kp=constants.KP_NORMAL,
+                              Kd=constants.KD_NORMAL,
+                              Ki=constants.KI_NORMAL,
+                              max=constants.MOTOR_MAX,
+                              min=constants.MOTOR_MIN,
+                              reverse_direction=constants.WING_FR_ANTICLOCKWISE
                               )
         self.PID_YAW_BL = PID(reference=self.ypr,
                               output=self.motor_Speeds,
                               reference_index_to_use=0,
                               output_index_to_use=3,
-                              Kp=Constants.KP_NORMAL,
-                              Kd=Constants.KD_NORMAL,
-                              Ki=Constants.KI_NORMAL,
-                              max=Constants.MOTOR_MAX,
-                              min=Constants.MOTOR_MIN,
-                              reverse_direction=not Constants.WING_FR_ANTICLOCKWISE
+                              Kp=constants.KP_NORMAL,
+                              Kd=constants.KD_NORMAL,
+                              Ki=constants.KI_NORMAL,
+                              max=constants.MOTOR_MAX,
+                              min=constants.MOTOR_MIN,
+                              reverse_direction=not constants.WING_FR_ANTICLOCKWISE
                               )
         self.PID_PITCH_FR = PID(reference=self.ypr,
                                 output=self.motor_Speeds,
                                 reference_index_to_use=1,
                                 output_index_to_use=0,
-                                Kp=Constants.KP_NORMAL,
-                                Kd=Constants.KD_NORMAL,
-                                Ki=Constants.KI_NORMAL,
-                                max=Constants.MOTOR_MAX,
-                                min=Constants.MOTOR_MIN,
+                                Kp=constants.KP_NORMAL,
+                                Kd=constants.KD_NORMAL,
+                                Ki=constants.KI_NORMAL,
+                                max=constants.MOTOR_MAX,
+                                min=constants.MOTOR_MIN,
                                 reverse_direction=True
                                 )
         self.PID_PITCH_FL = PID(reference=self.ypr,
                                 output=self.motor_Speeds,
                                 reference_index_to_use=1,
                                 output_index_to_use=1,
-                                Kp=Constants.KP_NORMAL,
-                                Kd=Constants.KD_NORMAL,
-                                Ki=Constants.KI_NORMAL,
-                                max=Constants.MOTOR_MAX,
-                                min=Constants.MOTOR_MIN,
+                                Kp=constants.KP_NORMAL,
+                                Kd=constants.KD_NORMAL,
+                                Ki=constants.KI_NORMAL,
+                                max=constants.MOTOR_MAX,
+                                min=constants.MOTOR_MIN,
                                 reverse_direction=True
                                 )
         self.PID_PITCH_BR = PID(reference=self.ypr,
                                 output=self.motor_Speeds,
                                 reference_index_to_use=1,
                                 output_index_to_use=2,
-                                Kp=Constants.KP_NORMAL,
-                                Kd=Constants.KD_NORMAL,
-                                Ki=Constants.KI_NORMAL,
-                                max=Constants.MOTOR_MAX,
-                                min=Constants.MOTOR_MIN,
+                                Kp=constants.KP_NORMAL,
+                                Kd=constants.KD_NORMAL,
+                                Ki=constants.KI_NORMAL,
+                                max=constants.MOTOR_MAX,
+                                min=constants.MOTOR_MIN,
                                 reverse_direction=False
                                 )
         self.PID_PITCH_BL = PID(reference=self.ypr,
                                 output=self.motor_Speeds,
                                 reference_index_to_use=1,
                                 output_index_to_use=3,
-                                Kp=Constants.KP_NORMAL,
-                                Kd=Constants.KD_NORMAL,
-                                Ki=Constants.KI_NORMAL,
-                                max=Constants.MOTOR_MAX,
-                                min=Constants.MOTOR_MIN,
+                                Kp=constants.KP_NORMAL,
+                                Kd=constants.KD_NORMAL,
+                                Ki=constants.KI_NORMAL,
+                                max=constants.MOTOR_MAX,
+                                min=constants.MOTOR_MIN,
                                 reverse_direction=False
                                 )
         self.PID_ROLL_FR = PID(reference=self.ypr,
                                output=self.motor_Speeds,
                                reference_index_to_use=2,
                                output_index_to_use=0,
-                               Kp=Constants.KP_NORMAL,
-                               Kd=Constants.KD_NORMAL,
-                               Ki=Constants.KI_NORMAL,
-                               max=Constants.MOTOR_MAX,
-                               min=Constants.MOTOR_MIN,
+                               Kp=constants.KP_NORMAL,
+                               Kd=constants.KD_NORMAL,
+                               Ki=constants.KI_NORMAL,
+                               max=constants.MOTOR_MAX,
+                               min=constants.MOTOR_MIN,
                                reverse_direction=False
                                )
         self.PID_ROLL_FL = PID(reference=self.ypr,
                                output=self.motor_Speeds,
                                reference_index_to_use=2,
                                output_index_to_use=1,
-                               Kp=Constants.KP_NORMAL,
-                               Kd=Constants.KD_NORMAL,
-                               Ki=Constants.KI_NORMAL,
-                               max=Constants.MOTOR_MAX,
-                               min=Constants.MOTOR_MIN,
+                               Kp=constants.KP_NORMAL,
+                               Kd=constants.KD_NORMAL,
+                               Ki=constants.KI_NORMAL,
+                               max=constants.MOTOR_MAX,
+                               min=constants.MOTOR_MIN,
                                reverse_direction=True
                                )
         self.PID_ROLL_BR = PID(reference=self.ypr,
                                output=self.motor_Speeds,
                                reference_index_to_use=2,
                                output_index_to_use=2,
-                               Kp=Constants.KP_NORMAL,
-                               Kd=Constants.KD_NORMAL,
-                               Ki=Constants.KI_NORMAL,
-                               max=Constants.MOTOR_MAX,
-                               min=Constants.MOTOR_MIN,
+                               Kp=constants.KP_NORMAL,
+                               Kd=constants.KD_NORMAL,
+                               Ki=constants.KI_NORMAL,
+                               max=constants.MOTOR_MAX,
+                               min=constants.MOTOR_MIN,
                                reverse_direction=False
                                )
         self.PID_ROLL_BL = PID(reference=self.ypr,
                                output=self.motor_Speeds,
                                reference_index_to_use=2,
                                output_index_to_use=3,
-                               Kp=Constants.KP_NORMAL,
-                               Kd=Constants.KD_NORMAL,
-                               Ki=Constants.KI_NORMAL,
-                               max=Constants.MOTOR_MAX,
-                               min=Constants.MOTOR_MIN,
+                               Kp=constants.KP_NORMAL,
+                               Kd=constants.KD_NORMAL,
+                               Ki=constants.KI_NORMAL,
+                               max=constants.MOTOR_MAX,
+                               min=constants.MOTOR_MIN,
                                reverse_direction=True
                                )
         self.PID_ALT_FR = PID(reference=self.altitudes,
                               output=self.motor_Speeds,
                               reference_index_to_use=None,
                               output_index_to_use=0,
-                              Kp=Constants.KP_ALTITUDE,
-                              Kd=Constants.KD_ALTITUDE,
-                              Ki=Constants.KI_ALTITUDE,
-                              max=Constants.MOTOR_MAX,
-                              min=Constants.MOTOR_MIN,
+                              Kp=constants.KP_ALTITUDE,
+                              Kd=constants.KD_ALTITUDE,
+                              Ki=constants.KI_ALTITUDE,
+                              max=constants.MOTOR_MAX,
+                              min=constants.MOTOR_MIN,
                               reverse_direction=False
                               )
         self.PID_ALT_FL = PID(reference=self.altitudes,
                               output=self.motor_Speeds,
                               reference_index_to_use=None,
                               output_index_to_use=1,
-                              Kp=Constants.KP_ALTITUDE,
-                              Kd=Constants.KD_ALTITUDE,
-                              Ki=Constants.KI_ALTITUDE,
-                              max=Constants.MOTOR_MAX,
-                              min=Constants.MOTOR_MIN,
+                              Kp=constants.KP_ALTITUDE,
+                              Kd=constants.KD_ALTITUDE,
+                              Ki=constants.KI_ALTITUDE,
+                              max=constants.MOTOR_MAX,
+                              min=constants.MOTOR_MIN,
                               reverse_direction=False
                               )
         self.PID_ALT_BR = PID(reference=self.altitudes,
                               output=self.motor_Speeds,
                               reference_index_to_use=None,
                               output_index_to_use=2,
-                              Kp=Constants.KP_ALTITUDE,
-                              Kd=Constants.KD_ALTITUDE,
-                              Ki=Constants.KI_ALTITUDE,
-                              max=Constants.MOTOR_MAX,
-                              min=Constants.MOTOR_MIN,
+                              Kp=constants.KP_ALTITUDE,
+                              Kd=constants.KD_ALTITUDE,
+                              Ki=constants.KI_ALTITUDE,
+                              max=constants.MOTOR_MAX,
+                              min=constants.MOTOR_MIN,
                               reverse_direction=False
                               )
         self.PID_ALT_BL = PID(reference=self.altitudes,
                               output=self.motor_Speeds,
                               reference_index_to_use=None,
                               output_index_to_use=3,
-                              Kp=Constants.KP_ALTITUDE,
-                              Kd=Constants.KD_ALTITUDE,
-                              Ki=Constants.KI_ALTITUDE,
-                              max=Constants.MOTOR_MAX,
-                              min=Constants.MOTOR_MIN,
+                              Kp=constants.KP_ALTITUDE,
+                              Kd=constants.KD_ALTITUDE,
+                              Ki=constants.KI_ALTITUDE,
+                              max=constants.MOTOR_MAX,
+                              min=constants.MOTOR_MIN,
                               reverse_direction=False
                               )
         self.PID_ULTRA_FRONT_FR = PID(reference=self.ultra_values,
                                       output=self.motor_Speeds,
                                       reference_index_to_use=0,
                                       output_index_to_use=0,
-                                      Kp=Constants.KP_ULTRASOUND,
-                                      Kd=Constants.KD_ULTRASOUND,
-                                      Ki=Constants.KI_ULTRASOUND,
-                                      max=Constants.MOTOR_MAX,
-                                      min=Constants.MOTOR_MIN,
+                                      Kp=constants.KP_ULTRASOUND,
+                                      Kd=constants.KD_ULTRASOUND,
+                                      Ki=constants.KI_ULTRASOUND,
+                                      max=constants.MOTOR_MAX,
+                                      min=constants.MOTOR_MIN,
                                       reverse_direction=False
                                       )
 
@@ -211,11 +211,11 @@ class Quadcopter:
                                       output=self.motor_Speeds,
                                       reference_index_to_use=0,
                                       output_index_to_use=1,
-                                      Kp=Constants.KP_ULTRASOUND,
-                                      Kd=Constants.KD_ULTRASOUND,
-                                      Ki=Constants.KI_ULTRASOUND,
-                                      max=Constants.MOTOR_MAX,
-                                      min=Constants.MOTOR_MIN,
+                                      Kp=constants.KP_ULTRASOUND,
+                                      Kd=constants.KD_ULTRASOUND,
+                                      Ki=constants.KI_ULTRASOUND,
+                                      max=constants.MOTOR_MAX,
+                                      min=constants.MOTOR_MIN,
                                       reverse_direction=False
                                       )
 
@@ -223,11 +223,11 @@ class Quadcopter:
                                       output=self.motor_Speeds,
                                       reference_index_to_use=0,
                                       output_index_to_use=2,
-                                      Kp=Constants.KP_ULTRASOUND,
-                                      Kd=Constants.KD_ULTRASOUND,
-                                      Ki=Constants.KI_ULTRASOUND,
-                                      max=Constants.MOTOR_MAX,
-                                      min=Constants.MOTOR_MIN,
+                                      Kp=constants.KP_ULTRASOUND,
+                                      Kd=constants.KD_ULTRASOUND,
+                                      Ki=constants.KI_ULTRASOUND,
+                                      max=constants.MOTOR_MAX,
+                                      min=constants.MOTOR_MIN,
                                       reverse_direction=True
                                       )
 
@@ -235,22 +235,22 @@ class Quadcopter:
                                       output=self.motor_Speeds,
                                       reference_index_to_use=0,
                                       output_index_to_use=3,
-                                      Kp=Constants.KP_ULTRASOUND,
-                                      Kd=Constants.KD_ULTRASOUND,
-                                      Ki=Constants.KI_ULTRASOUND,
-                                      max=Constants.MOTOR_MAX,
-                                      min=Constants.MOTOR_MIN,
+                                      Kp=constants.KP_ULTRASOUND,
+                                      Kd=constants.KD_ULTRASOUND,
+                                      Ki=constants.KI_ULTRASOUND,
+                                      max=constants.MOTOR_MAX,
+                                      min=constants.MOTOR_MIN,
                                       reverse_direction=True
                                       )
         self.PID_ULTRA_RIGHT_FR = PID(reference=self.ultra_values,
                                       output=self.motor_Speeds,
                                       reference_index_to_use=1,
                                       output_index_to_use=0,
-                                      Kp=Constants.KP_ULTRASOUND,
-                                      Kd=Constants.KD_ULTRASOUND,
-                                      Ki=Constants.KI_ULTRASOUND,
-                                      max=Constants.MOTOR_MAX,
-                                      min=Constants.MOTOR_MIN,
+                                      Kp=constants.KP_ULTRASOUND,
+                                      Kd=constants.KD_ULTRASOUND,
+                                      Ki=constants.KI_ULTRASOUND,
+                                      max=constants.MOTOR_MAX,
+                                      min=constants.MOTOR_MIN,
                                       reverse_direction=False
                                       )
 
@@ -258,11 +258,11 @@ class Quadcopter:
                                       output=self.motor_Speeds,
                                       reference_index_to_use=1,
                                       output_index_to_use=1,
-                                      Kp=Constants.KP_ULTRASOUND,
-                                      Kd=Constants.KD_ULTRASOUND,
-                                      Ki=Constants.KI_ULTRASOUND,
-                                      max=Constants.MOTOR_MAX,
-                                      min=Constants.MOTOR_MIN,
+                                      Kp=constants.KP_ULTRASOUND,
+                                      Kd=constants.KD_ULTRASOUND,
+                                      Ki=constants.KI_ULTRASOUND,
+                                      max=constants.MOTOR_MAX,
+                                      min=constants.MOTOR_MIN,
                                       reverse_direction=True
                                       )
 
@@ -270,11 +270,11 @@ class Quadcopter:
                                       output=self.motor_Speeds,
                                       reference_index_to_use=1,
                                       output_index_to_use=2,
-                                      Kp=Constants.KP_ULTRASOUND,
-                                      Kd=Constants.KD_ULTRASOUND,
-                                      Ki=Constants.KI_ULTRASOUND,
-                                      max=Constants.MOTOR_MAX,
-                                      min=Constants.MOTOR_MIN,
+                                      Kp=constants.KP_ULTRASOUND,
+                                      Kd=constants.KD_ULTRASOUND,
+                                      Ki=constants.KI_ULTRASOUND,
+                                      max=constants.MOTOR_MAX,
+                                      min=constants.MOTOR_MIN,
                                       reverse_direction=False
                                       )
 
@@ -282,22 +282,22 @@ class Quadcopter:
                                       output=self.motor_Speeds,
                                       reference_index_to_use=1,
                                       output_index_to_use=3,
-                                      Kp=Constants.KP_ULTRASOUND,
-                                      Kd=Constants.KD_ULTRASOUND,
-                                      Ki=Constants.KI_ULTRASOUND,
-                                      max=Constants.MOTOR_MAX,
-                                      min=Constants.MOTOR_MIN,
+                                      Kp=constants.KP_ULTRASOUND,
+                                      Kd=constants.KD_ULTRASOUND,
+                                      Ki=constants.KI_ULTRASOUND,
+                                      max=constants.MOTOR_MAX,
+                                      min=constants.MOTOR_MIN,
                                       reverse_direction=True
                                       )
         self.PID_ULTRA_LEFT_FR = PID(reference=self.ultra_values,
                                      output=self.motor_Speeds,
                                      reference_index_to_use=2,
                                      output_index_to_use=0,
-                                     Kp=Constants.KP_ULTRASOUND,
-                                     Kd=Constants.KD_ULTRASOUND,
-                                     Ki=Constants.KI_ULTRASOUND,
-                                     max=Constants.MOTOR_MAX,
-                                     min=Constants.MOTOR_MIN,
+                                     Kp=constants.KP_ULTRASOUND,
+                                     Kd=constants.KD_ULTRASOUND,
+                                     Ki=constants.KI_ULTRASOUND,
+                                     max=constants.MOTOR_MAX,
+                                     min=constants.MOTOR_MIN,
                                      reverse_direction=True
                                      )
 
@@ -305,11 +305,11 @@ class Quadcopter:
                                      output=self.motor_Speeds,
                                      reference_index_to_use=2,
                                      output_index_to_use=1,
-                                     Kp=Constants.KP_ULTRASOUND,
-                                     Kd=Constants.KD_ULTRASOUND,
-                                     Ki=Constants.KI_ULTRASOUND,
-                                     max=Constants.MOTOR_MAX,
-                                     min=Constants.MOTOR_MIN,
+                                     Kp=constants.KP_ULTRASOUND,
+                                     Kd=constants.KD_ULTRASOUND,
+                                     Ki=constants.KI_ULTRASOUND,
+                                     max=constants.MOTOR_MAX,
+                                     min=constants.MOTOR_MIN,
                                      reverse_direction=False
                                      )
 
@@ -317,11 +317,11 @@ class Quadcopter:
                                      output=self.motor_Speeds,
                                      reference_index_to_use=2,
                                      output_index_to_use=2,
-                                     Kp=Constants.KP_ULTRASOUND,
-                                     Kd=Constants.KD_ULTRASOUND,
-                                     Ki=Constants.KI_ULTRASOUND,
-                                     max=Constants.MOTOR_MAX,
-                                     min=Constants.MOTOR_MIN,
+                                     Kp=constants.KP_ULTRASOUND,
+                                     Kd=constants.KD_ULTRASOUND,
+                                     Ki=constants.KI_ULTRASOUND,
+                                     max=constants.MOTOR_MAX,
+                                     min=constants.MOTOR_MIN,
                                      reverse_direction=True
                                      )
 
@@ -329,22 +329,22 @@ class Quadcopter:
                                      output=self.motor_Speeds,
                                      reference_index_to_use=2,
                                      output_index_to_use=3,
-                                     Kp=Constants.KP_ULTRASOUND,
-                                     Kd=Constants.KD_ULTRASOUND,
-                                     Ki=Constants.KI_ULTRASOUND,
-                                     max=Constants.MOTOR_MAX,
-                                     min=Constants.MOTOR_MIN,
+                                     Kp=constants.KP_ULTRASOUND,
+                                     Kd=constants.KD_ULTRASOUND,
+                                     Ki=constants.KI_ULTRASOUND,
+                                     max=constants.MOTOR_MAX,
+                                     min=constants.MOTOR_MIN,
                                      reverse_direction=False
                                      )
         self.PID_ULTRA_TOP_FR = PID(reference=self.ultra_values,
                                     output=self.motor_Speeds,
                                     reference_index_to_use=3,
                                     output_index_to_use=0,
-                                    Kp=Constants.KP_ULTRASOUND,
-                                    Kd=Constants.KD_ULTRASOUND,
-                                    Ki=Constants.KI_ULTRASOUND,
-                                    max=Constants.MOTOR_MAX,
-                                    min=Constants.MOTOR_MIN,
+                                    Kp=constants.KP_ULTRASOUND,
+                                    Kd=constants.KD_ULTRASOUND,
+                                    Ki=constants.KI_ULTRASOUND,
+                                    max=constants.MOTOR_MAX,
+                                    min=constants.MOTOR_MIN,
                                     reverse_direction=True
                                     )
 
@@ -352,11 +352,11 @@ class Quadcopter:
                                     output=self.motor_Speeds,
                                     reference_index_to_use=3,
                                     output_index_to_use=1,
-                                    Kp=Constants.KP_ULTRASOUND,
-                                    Kd=Constants.KD_ULTRASOUND,
-                                    Ki=Constants.KI_ULTRASOUND,
-                                    max=Constants.MOTOR_MAX,
-                                    min=Constants.MOTOR_MIN,
+                                    Kp=constants.KP_ULTRASOUND,
+                                    Kd=constants.KD_ULTRASOUND,
+                                    Ki=constants.KI_ULTRASOUND,
+                                    max=constants.MOTOR_MAX,
+                                    min=constants.MOTOR_MIN,
                                     reverse_direction=True
                                     )
 
@@ -364,11 +364,11 @@ class Quadcopter:
                                     output=self.motor_Speeds,
                                     reference_index_to_use=3,
                                     output_index_to_use=2,
-                                    Kp=Constants.KP_ULTRASOUND,
-                                    Kd=Constants.KD_ULTRASOUND,
-                                    Ki=Constants.KI_ULTRASOUND,
-                                    max=Constants.MOTOR_MAX,
-                                    min=Constants.MOTOR_MIN,
+                                    Kp=constants.KP_ULTRASOUND,
+                                    Kd=constants.KD_ULTRASOUND,
+                                    Ki=constants.KI_ULTRASOUND,
+                                    max=constants.MOTOR_MAX,
+                                    min=constants.MOTOR_MIN,
                                     reverse_direction=True
                                     )
 
@@ -376,11 +376,11 @@ class Quadcopter:
                                     output=self.motor_Speeds,
                                     reference_index_to_use=3,
                                     output_index_to_use=3,
-                                    Kp=Constants.KP_ULTRASOUND,
-                                    Kd=Constants.KD_ULTRASOUND,
-                                    Ki=Constants.KI_ULTRASOUND,
-                                    max=Constants.MOTOR_MAX,
-                                    min=Constants.MOTOR_MIN,
+                                    Kp=constants.KP_ULTRASOUND,
+                                    Kd=constants.KD_ULTRASOUND,
+                                    Ki=constants.KI_ULTRASOUND,
+                                    max=constants.MOTOR_MAX,
+                                    min=constants.MOTOR_MIN,
                                     reverse_direction=True
                                     )
 
@@ -396,15 +396,15 @@ class Quadcopter:
                           'desired': 0.0}
 
         # ORDER IS FR,FL,BR,BL
-        self.motor_Speeds = [Constants.MOTOR_MIN, Constants.MOTOR_MIN, Constants.MOTOR_MIN, Constants.MOTOR_MIN]
+        self.motor_Speeds = [constants.MOTOR_MIN, constants.MOTOR_MIN, constants.MOTOR_MIN, constants.MOTOR_MIN]
 
         # Which ultra sensor is about to collide
         self.collision_ultra_index = 0
         # ORDER IS F,R,L,T
 
         self.ultra_values = {'current': [0.0, 0.0, 0.0, 0.0],
-                             'desired': [Constants.ULTRASOUND_SAFE_DISTANCE, Constants.ULTRASOUND_SAFE_DISTANCE,
-                                         Constants.ULTRASOUND_SAFE_DISTANCE, Constants.ULTRASOUND_SAFE_DISTANCE]}
+                             'desired': [constants.ULTRASOUND_SAFE_DISTANCE, constants.ULTRASOUND_SAFE_DISTANCE,
+                                         constants.ULTRASOUND_SAFE_DISTANCE, constants.ULTRASOUND_SAFE_DISTANCE]}
 
         self.ypr = {'current': [0.0, 0.0, 0.0],
                     'desired': [0.0, 0.0, 0.0]}
@@ -457,7 +457,7 @@ class Quadcopter:
         self.ultra_values['current'][3] = top
         for i in range(len(self.ultra_values['current'])):
             if self.ultra_values['current'][i] != 0:
-                self.ultra_values['current'][i] -= Constants.ULTRASOUND_TOWINGTIP_OFFSET
+                self.ultra_values['current'][i] -= constants.ULTRASOUND_TOWINGTIP_OFFSET
 
         self.logger.data_ultrasound(self.ultra_values['current'])
 
@@ -467,32 +467,32 @@ class Quadcopter:
         self.__has_taken_off__ = True
         # To make sure speed doesnt reach lesser than min rotation speed(Instant crash)
         for PID in self.PIDS_Pitch:
-            PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_MIN)
+            PID.set_output_limits(constants.MOTOR_MAX, constants.MOTOR_MIN)
         for PID in self.PIDS_Yaw:
-            PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_MIN)
+            PID.set_output_limits(constants.MOTOR_MAX, constants.MOTOR_MIN)
         for PID in self.PIDS_Roll:
-            PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_MIN)
+            PID.set_output_limits(constants.MOTOR_MAX, constants.MOTOR_MIN)
         for PID in self.PIDS_Altitude:
-            PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_MIN)
+            PID.set_output_limits(constants.MOTOR_MAX, constants.MOTOR_MIN)
         for PID_TYPE in self.PIDS_ULTRA:
             for PID in PID_TYPE:
-                PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_MIN)
+                PID.set_output_limits(constants.MOTOR_MAX, constants.MOTOR_MIN)
 
-        self.set_mode_hover_enable(Constants.TAKEOFF_PREFERED_ALTITUDE)
+        self.set_mode_hover_enable(constants.TAKEOFF_PREFERED_ALTITUDE)
 
     def land(self):
         self.logger.mode_Land()
         for PID in self.PIDS_Pitch:
-            PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_ABSOLUTE__MIN)
+            PID.set_output_limits(constants.MOTOR_MAX, constants.MOTOR_ABSOLUTE__MIN)
         for PID in self.PIDS_Yaw:
-            PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_ABSOLUTE__MIN)
+            PID.set_output_limits(constants.MOTOR_MAX, constants.MOTOR_ABSOLUTE__MIN)
         for PID in self.PIDS_Roll:
-            PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_ABSOLUTE__MIN)
+            PID.set_output_limits(constants.MOTOR_MAX, constants.MOTOR_ABSOLUTE__MIN)
         for PID in self.PIDS_Altitude:
-            PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_ABSOLUTE__MIN)
+            PID.set_output_limits(constants.MOTOR_MAX, constants.MOTOR_ABSOLUTE__MIN)
         for PID_TYPE in self.PIDS_ULTRA:
             for PID in PID_TYPE:
-                PID.set_output_limits(Constants.MOTOR_MAX, Constants.MOTOR_ABSOLUTE__MIN)
+                PID.set_output_limits(constants.MOTOR_MAX, constants.MOTOR_ABSOLUTE__MIN)
         self.set_mode_altitude_hold_enable(0.0)
 
     # COLLISION MODE STUFF
@@ -535,7 +535,7 @@ class Quadcopter:
         self.set_mode_collision_avoid_disable()
         val = self.ultra_values['current']
         for i in range(len(val)):
-            if (val[i] != 0) and (val[i] < Constants.ULTRASOUND_SAFE_DISTANCE):
+            if (val[i] != 0) and (val[i] < constants.ULTRASOUND_SAFE_DISTANCE):
                 self.set_mode_collision_avoid_enable()
                 self.logger.warn_collision(i, self.ultra_values['current'][i])
                 for pid in self.PIDS_ULTRA[i]:
@@ -570,7 +570,7 @@ class Quadcopter:
                                                                             'Flight': self.is_mode_flight()})
 
     def has_landed(self):
-        return True if not filter(lambda x: x < Constants.MOTOR_MIN, self.motor_Speeds) else False
+        return True if not filter(lambda x: x < constants.MOTOR_MIN, self.motor_Speeds) else False
 
     def has_taken_off(self):
         return self.__has_taken_off__
@@ -610,12 +610,12 @@ class Quadcopter:
 
     def __set_pid_flight__(self):
         for PID in self.PIDS_Pitch:
-            PID.change_pid(Constants.KP_FLIGHTMODE, Constants.KI_FLIGHTMODE, Constants.KD_NORMAL)
+            PID.change_pid(constants.KP_FLIGHTMODE, constants.KI_FLIGHTMODE, constants.KD_NORMAL)
 
         for PID in self.PIDS_Yaw:
-            PID.change_pid(Constants.KP_FLIGHTMODE, Constants.KI_FLIGHTMODE, Constants.KD_NORMAL)
+            PID.change_pid(constants.KP_FLIGHTMODE, constants.KI_FLIGHTMODE, constants.KD_NORMAL)
         for PID in self.PIDS_Roll:
-            PID.change_pid(Constants.KP_FLIGHTMODE, Constants.KI_FLIGHTMODE, Constants.KD_NORMAL)
+            PID.change_pid(constants.KP_FLIGHTMODE, constants.KI_FLIGHTMODE, constants.KD_NORMAL)
 
     def is_mode_flight(self):
         return not self.__is_mode_Hover__
@@ -638,19 +638,19 @@ class Quadcopter:
 
     def __set_pid_hover__(self):
         for PID in self.PIDS_Pitch:
-            PID.change_pid(Constants.KP_NORMAL, Constants.KI_NORMAL, Constants.KD_NORMAL)
+            PID.change_pid(constants.KP_NORMAL, constants.KI_NORMAL, constants.KD_NORMAL)
 
         for PID in self.PIDS_Yaw:
-            PID.change_pid(Constants.KP_NORMAL, Constants.KI_NORMAL, Constants.KD_NORMAL)
+            PID.change_pid(constants.KP_NORMAL, constants.KI_NORMAL, constants.KD_NORMAL)
         for PID in self.PIDS_Roll:
-            PID.change_pid(Constants.KP_NORMAL, Constants.KI_NORMAL, Constants.KD_NORMAL)
+            PID.change_pid(constants.KP_NORMAL, constants.KI_NORMAL, constants.KD_NORMAL)
 
     def is_mode_hover(self):
         return self.__is_mode_Hover__
 
     def __check_ypr_goodness__(self, ypr):
-        return (ypr[1] <= Constants.MAX_PITCH and ypr[1] >= -Constants.MAX_PITCH) \
-               and (ypr[2] <= Constants.MAX_ROLL and ypr[2] >= -Constants.MAX_ROLL)
+        return (ypr[1] <= constants.MAX_PITCH and ypr[1] >= -constants.MAX_PITCH) \
+               and (ypr[2] <= constants.MAX_ROLL and ypr[2] >= -constants.MAX_ROLL)
 
     def get_ypr_current(self):
         return self.ypr['current']
@@ -713,8 +713,8 @@ class Quadcopter:
         self.logger.data_set_speeds([speed for i in range(4)])
 
         for i in range(4):
-            self.motor_Speeds[i] = speed if speed < Constants.MOTOR_MIN else Constants.MOTOR_MIN
-            self.motor_Speeds[i] = speed if speed > Constants.MOTOR_MAX else Constants.MOTOR_MAX
+            self.motor_Speeds[i] = speed if speed < constants.MOTOR_MIN else constants.MOTOR_MIN
+            self.motor_Speeds[i] = speed if speed > constants.MOTOR_MAX else constants.MOTOR_MAX
         self.set_mode_hover_enable(disable_Altitude_Hold=True)
 
 
@@ -777,9 +777,9 @@ def sim_3(a):
 
 
 if __name__ == '__main__':
-    import CustomLogger
+    import customlogger
 
-    a = Quadcopter(CustomLogger.PILogger())
+    a = Quadcopter(customlogger.pi_logger())
     sim_1(a)
-    a = Quadcopter(CustomLogger.PILogger())
+    a = Quadcopter(customlogger.pi_logger())
     sim_2(a)
