@@ -338,8 +338,10 @@ void gyro_Setup()
 		Serial.print("Z-Axis sensitivity adjustment value "); Serial.println(magCalibration[2], 2);
 		
 #endif
+		for(int i=0;i<200;i++){
+			getYPR();
+		}
 		sprintf(buf,FORMAT_SETUP_SUCCESS,"MPU9250");
-		delay(200);
 		
 	}
 	else

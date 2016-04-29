@@ -84,7 +84,6 @@ def read_from_port(port, baud_rate, sender, logger):
 
     while True:
         reading = serial_port.readline().decode("Utf-8").rstrip()
-        print reading
         if reading:
             try:
                 sender.put(reading)

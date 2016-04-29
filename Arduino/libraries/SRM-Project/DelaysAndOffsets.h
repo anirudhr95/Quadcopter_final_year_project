@@ -15,13 +15,13 @@
 
 
 // #define SET_TRANSMISSION_RATE_HIGH
-// #define SET_TRANSMISSION_RATE_MID 
-#define SET_TRANSMISSION_RATE_LOW
+#define SET_TRANSMISSION_RATE_MID 
+// #define SET_TRANSMISSION_RATE_LOW
 
 #define UPDATE_FREQUENCY_RATE_HIGH 100
 #define UPDATE_FREQUENCY_RATE_MID 300
 #define UPDATE_FREQUENCY_RATE_LOW 800
-#define NUM_GYRO_READINGS_PER_ULTRA 3
+#define NUM_GYRO_READINGS_PER_ULTRA 2
 
 /* GYRO TRANSMISSION RATE 
 Uncomment the transmission rate to use
@@ -32,9 +32,12 @@ LOW = 1 for every other possible type of message
 
 // Pitch is -Roll, Roll is -Pitch
 #define GYRO_ANGLES_REVERSED true
-#define GYRO_PITCH_OFFSET -8.5
-#define GYRO_ROLL_OFFSET 8.8
+#define GYRO_PITCH_OFFSET 0
+#define GYRO_ROLL_OFFSET 0
+// #define GYRO_PITCH_OFFSET -8.5
+// #define GYRO_ROLL_OFFSET 8.8
 /*	
+- 6.30, 6.8
 Ultrasound
 */
 

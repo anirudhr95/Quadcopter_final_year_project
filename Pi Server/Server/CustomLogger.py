@@ -115,7 +115,8 @@ class pi_logger:
         self.logger.debug("SET_ALTITUDE:%s" % altitude)
 
     def data_set_ypr(self, ypr):
-        self.logger.info("%s:%s" % (constants.IOSMESSAGE_SETYPR, ";".join(str(val) for val in ypr)))
+        pass
+        # self.logger.info("%s:%s" % (constants.IOSMESSAGE_SETYPR, ";".join(str(val) for val in ypr)))
 
     def warn_collision(self, direction, sensor_value):
         self.logger.critical("COLLISION:%s-%s" % (direction, sensor_value))
@@ -140,7 +141,8 @@ class pi_logger:
 
     def data_ultrasound(self, data):
         # assert isinstance(data, list)
-        self.logger.debug("%s" % (';'.join(str(val) for val in data)))
+        pass
+        # self.logger.debug("ULTRASOUND:%s" % (';'.join(str(val) for val in data)))
 
     def setup_init(self, module):
         self.logger.info("SETUP-INITIALIZING:%s" % module)

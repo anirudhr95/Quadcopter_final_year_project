@@ -76,16 +76,19 @@ class Middleware_Arduino:
 
         self.quadcopter = quadcopter
         self.logger = arduino_logger()
+        self.flag = False
     def parseMessage(self, msg):
         try:
 
             functionName, params = msg.split(':')
             if functionName == constants.ARDUINOMESSAGE_GYRO:
+
                 # DATA:Y;P;R;Mx;My;Mz;Mh
 
                 y, p, r, heading = map(lambda x: float(x), params.split(';'))
                 self.logger.data_gyromag(gyro=[y,p,r],heading=heading)
-                self.quadcopter.sensor_set_ypr_current([y, p, r])
+                self.quadcopter.set_ypr_current([y, p, r])
+
             elif functionName == constants.ARDUINOSTATUS_ULTRA:
                 self.logger.data_ultrasound(params.split(';'))
                 # ORDER: BOTTOM, TOP, FRONT, RIGHT, LEFT
