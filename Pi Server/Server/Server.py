@@ -44,7 +44,7 @@ from flask import Flask, request, render_template
 from flask_socketio import SocketIO
 
 import constants
-from quadcopter import Quadcopter
+from quadcopterComponents.quadcopter import Quadcopter
 
 # Socket-io server example
 # https://github.com/miguelgrinberg/Flask-SocketIO/blob/v2.2/example/app.py

@@ -17,8 +17,8 @@ class pid_handler:
                               Kp=constants.KP_NORMAL,
                               Kd=constants.KD_NORMAL,
                               Ki=constants.KI_NORMAL,
-                              max=constants.MOTOR_MAX,
-                              min=constants.MOTOR_MIN,
+                              max=constants.MOTOR_MAX_FLIGHT,
+                              min=constants.MOTOR_MIN_FLIGHT,
                               reverse_direction=not constants.WING_FR_ANTICLOCKWISE
                               )
         self.PID_YAW_FL = PID(reference=self.ypr,
@@ -28,8 +28,8 @@ class pid_handler:
                               Kp=constants.KP_NORMAL,
                               Kd=constants.KD_NORMAL,
                               Ki=constants.KI_NORMAL,
-                              max=constants.MOTOR_MAX,
-                              min=constants.MOTOR_MIN,
+                              max=constants.MOTOR_MAX_FLIGHT,
+                              min=constants.MOTOR_MIN_FLIGHT,
                               reverse_direction=constants.WING_FR_ANTICLOCKWISE
                               )
         self.PID_YAW_BR = PID(reference=self.ypr,
@@ -39,8 +39,8 @@ class pid_handler:
                               Kp=constants.KP_NORMAL,
                               Kd=constants.KD_NORMAL,
                               Ki=constants.KI_NORMAL,
-                              max=constants.MOTOR_MAX,
-                              min=constants.MOTOR_MIN,
+                              max=constants.MOTOR_MAX_FLIGHT,
+                              min=constants.MOTOR_MIN_FLIGHT,
                               reverse_direction=constants.WING_FR_ANTICLOCKWISE
                               )
         self.PID_YAW_BL = PID(reference=self.ypr,
@@ -50,8 +50,8 @@ class pid_handler:
                               Kp=constants.KP_NORMAL,
                               Kd=constants.KD_NORMAL,
                               Ki=constants.KI_NORMAL,
-                              max=constants.MOTOR_MAX,
-                              min=constants.MOTOR_MIN,
+                              max=constants.MOTOR_MAX_FLIGHT,
+                              min=constants.MOTOR_MIN_FLIGHT,
                               reverse_direction=not constants.WING_FR_ANTICLOCKWISE
                               )
         self.PID_PITCH_FR = PID(reference=self.ypr,
@@ -61,8 +61,8 @@ class pid_handler:
                                 Kp=constants.KP_NORMAL,
                                 Kd=constants.KD_NORMAL,
                                 Ki=constants.KI_NORMAL,
-                                max=constants.MOTOR_MAX,
-                                min=constants.MOTOR_MIN,
+                                max=constants.MOTOR_MAX_FLIGHT,
+                                min=constants.MOTOR_MIN_FLIGHT,
                                 reverse_direction=True
                                 )
         self.PID_PITCH_FL = PID(reference=self.ypr,
@@ -72,8 +72,8 @@ class pid_handler:
                                 Kp=constants.KP_NORMAL,
                                 Kd=constants.KD_NORMAL,
                                 Ki=constants.KI_NORMAL,
-                                max=constants.MOTOR_MAX,
-                                min=constants.MOTOR_MIN,
+                                max=constants.MOTOR_MAX_FLIGHT,
+                                min=constants.MOTOR_MIN_FLIGHT,
                                 reverse_direction=True
                                 )
         self.PID_PITCH_BR = PID(reference=self.ypr,
@@ -83,8 +83,8 @@ class pid_handler:
                                 Kp=constants.KP_NORMAL,
                                 Kd=constants.KD_NORMAL,
                                 Ki=constants.KI_NORMAL,
-                                max=constants.MOTOR_MAX,
-                                min=constants.MOTOR_MIN,
+                                max=constants.MOTOR_MAX_FLIGHT,
+                                min=constants.MOTOR_MIN_FLIGHT,
                                 reverse_direction=False
                                 )
         self.PID_PITCH_BL = PID(reference=self.ypr,
@@ -94,8 +94,8 @@ class pid_handler:
                                 Kp=constants.KP_NORMAL,
                                 Kd=constants.KD_NORMAL,
                                 Ki=constants.KI_NORMAL,
-                                max=constants.MOTOR_MAX,
-                                min=constants.MOTOR_MIN,
+                                max=constants.MOTOR_MAX_FLIGHT,
+                                min=constants.MOTOR_MIN_FLIGHT,
                                 reverse_direction=False
                                 )
         self.PID_ROLL_FR = PID(reference=self.ypr,
@@ -105,8 +105,8 @@ class pid_handler:
                                Kp=constants.KP_NORMAL,
                                Kd=constants.KD_NORMAL,
                                Ki=constants.KI_NORMAL,
-                               max=constants.MOTOR_MAX,
-                               min=constants.MOTOR_MIN,
+                               max=constants.MOTOR_MAX_FLIGHT,
+                               min=constants.MOTOR_MIN_FLIGHT,
                                reverse_direction=False
                                )
         self.PID_ROLL_FL = PID(reference=self.ypr,
@@ -116,8 +116,8 @@ class pid_handler:
                                Kp=constants.KP_NORMAL,
                                Kd=constants.KD_NORMAL,
                                Ki=constants.KI_NORMAL,
-                               max=constants.MOTOR_MAX,
-                               min=constants.MOTOR_MIN,
+                               max=constants.MOTOR_MAX_FLIGHT,
+                               min=constants.MOTOR_MIN_FLIGHT,
                                reverse_direction=True
                                )
         self.PID_ROLL_BR = PID(reference=self.ypr,
@@ -127,8 +127,8 @@ class pid_handler:
                                Kp=constants.KP_NORMAL,
                                Kd=constants.KD_NORMAL,
                                Ki=constants.KI_NORMAL,
-                               max=constants.MOTOR_MAX,
-                               min=constants.MOTOR_MIN,
+                               max=constants.MOTOR_MAX_FLIGHT,
+                               min=constants.MOTOR_MIN_FLIGHT,
                                reverse_direction=False
                                )
         self.PID_ROLL_BL = PID(reference=self.ypr,
@@ -138,8 +138,8 @@ class pid_handler:
                                Kp=constants.KP_NORMAL,
                                Kd=constants.KD_NORMAL,
                                Ki=constants.KI_NORMAL,
-                               max=constants.MOTOR_MAX,
-                               min=constants.MOTOR_MIN,
+                               max=constants.MOTOR_MAX_FLIGHT,
+                               min=constants.MOTOR_MIN_FLIGHT,
                                reverse_direction=True
                                )
         self.PID_ALT_FR = PID(reference=self.altitudes,
@@ -149,8 +149,8 @@ class pid_handler:
                               Kp=constants.KP_ALTITUDE,
                               Kd=constants.KD_ALTITUDE,
                               Ki=constants.KI_ALTITUDE,
-                              max=constants.MOTOR_MAX,
-                              min=constants.MOTOR_MIN,
+                              max=constants.MOTOR_MAX_FLIGHT,
+                              min=constants.MOTOR_MIN_FLIGHT,
                               reverse_direction=False
                               )
         self.PID_ALT_FL = PID(reference=self.altitudes,
@@ -160,8 +160,8 @@ class pid_handler:
                               Kp=constants.KP_ALTITUDE,
                               Kd=constants.KD_ALTITUDE,
                               Ki=constants.KI_ALTITUDE,
-                              max=constants.MOTOR_MAX,
-                              min=constants.MOTOR_MIN,
+                              max=constants.MOTOR_MAX_FLIGHT,
+                              min=constants.MOTOR_MIN_FLIGHT,
                               reverse_direction=False
                               )
         self.PID_ALT_BR = PID(reference=self.altitudes,
@@ -171,8 +171,8 @@ class pid_handler:
                               Kp=constants.KP_ALTITUDE,
                               Kd=constants.KD_ALTITUDE,
                               Ki=constants.KI_ALTITUDE,
-                              max=constants.MOTOR_MAX,
-                              min=constants.MOTOR_MIN,
+                              max=constants.MOTOR_MAX_FLIGHT,
+                              min=constants.MOTOR_MIN_FLIGHT,
                               reverse_direction=False
                               )
         self.PID_ALT_BL = PID(reference=self.altitudes,
@@ -182,8 +182,8 @@ class pid_handler:
                               Kp=constants.KP_ALTITUDE,
                               Kd=constants.KD_ALTITUDE,
                               Ki=constants.KI_ALTITUDE,
-                              max=constants.MOTOR_MAX,
-                              min=constants.MOTOR_MIN,
+                              max=constants.MOTOR_MAX_FLIGHT,
+                              min=constants.MOTOR_MIN_FLIGHT,
                               reverse_direction=False
                               )
         self.PID_ULTRA_FRONT_FR = PID(reference=self.ultra_values,
@@ -193,8 +193,8 @@ class pid_handler:
                                       Kp=constants.KP_ULTRASOUND,
                                       Kd=constants.KD_ULTRASOUND,
                                       Ki=constants.KI_ULTRASOUND,
-                                      max=constants.MOTOR_MAX,
-                                      min=constants.MOTOR_MIN,
+                                      max=constants.MOTOR_MAX_FLIGHT,
+                                      min=constants.MOTOR_MIN_FLIGHT,
                                       reverse_direction=False
                                       )
 
@@ -205,8 +205,8 @@ class pid_handler:
                                       Kp=constants.KP_ULTRASOUND,
                                       Kd=constants.KD_ULTRASOUND,
                                       Ki=constants.KI_ULTRASOUND,
-                                      max=constants.MOTOR_MAX,
-                                      min=constants.MOTOR_MIN,
+                                      max=constants.MOTOR_MAX_FLIGHT,
+                                      min=constants.MOTOR_MIN_FLIGHT,
                                       reverse_direction=False
                                       )
 
@@ -217,8 +217,8 @@ class pid_handler:
                                       Kp=constants.KP_ULTRASOUND,
                                       Kd=constants.KD_ULTRASOUND,
                                       Ki=constants.KI_ULTRASOUND,
-                                      max=constants.MOTOR_MAX,
-                                      min=constants.MOTOR_MIN,
+                                      max=constants.MOTOR_MAX_FLIGHT,
+                                      min=constants.MOTOR_MIN_FLIGHT,
                                       reverse_direction=True
                                       )
 
@@ -229,8 +229,8 @@ class pid_handler:
                                       Kp=constants.KP_ULTRASOUND,
                                       Kd=constants.KD_ULTRASOUND,
                                       Ki=constants.KI_ULTRASOUND,
-                                      max=constants.MOTOR_MAX,
-                                      min=constants.MOTOR_MIN,
+                                      max=constants.MOTOR_MAX_FLIGHT,
+                                      min=constants.MOTOR_MIN_FLIGHT,
                                       reverse_direction=True
                                       )
         self.PID_ULTRA_RIGHT_FR = PID(reference=self.ultra_values,
@@ -240,8 +240,8 @@ class pid_handler:
                                       Kp=constants.KP_ULTRASOUND,
                                       Kd=constants.KD_ULTRASOUND,
                                       Ki=constants.KI_ULTRASOUND,
-                                      max=constants.MOTOR_MAX,
-                                      min=constants.MOTOR_MIN,
+                                      max=constants.MOTOR_MAX_FLIGHT,
+                                      min=constants.MOTOR_MIN_FLIGHT,
                                       reverse_direction=False
                                       )
 
@@ -252,8 +252,8 @@ class pid_handler:
                                       Kp=constants.KP_ULTRASOUND,
                                       Kd=constants.KD_ULTRASOUND,
                                       Ki=constants.KI_ULTRASOUND,
-                                      max=constants.MOTOR_MAX,
-                                      min=constants.MOTOR_MIN,
+                                      max=constants.MOTOR_MAX_FLIGHT,
+                                      min=constants.MOTOR_MIN_FLIGHT,
                                       reverse_direction=True
                                       )
 
@@ -264,8 +264,8 @@ class pid_handler:
                                       Kp=constants.KP_ULTRASOUND,
                                       Kd=constants.KD_ULTRASOUND,
                                       Ki=constants.KI_ULTRASOUND,
-                                      max=constants.MOTOR_MAX,
-                                      min=constants.MOTOR_MIN,
+                                      max=constants.MOTOR_MAX_FLIGHT,
+                                      min=constants.MOTOR_MIN_FLIGHT,
                                       reverse_direction=False
                                       )
 
@@ -276,8 +276,8 @@ class pid_handler:
                                       Kp=constants.KP_ULTRASOUND,
                                       Kd=constants.KD_ULTRASOUND,
                                       Ki=constants.KI_ULTRASOUND,
-                                      max=constants.MOTOR_MAX,
-                                      min=constants.MOTOR_MIN,
+                                      max=constants.MOTOR_MAX_FLIGHT,
+                                      min=constants.MOTOR_MIN_FLIGHT,
                                       reverse_direction=True
                                       )
         self.PID_ULTRA_LEFT_FR = PID(reference=self.ultra_values,
@@ -287,8 +287,8 @@ class pid_handler:
                                      Kp=constants.KP_ULTRASOUND,
                                      Kd=constants.KD_ULTRASOUND,
                                      Ki=constants.KI_ULTRASOUND,
-                                     max=constants.MOTOR_MAX,
-                                     min=constants.MOTOR_MIN,
+                                     max=constants.MOTOR_MAX_FLIGHT,
+                                     min=constants.MOTOR_MIN_FLIGHT,
                                      reverse_direction=True
                                      )
 
@@ -299,8 +299,8 @@ class pid_handler:
                                      Kp=constants.KP_ULTRASOUND,
                                      Kd=constants.KD_ULTRASOUND,
                                      Ki=constants.KI_ULTRASOUND,
-                                     max=constants.MOTOR_MAX,
-                                     min=constants.MOTOR_MIN,
+                                     max=constants.MOTOR_MAX_FLIGHT,
+                                     min=constants.MOTOR_MIN_FLIGHT,
                                      reverse_direction=False
                                      )
 
@@ -311,8 +311,8 @@ class pid_handler:
                                      Kp=constants.KP_ULTRASOUND,
                                      Kd=constants.KD_ULTRASOUND,
                                      Ki=constants.KI_ULTRASOUND,
-                                     max=constants.MOTOR_MAX,
-                                     min=constants.MOTOR_MIN,
+                                     max=constants.MOTOR_MAX_FLIGHT,
+                                     min=constants.MOTOR_MIN_FLIGHT,
                                      reverse_direction=True
                                      )
 
@@ -323,8 +323,8 @@ class pid_handler:
                                      Kp=constants.KP_ULTRASOUND,
                                      Kd=constants.KD_ULTRASOUND,
                                      Ki=constants.KI_ULTRASOUND,
-                                     max=constants.MOTOR_MAX,
-                                     min=constants.MOTOR_MIN,
+                                     max=constants.MOTOR_MAX_FLIGHT,
+                                     min=constants.MOTOR_MIN_FLIGHT,
                                      reverse_direction=False
                                      )
         self.PID_ULTRA_TOP_FR = PID(reference=self.ultra_values,
@@ -334,8 +334,8 @@ class pid_handler:
                                     Kp=constants.KP_ULTRASOUND,
                                     Kd=constants.KD_ULTRASOUND,
                                     Ki=constants.KI_ULTRASOUND,
-                                    max=constants.MOTOR_MAX,
-                                    min=constants.MOTOR_MIN,
+                                    max=constants.MOTOR_MAX_FLIGHT,
+                                    min=constants.MOTOR_MIN_FLIGHT,
                                     reverse_direction=True
                                     )
 
@@ -346,8 +346,8 @@ class pid_handler:
                                     Kp=constants.KP_ULTRASOUND,
                                     Kd=constants.KD_ULTRASOUND,
                                     Ki=constants.KI_ULTRASOUND,
-                                    max=constants.MOTOR_MAX,
-                                    min=constants.MOTOR_MIN,
+                                    max=constants.MOTOR_MAX_FLIGHT,
+                                    min=constants.MOTOR_MIN_FLIGHT,
                                     reverse_direction=True
                                     )
 
@@ -358,8 +358,8 @@ class pid_handler:
                                     Kp=constants.KP_ULTRASOUND,
                                     Kd=constants.KD_ULTRASOUND,
                                     Ki=constants.KI_ULTRASOUND,
-                                    max=constants.MOTOR_MAX,
-                                    min=constants.MOTOR_MIN,
+                                    max=constants.MOTOR_MAX_FLIGHT,
+                                    min=constants.MOTOR_MIN_FLIGHT,
                                     reverse_direction=True
                                     )
 
@@ -370,8 +370,8 @@ class pid_handler:
                                     Kp=constants.KP_ULTRASOUND,
                                     Kd=constants.KD_ULTRASOUND,
                                     Ki=constants.KI_ULTRASOUND,
-                                    max=constants.MOTOR_MAX,
-                                    min=constants.MOTOR_MIN,
+                                    max=constants.MOTOR_MAX_FLIGHT,
+                                    min=constants.MOTOR_MIN_FLIGHT,
                                     reverse_direction=True
                                     )
 
@@ -400,6 +400,8 @@ class pid_handler:
                               self.PID_ALT_FL,
                               self.PID_ALT_BR,
                               self.PID_ALT_BL]
+        self.PIDS_YPRA = [self.PIDS_Yaw, self.PIDS_Pitch, self.PIDS_Roll, self.PIDS_Altitude]
+        self.PIDS_YPR = [self.PIDS_Yaw, self.PIDS_Pitch, self.PIDS_Roll]
         self.PIDS_ULTRA_Front = [self.PID_ULTRA_FRONT_FR,
                                  self.PID_ULTRA_FRONT_FL,
                                  self.PID_ULTRA_FRONT_BR,
@@ -446,28 +448,26 @@ class pid_handler:
         for pid in self.PIDS_Altitude:
             pid.compute()
 
-    def __set_pid_test__(self, p, i, d):
-        for PID in self.PIDS_Pitch:
-            PID.change_pid(p, i, d)
-        for PID in self.PIDS_Yaw:
-            PID.change_pid(p, i, d)
-        for PID in self.PIDS_Roll:
-            PID.change_pid(p, i, d)
+    def __set_pid__(self, p, i, d):
+        for pid_class in self.PIDS_YPR:
+            for pid in pid_class:
+                pid.change_pid(p, i, d)
 
-    def __set_pid_flight__(self):
-        for PID in self.PIDS_Pitch:
-            PID.change_pid(constants.KP_FLIGHTMODE, constants.KI_FLIGHTMODE, constants.KD_NORMAL)
+    def set_pid_constants_for_test(self, p, i, d):
+        self.__set_pid__(p, i, d)
 
-        for PID in self.PIDS_Yaw:
-            PID.change_pid(constants.KP_FLIGHTMODE, constants.KI_FLIGHTMODE, constants.KD_NORMAL)
-        for PID in self.PIDS_Roll:
-            PID.change_pid(constants.KP_FLIGHTMODE, constants.KI_FLIGHTMODE, constants.KD_NORMAL)
+    def set_pid_constants_for_flight(self):
+        self.__set_pid__(constants.KP_FLIGHTMODE, constants.KI_FLIGHTMODE, constants.KD_NORMAL)
 
-    def __set_pid_hover__(self):
-        for PID in self.PIDS_Pitch:
-            PID.change_pid(constants.KP_NORMAL, constants.KI_NORMAL, constants.KD_NORMAL)
+    def set_pid_constants_for_hover(self):
+        self.__set_pid__(constants.KP_NORMAL, constants.KI_NORMAL, constants.KD_NORMAL)
 
-        for PID in self.PIDS_Yaw:
-            PID.change_pid(constants.KP_NORMAL, constants.KI_NORMAL, constants.KD_NORMAL)
-        for PID in self.PIDS_Roll:
-            PID.change_pid(constants.KP_NORMAL, constants.KI_NORMAL, constants.KD_NORMAL)
+    def set_speedlimit__flight(self):
+        for pid_class in self.PIDS_YPRA:
+            for pid in pid_class:
+                pid.set_output_limits(constants.MOTOR_MAX_FLIGHT, constants.MOTOR_MIN_FLIGHT)
+
+    def set_speedlimit_landing(self):
+        for pid_class in self.PIDS_YPRA:
+            for pid in pid_class:
+                pid.set_output_limits(constants.MOTOR_MAX_FLIGHT, constants.MOTOR_MIN_LANDING)

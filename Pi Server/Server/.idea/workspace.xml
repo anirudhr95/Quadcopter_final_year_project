@@ -5,19 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="14a6cb86-3ccf-448f-8373-ff337c3ac330" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/quadcopterComponents/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/quadcopterComponents/altitude.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/quadcopterComponents/gyro.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/quadcopterComponents/motor.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/quadcopterComponents/pid_handler.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/quadcopterComponents/ultrasonic.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Arduino/libraries/SRM-Project/DelaysAndOffsets.h" afterPath="$PROJECT_DIR$/../../Arduino/libraries/SRM-Project/DelaysAndOffsets.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Arduino/libraries/SRM-Project/Mpu.h" afterPath="$PROJECT_DIR$/../../Arduino/libraries/SRM-Project/Mpu.h" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/quadcopterComponents/mode.py" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/Quadcopter.py" afterPath="$PROJECT_DIR$/quadcopterComponents/quadcopter.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Constants.py" afterPath="$PROJECT_DIR$/Constants.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CustomLogger.py" afterPath="$PROJECT_DIR$/CustomLogger.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Server.py" afterPath="$PROJECT_DIR$/Server.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/middleware.py" afterPath="$PROJECT_DIR$/middleware.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/quadcopterComponents/__init__.py" afterPath="$PROJECT_DIR$/quadcopterComponents/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/quadcopterComponents/motor.py" afterPath="$PROJECT_DIR$/quadcopterComponents/motor.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/quadcopterComponents/pid_handler.py" afterPath="$PROJECT_DIR$/quadcopterComponents/pid_handler.py" />
     </list>
     <ignored path="Server.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -48,7 +43,7 @@
       <file leaf-file-name="server.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-510">
+            <state relative-caret-position="705">
               <caret line="63" column="0" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
               <folding>
                 <element signature="e#723#737#0" expanded="true" />
@@ -58,15 +53,36 @@
         </entry>
       </file>
       <file leaf-file-name="quadcopter.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/quadcopter.py">
+        <entry file="file://$PROJECT_DIR$/quadcopterComponents/quadcopter.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2250">
-              <caret line="221" column="0" selection-start-line="221" selection-start-column="0" selection-end-line="221" selection-end-column="0" />
+            <state relative-caret-position="225">
+              <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
               <folding>
                 <element signature="e#0#16#0" expanded="true" />
-                <element signature="e#141#467#1" expanded="false" />
-                <element signature="e#7123#7610#0" expanded="false" />
+                <element signature="e#194#520#1" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/quadcopterComponents/__init__.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="637">
+              <caret line="65" column="13" selection-start-line="65" selection-start-column="13" selection-end-line="65" selection-end-column="13" />
+              <folding>
+                <element signature="e#894#1381#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mode.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/quadcopterComponents/mode.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="18" column="11" selection-start-line="18" selection-start-column="11" selection-end-line="18" selection-end-column="11" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -74,21 +90,31 @@
       <file leaf-file-name="pid_handler.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/quadcopterComponents/pid_handler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1125">
-              <caret line="472" column="89" selection-start-line="472" selection-start-column="89" selection-end-line="472" selection-end-column="89" />
+            <state relative-caret-position="382">
+              <caret line="449" column="0" selection-start-line="449" selection-start-column="0" selection-end-line="449" selection-end-column="0" />
               <folding>
                 <element signature="e#0#16#0" expanded="true" />
-                <element signature="e#94#20452#0" expanded="false" />
-                <element signature="e#20752#20909#0" expanded="false" />
-                <element signature="e#20935#21078#0" expanded="false" />
-                <element signature="e#21104#21254#0" expanded="false" />
-                <element signature="e#21284#21442#0" expanded="false" />
-                <element signature="e#21475#21674#0" expanded="false" />
-                <element signature="e#21707#21906#0" expanded="false" />
-                <element signature="e#21938#22130#0" expanded="false" />
-                <element signature="e#22161#22346#0" expanded="false" />
-                <element signature="e#22373#22543#0" expanded="false" />
+                <element signature="e#94#20900#0" expanded="false" />
+                <element signature="e#21200#21357#0" expanded="false" />
+                <element signature="e#21383#21526#0" expanded="false" />
+                <element signature="e#21552#21702#0" expanded="false" />
+                <element signature="e#21732#21890#0" expanded="false" />
+                <element signature="e#22090#22289#0" expanded="false" />
+                <element signature="e#22322#22521#0" expanded="false" />
+                <element signature="e#22553#22745#0" expanded="false" />
+                <element signature="e#22776#22961#0" expanded="false" />
+                <element signature="e#22988#23158#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="constants.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/constants.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="247">
+              <caret line="70" column="8" selection-start-line="70" selection-start-column="8" selection-end-line="70" selection-end-column="8" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -133,41 +159,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="customlogger.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/customlogger.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="842">
-              <caret line="119" column="0" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
-              <folding>
-                <element signature="e#44#58#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="middleware.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/middleware.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="88" column="70" selection-start-line="88" selection-start-column="70" selection-end-line="88" selection-end-column="70" />
-              <folding>
-                <element signature="e#0#16#0" expanded="true" />
-                <element signature="e#97#1925#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="constants.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/constants.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="526">
-              <caret line="78" column="30" selection-start-line="78" selection-start-column="30" selection-end-line="78" selection-end-column="30" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -207,14 +198,16 @@
         <option value="$PROJECT_DIR$/message_sender.py" />
         <option value="$PROJECT_DIR$/server.py" />
         <option value="$PROJECT_DIR$/customlogger.py" />
-        <option value="$PROJECT_DIR$/constants.py" />
         <option value="$PROJECT_DIR$/middleware.py" />
         <option value="$PROJECT_DIR$/quad_components/gyro.py" />
         <option value="$PROJECT_DIR$/quadcopterComponents/gyro.py" />
         <option value="$PROJECT_DIR$/quadcopterComponents/motor.py" />
         <option value="$PROJECT_DIR$/quadcopterComponents/altitude.py" />
         <option value="$PROJECT_DIR$/quadcopterComponents/ultrasonic.py" />
+        <option value="$PROJECT_DIR$/constants.py" />
+        <option value="$PROJECT_DIR$/quadcopterComponents/mode.py" />
         <option value="$PROJECT_DIR$/quadcopterComponents/pid_handler.py" />
+        <option value="$PROJECT_DIR$/quadcopterComponents/__init__.py" />
         <option value="$PROJECT_DIR$/quadcopter.py" />
       </list>
     </option>
@@ -359,7 +352,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="Server" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/quadcopter.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/quadcopterComponents/quadcopter.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -641,7 +634,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891566" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27710843" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27710843" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -686,25 +679,15 @@
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint type="python-line">
-          <url>file://$PROJECT_DIR$/quadcopter.py</url>
-          <line>211</line>
-          <option name="timeStamp" value="35" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
-          <url>file://$PROJECT_DIR$/quadcopter.py</url>
-          <line>87</line>
+          <url>file://$PROJECT_DIR$/quadcopterComponents/quadcopter.py</url>
+          <line>80</line>
           <option name="timeStamp" value="36" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/middleware.py</url>
           <line>40</line>
           <option name="timeStamp" value="38" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="python-line">
-          <url>file://$PROJECT_DIR$/quadcopter.py</url>
-          <line>202</line>
-          <option name="timeStamp" value="41" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/server.py</url>
@@ -731,11 +714,6 @@
           <line>116</line>
           <option name="timeStamp" value="49" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="python-line">
-          <url>file://$PROJECT_DIR$/quadcopter.py</url>
-          <line>192</line>
-          <option name="timeStamp" value="52" />
-        </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
@@ -759,24 +737,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/constants.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2175">
-          <caret line="147" column="19" selection-start-line="147" selection-start-column="19" selection-end-line="147" selection-end-column="19" />
-          <folding>
-            <element signature="e#723#737#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bonjour.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="840">
@@ -1003,14 +963,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/constants.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="526">
-          <caret line="78" column="30" selection-start-line="78" selection-start-column="30" selection-end-line="78" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/customlogger.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="842">
@@ -1040,16 +992,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-510">
-          <caret line="63" column="0" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
-          <folding>
-            <element signature="e#723#737#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/quadcopterComponents/ultrasonic.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
@@ -1074,34 +1016,69 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/constants.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="70" column="8" selection-start-line="70" selection-start-column="8" selection-end-line="70" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/quadcopterComponents/pid_handler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1125">
-          <caret line="472" column="89" selection-start-line="472" selection-start-column="89" selection-end-line="472" selection-end-column="89" />
+        <state relative-caret-position="382">
+          <caret line="449" column="0" selection-start-line="449" selection-start-column="0" selection-end-line="449" selection-end-column="0" />
           <folding>
             <element signature="e#0#16#0" expanded="true" />
-            <element signature="e#94#20452#0" expanded="false" />
-            <element signature="e#20752#20909#0" expanded="false" />
-            <element signature="e#20935#21078#0" expanded="false" />
-            <element signature="e#21104#21254#0" expanded="false" />
-            <element signature="e#21284#21442#0" expanded="false" />
-            <element signature="e#21475#21674#0" expanded="false" />
-            <element signature="e#21707#21906#0" expanded="false" />
-            <element signature="e#21938#22130#0" expanded="false" />
-            <element signature="e#22161#22346#0" expanded="false" />
-            <element signature="e#22373#22543#0" expanded="false" />
+            <element signature="e#94#20900#0" expanded="false" />
+            <element signature="e#21200#21357#0" expanded="false" />
+            <element signature="e#21383#21526#0" expanded="false" />
+            <element signature="e#21552#21702#0" expanded="false" />
+            <element signature="e#21732#21890#0" expanded="false" />
+            <element signature="e#22090#22289#0" expanded="false" />
+            <element signature="e#22322#22521#0" expanded="false" />
+            <element signature="e#22553#22745#0" expanded="false" />
+            <element signature="e#22776#22961#0" expanded="false" />
+            <element signature="e#22988#23158#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/quadcopter.py">
+    <entry file="file://$PROJECT_DIR$/quadcopterComponents/mode.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2250">
-          <caret line="221" column="0" selection-start-line="221" selection-start-column="0" selection-end-line="221" selection-end-column="0" />
+        <state relative-caret-position="270">
+          <caret line="18" column="11" selection-start-line="18" selection-start-column="11" selection-end-line="18" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/quadcopterComponents/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="637">
+          <caret line="65" column="13" selection-start-line="65" selection-start-column="13" selection-end-line="65" selection-end-column="13" />
+          <folding>
+            <element signature="e#894#1381#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="705">
+          <caret line="63" column="0" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
+          <folding>
+            <element signature="e#723#737#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/quadcopterComponents/quadcopter.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
           <folding>
             <element signature="e#0#16#0" expanded="true" />
-            <element signature="e#141#467#1" expanded="false" />
-            <element signature="e#7123#7610#0" expanded="false" />
+            <element signature="e#194#520#1" expanded="false" />
           </folding>
         </state>
       </provider>
