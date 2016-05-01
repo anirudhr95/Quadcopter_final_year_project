@@ -61,14 +61,14 @@ middleware = None
 message_sender = None
 pi_logger = None
 sender, reader = None,None
-
-def read_from_port(port, baud_rate, sender, logger):
+externalsender = []
+def read_from_port(port, baud_rate, sender, logger,externalreceiver):
     """
 
     :param event: Thread.Event to call upon reading data froms serial (Used by IOSSenderThread)
     :param serial_port: serial.Serial() variable specifying serial port of arduino decice
     """
-
+    import time
     name = "ArduinoReaderSubroutine"
     logger.setup_init(name)
     try:
@@ -85,12 +85,15 @@ def read_from_port(port, baud_rate, sender, logger):
         reading = serial_port.readline().decode("Utf-8").rstrip()
         if reading:
             try:
+                # externalreceiver.append(reading)
                 sender.put(reading)
+                print reading
             except Exception as e:
                 logger.error(e)
 
+        # time.sleep(constants.ARDUINO_MESSAGE_REFRESHTIME - 0.1)
 
-def speed_control(reader, quadcopter, message_sender, middleware, logger):
+def speed_control(reader, quadcopter, message_sender, middleware, logger, externalreceiver):
     """
         Requires middleware, Quadcopter, Message_sender params
     """
@@ -148,12 +151,26 @@ def speed_control(reader, quadcopter, message_sender, middleware, logger):
     #
     #     except ValueError as e:
     #         print e
+    logger.setup_init(name)
 
+    logger.setup_message("Waiting for first reading")
+    reading = reader.get()
+    while not middleware.parseMessage(reading):
+        # parseMessage returns true, when setup is completed
+        # print externalreceiver
+        reading = reader.get()
+        # middleware.parseMessage(reading)
+    logger.setup_success(name)
     speeds, oldspeeds = [0, 0, 0, 0], [0, 0, 0, 0]
     quadcopter.takeoff()
     while True:
         # CHECK MESSAGE QUEUE FOR ARDUINO INPUTS
         reading = None
+        for i,val in enumerate(externalreceiver):
+            # To get data from IOS, browser
+            print '\n\n\n\n\nYO:%s'%val
+            middleware.parseMessage(val)
+            externalreceiver.pop(i)
         with Timeout(constants.ARDUINO_MESSAGE_REFRESHTIME,False) as t:
             reading = reader.get(timeout=t)
         if reading is None:
@@ -169,10 +186,11 @@ def speed_control(reader, quadcopter, message_sender, middleware, logger):
                     middleware.parseMessage(reading)
                 else:
                     break
+        # CALCULATE PID AND ADJUST
         oldspeeds = speeds[:]
         speeds = quadcopter.refresh()
         if should_send_new_motor_speed(oldspeeds, speeds):
-            print speeds
+            # print speeds
             message_sender.toArduino_set_speed(speeds)
         time.sleep(constants.REFRESH_PID_TIME)
 
@@ -183,10 +201,10 @@ def should_send_new_motor_speed(old_speed, new_speed):
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
-    global quadcopter,sender
+    global externalsender
     if request.method == "POST":
         if 'quad_setSpeed' in request.form:
-            sender.put(constants.IOSMESSAGE_SETSPEED+':'+request.form["quad_setSpeed_text"])
+            externalsender.append(constants.IOSMESSAGE_SETSPEED+':'+request.form["quad_setSpeed_text"])
 
             # quadcopter.set_speed(int(request.form["quad_setSpeed_text"]))
         elif 'set_ypr' in request.form:
@@ -198,20 +216,20 @@ def index():
                 ypr[1] = float(request.form['set_ypr_p'])
             if request.form['set_ypr_r'] != '':
                 ypr[2] = float(request.form['set_ypr_r'])
-            sender.put(constants.IOSMESSAGE_SETYPR+':'+';'.join(ypr))
+            externalsender.append('%s:%s'%(constants.IOSMESSAGE_SETYPR,';'.join(str(val) for val in ypr)))
             # quadcopter.set_ypr_desired(ypr)
 
         elif 'takeoff' in request.form:
-            sender.put(constants.IOSMESSAGE_TAKEOFF)
+            externalsender.append(constants.IOSMESSAGE_TAKEOFF)
             # quadcopter.takeoff()
         elif 'land' in request.form:
-            sender.put(constants.IOSMESSAGE_LAND)
+            externalsender.append(constants.IOSMESSAGE_LAND)
             # quadcopter.land()
         elif 'hover' in request.form:
-            sender.put(constants.IOSMESSAGE_HOVER)
+            externalsender.append(constants.IOSMESSAGE_HOVER)
             # quadcopter.set_mode_hover_enable()
         elif 'hold_altitude' in request.form:
-            sender.put(constants.IOSMESSAGE_HOLDALTITUDE)
+            externalsender.append(constants.IOSMESSAGE_HOLDALTITUDE)
             # quadcopter.set_mode_altitude_hold_enable()
 
         # elif 'change_pid' in request.form:
@@ -229,7 +247,7 @@ def index():
 
 # @app.before_first_request
 def initialSetup():
-    global quadcopter, middleware, message_sender, pi_logger
+    global quadcopter, middleware, message_sender, pi_logger,externalsender
     from middleware import Middleware
 
     from customlogger import pi_logger
@@ -275,7 +293,8 @@ def initialSetup():
                                     kwargs={'port': constants.ARDUINO_PORT,
                                             'baud_rate': constants.ARDUINO_BAUDRATE,
                                             'sender': sender,
-                                            'logger': pi_logger}
+                                            'logger': pi_logger,
+                                            'externalreceiver':externalsender}
                                     )
 
     thread3 = gipc.start_process(name="PID Thread",
@@ -284,7 +303,8 @@ def initialSetup():
                                  kwargs={'reader': reader,
                                          'quadcopter': quadcopter,
                                          'message_sender': message_sender,
-                                         'middleware': middleware, 'logger': pi_logger},
+                                         'middleware': middleware, 'logger': pi_logger,
+                                         'externalreceiver':externalsender},
 
                                  )
     # speed_control(reader=reader,quadcopter=quadcopter,message_sender=message_sender,middleware=middleware,logger=pi_logger)

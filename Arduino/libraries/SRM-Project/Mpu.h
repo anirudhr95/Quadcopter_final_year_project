@@ -244,6 +244,7 @@ float deltat = 0.0f, sum = 0.0f;        // integration interval for both filter 
 uint32_t lastUpdate = 0, firstUpdate = 0; // used to calculate integration interval
 uint32_t Now = 0;        // used to calculate integration interval
 
+static float YPR_OFFSET[3];
 float ax, ay, az, gx, gy, gz, mx, my, mz; // variables to hold latest sensor data values
 float q[4] = {1.0f, 0.0f, 0.0f, 0.0f};    // vector to hold quaternion
 float eInt[3] = {0.0f, 0.0f, 0.0f};       // vector to hold integral error for Mahony method
@@ -338,9 +339,14 @@ void gyro_Setup()
 		Serial.print("Z-Axis sensitivity adjustment value "); Serial.println(magCalibration[2], 2);
 		
 #endif
-		for(int i=0;i<200;i++){
+		for(int i=0;i<1000;i++){
 			getYPR();
+			delay(7);
 		}
+		float *temp = getYPR();
+		for(int i=0;i<3;i++)
+			YPR_OFFSET[i] = -temp[i];
+
 		sprintf(buf,FORMAT_SETUP_SUCCESS,"MPU9250");
 		
 	}
@@ -454,9 +460,9 @@ float *getYPR()
 		ypr[1] = -ypr[2];
 		ypr[2] = -temp;
 	#endif
-
-	ypr[1]  += GYRO_PITCH_OFFSET;
-	ypr[2] += GYRO_ROLL_OFFSET;
+	ypr[0] += YPR_OFFSET[0];
+	ypr[1]  += YPR_OFFSET[1];
+	ypr[2] += YPR_OFFSET[2];
 	
 	return ypr;
 	last_YPR_CALL = millis();

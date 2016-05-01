@@ -38,18 +38,11 @@ void ultra_on_Compute_Complete() ;
 
 void ultra_Setup(){
 	char buf[100];
-	#ifdef SET_TRANSMISSION_RATE_HIGH
-		PING_INTERVAL = UPDATE_FREQUENCY_RATE_HIGH;
-	#elif defined SET_TRANSMISSION_RATE_MID
-		PING_INTERVAL = UPDATE_FREQUENCY_RATE_MID;
-	#elif defined SET_TRANSMISSION_RATE_LOW
-		PING_INTERVAL = UPDATE_FREQUENCY_RATE_LOW;
-	#endif
-	PING_INTERVAL = int(PING_INTERVAL/SONAR_NUM) * NUM_GYRO_READINGS_PER_ULTRA;
+	PING_INTERVAL = int(UPDATE_FREQUENCY_RATE/SONAR_NUM) * NUM_GYRO_READINGS_PER_ULTRA;
 	sprintf(buf,FORMAT_SETUP_INIT,"ULTRASOUND");
 	Serial.print(buf);
 		// First ping starts at 75ms, gives time for the Arduino to chill before starting.
-	pingTimer[0] = millis() + 100;
+	pingTimer[0] = millis() + 2000;
 		// Set the starting time for each sensor.
 	for (uint8_t i = 1; i < SONAR_NUM; i++)
 		pingTimer[i] = pingTimer[i - 1] + PING_INTERVAL;

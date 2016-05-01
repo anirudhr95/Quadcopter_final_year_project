@@ -31,52 +31,34 @@ void setup() {
 
 
 void sendYPR(){
-  #ifdef SET_TRANSMISSION_RATE_HIGH
-	if(millis() - last_sent >= UPDATE_FREQUENCY_RATE_HIGH){
+  
+	if(millis() - last_sent >= UPDATE_FREQUENCY_RATE){
     last_sent = millis();
     SEND_MSG_GYROMAG(ypr, getHeading());
 	}
-	#elif defined SET_TRANSMISSION_RATE_MID
-	if(millis() - last_sent >= UPDATE_FREQUENCY_RATE_MID){
-    last_sent = millis();
-    SEND_MSG_GYROMAG(ypr, getHeading());
-  }
-  #elif defined SET_TRANSMISSION_RATE_LOW
-	if(millis() - last_sent >= UPDATE_FREQUENCY_RATE_LOW){
-    last_sent = millis();
-    SEND_MSG_GYROMAG(ypr, getHeading());
-  }
-  #endif
-
-
 }
-void loop() {
-  
-  
-  
-	if(Serial.available()){
-/*
+void serialEvent(){
+  /*
 POSSIBLE INPUTS : 
 1) MOTOR_SPEEDS:A;B;C;D     -> Set Motor Speeds to Values
 */
-   
-		input = Serial.readString();
+ input = Serial.readString();
     
-		if(input.startsWith("MOTOR_SPEEDS")){
+   if(input.startsWith("MOTOR_SPEEDS")){
 //      M:50;30;20;10
-			first_position = input.indexOf(';');
-			second_position = input.indexOf(';',first_position+1);
-			third_position = input.indexOf(';',second_position+1);
-			MotorSpeeds[0] = input.substring(input.indexOf(':')+1,first_position).toInt();
-			MotorSpeeds[1] = input.substring(first_position+1,second_position).toInt();
-			MotorSpeeds[2] = input.substring(second_position+1,third_position).toInt();
-			MotorSpeeds[3] = input.substring(third_position+1).toInt();
+      first_position = input.indexOf(';');
+      second_position = input.indexOf(';',first_position+1);
+      third_position = input.indexOf(';',second_position+1);
+      MotorSpeeds[0] = input.substring(input.indexOf(':')+1,first_position).toInt();
+      MotorSpeeds[1] = input.substring(first_position+1,second_position).toInt();
+      MotorSpeeds[2] = input.substring(second_position+1,third_position).toInt();
+      MotorSpeeds[3] = input.substring(third_position+1).toInt();
      refreshMotors(MotorSpeeds);
-		}
-	}
+    } 
+}
+void loop() {
  ultra_Compute();
   getYPR();
-  
   sendYPR();
 }
 

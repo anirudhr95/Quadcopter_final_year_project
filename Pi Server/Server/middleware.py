@@ -26,6 +26,8 @@ class Middleware:
         self.ioslogger = ios_logger()
         self.flag = False
 
+    def ready(self):
+        return self.flag
     def parseMessage(self, msg):
         try:
             # from quadcopterComponents import Quadcopter
@@ -76,6 +78,7 @@ class Middleware:
                 elif functionName == constants.ARDUINOSTATUS_SETUP_MESSAGE:
                     self.arduinologger.setup_message(params)
                 elif functionName == "SETUP COMPLETED":
+                    self.flag = True
                     return True
 
             else:

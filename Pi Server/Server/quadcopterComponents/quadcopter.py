@@ -109,7 +109,7 @@ class Quadcopter:
         })
 
     def update_flight_status(self):
-        print "MYSTATUS : %s"%self.flight_status
+        # print "MYSTATUS : %s"%self.flight_status
         if self.flight_status != Flight_Status.off:
             if self.flight_status == Flight_Status.taking_off:
                 if abs(self.altitude.get_altitude_current() - self.altitude.get_altitude_desired()) < 3:
@@ -117,7 +117,7 @@ class Quadcopter:
             elif self.flight_status == Flight_Status.landing:
                 if filter(lambda x: x == constants.MOTOR_MIN_LANDING, self.motor.get_speed()) is None:
                     self.flight_status = Flight_Status.off
-        print "MYSTATUSAFTER : %s" % self.flight_status
+        # print "MYSTATUSAFTER : %s" % self.flight_status
 
     def refresh(self):
         """
@@ -127,7 +127,7 @@ class Quadcopter:
         print self
         if self.flight_status == Flight_Status.off:
             return self.motor.get_speed()
-        print 'YOYOaa%s' % self.current_mode
+        # print 'YOYOaa%s' % self.current_mode
         # Compute new motor speeds
         # Check for bad angles
         # TODO: Change PID Algorithm -> If reference parameters cross threshold, modify PID to bring it under control, then set pid to normal (Useful in case of wind)
@@ -140,11 +140,12 @@ class Quadcopter:
             if (val != 0) and (val < constants.ULTRASOUND_SAFE_DISTANCE):
                 self.current_mode = Mode.collision_avoidance
                 self.logger.warn_collision(i, val)
+                # TODO : Uncomment this before uploading
                 # self.pidhandler.compute_ultra(i)
 
         # If collision possible, return the newly computed speeds, and return result without computing other PIDs except Altitude.
         if self.current_mode != Mode.collision_avoidance:
-            # self.pidhandler.compute_yaw()
+            self.pidhandler.compute_yaw()
             self.pidhandler.compute_roll()
             self.pidhandler.compute_pitch()
 
@@ -157,5 +158,5 @@ class Quadcopter:
 
 
         self.update_flight_status()
-        print self.motor.get_speed()
-        return self.motor.get_speed()
+        # print self.motor.get_speed()
+        return map(lambda x: int(x),self.motor.get_speed())

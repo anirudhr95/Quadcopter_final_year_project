@@ -107,7 +107,7 @@ void motor_setup(){
 		// Arming speed should be LOW for sometime, to instruct the ESC that it is in "WORKING" mode
 	motor_Set_Speed(1000);
 	
-	delay(motor_Arm_Delay);
+	// delay(motor_Arm_Delay);
 	
 	sprintf(buf,FORMAT_SETUP_SUCCESS,"MOTOR");
 }
