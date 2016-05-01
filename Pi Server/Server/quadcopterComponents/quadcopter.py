@@ -18,9 +18,9 @@ class Quadcopter:
         self.logger = pi_logger
         self.should_hold_altitude = True
 
-        self.current_mode = Mode.hover
+        self.current_mode = Mode.off
         self.flight_status = Flight_Status.off
-        self.altitude_hold_status = Altitude_Hold.on
+        self.altitude_hold_status = Altitude_Hold.off
 
         self.gyro = gyro.Gyro(self.logger)
         self.altitude = altitude.Altitude(self.logger)
@@ -34,17 +34,22 @@ class Quadcopter:
     def takeoff(self):
         print '\n\nENTERED TAKEOFF'
         self.logger.mode_Takeoff()
-        self.current_mode = Flight_Status.taking_off
+
+        print 'YOYO%s'%self.current_mode
         self.set_mode_hover_enable(height=constants.TAKEOFF_PREFERED_ALTITUDE)
+        self.flight_status = Flight_Status.taking_off
 
 
 
     def land(self):
+        print 'CALLED LAND'
         self.logger.mode_Land()
-        self.current_mode = Flight_Status.landing
+
         self.set_mode_hover_enable(height=constants.ULTRASOUND_TOGROUND_OFFSET)
+        self.flight_status = Flight_Status.landing
 
     def set_mode_altitude_hold_enable(self, height=None):
+        print 'CALLED ALTITUDEHOLD ENABLE WITH HEIGHT %s'%height
         if self.altitude_hold_status == Altitude_Hold.off:
             self.logger.mode_altitude_hold(1)
             self.altitude_hold_status = Altitude_Hold.on
@@ -57,12 +62,13 @@ class Quadcopter:
             self.altitude.set_altitude_desired(height)
 
     def set_mode_altitude_hold_disable(self):
+        print 'CALLED ALTITUDEHOLD DISABLE'
         if self.altitude_hold_status == Altitude_Hold.on:
             self.logger.mode_altitude_hold(0)
             self.altitude_hold_status = Altitude_Hold.off
 
     def set_mode_flight_enable(self, hold_altitude=True):
-
+        print 'CALLED FLIGHT ENABLE'
         if self.current_mode != Mode.flight:
             self.logger.mode_flight()
             if hold_altitude:
@@ -78,6 +84,7 @@ class Quadcopter:
         :param height:
         :param disable_Altitude_Hold: Used by set_speed to prevent reduction in speeds by PID
         """
+        print 'CALLED HOVER'
         # if not self.is_mode_hover():
         self.logger.mode_hover()
         self.gyro.set_ypr_desired([self.gyro.get_ypr_current()[0], 0, 0])
@@ -88,24 +95,21 @@ class Quadcopter:
         self.pidhandler.set_pid_constants_for_hover()
         self.current_mode = Mode.hover
 
-    def __compute__(self):
-        """
-        Modifies motor speeds
-        """
-
-        return self.motor.get_speed()
+        print self
 
     def __str__(self):
         return str({
             "Altitudes": self.altitude.get_altitudes(),
             "YPR": self.gyro.get_ypr(),
             "Mode": self.current_mode,
+            "Flight_Status": self.flight_status,
             "Altitude_Hold": self.altitude_hold_status,
             "Motor_Speeds": self.motor.get_speed(),
             "Logger": self.logger
         })
 
     def update_flight_status(self):
+        print "MYSTATUS : %s"%self.flight_status
         if self.flight_status != Flight_Status.off:
             if self.flight_status == Flight_Status.taking_off:
                 if abs(self.altitude.get_altitude_current() - self.altitude.get_altitude_desired()) < 3:
@@ -113,20 +117,17 @@ class Quadcopter:
             elif self.flight_status == Flight_Status.landing:
                 if filter(lambda x: x == constants.MOTOR_MIN_LANDING, self.motor.get_speed()) is None:
                     self.flight_status = Flight_Status.off
-        pass
-    def has_landed(self):
-        return True if not filter(lambda x: x < constants.MOTOR_MIN_FLIGHT + 50, self.motor.get_speed()) else False
-
-
+        print "MYSTATUSAFTER : %s" % self.flight_status
 
     def refresh(self):
         """
         :returns Motorspeeds: The new motor speeds to set
         """
         # Return existing speed if takeoff command has not been given
-        # print self
+        print self
         if self.flight_status == Flight_Status.off:
             return self.motor.get_speed()
+        print 'YOYOaa%s' % self.current_mode
         # Compute new motor speeds
         # Check for bad angles
         # TODO: Change PID Algorithm -> If reference parameters cross threshold, modify PID to bring it under control, then set pid to normal (Useful in case of wind)
@@ -139,11 +140,11 @@ class Quadcopter:
             if (val != 0) and (val < constants.ULTRASOUND_SAFE_DISTANCE):
                 self.current_mode = Mode.collision_avoidance
                 self.logger.warn_collision(i, val)
-                self.pidhandler.compute_ultra(i)
+                # self.pidhandler.compute_ultra(i)
 
         # If collision possible, return the newly computed speeds, and return result without computing other PIDs except Altitude.
         if self.current_mode != Mode.collision_avoidance:
-            self.pidhandler.compute_yaw()
+            # self.pidhandler.compute_yaw()
             self.pidhandler.compute_roll()
             self.pidhandler.compute_pitch()
 

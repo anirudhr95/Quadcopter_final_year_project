@@ -54,14 +54,13 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 
 socketio = SocketIO(app)
-quadcopter = None
 thread = None
+quadcopter = None
 thread3 = None
-middleware_ios = None
-middleware_arduino = None
+middleware = None
 message_sender = None
 pi_logger = None
-
+sender, reader = None,None
 
 def read_from_port(port, baud_rate, sender, logger):
     """
@@ -91,24 +90,67 @@ def read_from_port(port, baud_rate, sender, logger):
                 logger.error(e)
 
 
-def speed_control(reader, quadcopter, message_sender, middleware_arduino, logger):
+def speed_control(reader, quadcopter, message_sender, middleware, logger):
     """
-        Requires middleware_arduino, Quadcopter, Message_sender params
+        Requires middleware, Quadcopter, Message_sender params
     """
     import time
     # Wait for Serial Setup to complete (Marked by "SETUP COMPLETED:" MESSAGE)
-    name = "QuadController"
-    logger.setup_init(name)
 
-    logger.setup_message("Waiting for first reading")
-    reading = reader.get()
-    while not middleware_arduino.parseMessage(reading):
-        # parseMessage returns true, when setup is completed
-        reading = reader.get()
-        # middleware_arduino.parseMessage(reading)
-    logger.setup_success(name)
+    # logger.setup_init(name)
+    #
+    # logger.setup_message("Waiting for first reading")
+    # reading = reader.get()
+    # while not middleware.parseMessage(reading):
+    #     # parseMessage returns true, when setup is completed
+    #     reading = reader.get()
+    #     # middleware.parseMessage(reading)
+    # logger.setup_success(name)
+    name = "QuadController"
+    # def parseMessage(msg):
+    #     from customlogger import arduino_logger
+    #     logger = arduino_logger()
+    #     try:
+    #         # from quadcopterComponents import Quadcopter
+    #         # self.quadcopter = Quadcopter()
+    #
+    #         functionName, params = msg.split(':')
+    #         if functionName == constants.ARDUINOMESSAGE_GYRO:
+    #
+    #             # DATA:Y;P;R;Mx;My;Mz;Mh
+    #
+    #             y, p, r, heading = map(lambda x: float(x), params.split(';'))
+    #             logger.data_gyromag(gyro=[y, p, r], heading=heading)
+    #             quadcopter.gyro.set_ypr_current([y, p, r])
+    #
+    #         elif functionName == constants.ARDUINOSTATUS_ULTRA:
+    #             logger.data_ultrasound(params.split(';'))
+    #             # ORDER: BOTTOM, TOP, FRONT, RIGHT, LEFT
+    #             bottom, top, front, right, left = map(lambda x: float(x), params.split(';'))
+    #             quadcopter.altitude.set_sensor_altitude_current(bottom)
+    #             quadcopter.ultra.set_sensor_ultra_values(front=front, left=left, right=right, top=top)
+    #
+    #         elif functionName == constants.ARDUINOMESSAGE_MOTOR:
+    #             logger.data_motor_speeds(params.split(';'))
+    #         elif functionName == constants.ARDUINOSTATUS_SETUP_INITIALIZING:
+    #             logger.setup_init(params)
+    #         elif functionName == constants.ARDUINOSTATUS_SETUP_SUCCESS:
+    #             logger.setup_success(params)
+    #         elif functionName == constants.ARDUINOSTATUS_SETUP_FAILURE:
+    #             logger.setup_failure(params)
+    #         elif functionName == constants.ARDUINOSTATUS_SETUP_ERRORCODE:
+    #             logger.setup_errorcode(params)
+    #         elif functionName == constants.ARDUINOSTATUS_SETUP_MESSAGE:
+    #             logger.setup_message(params)
+    #         elif functionName == "SETUP COMPLETED":
+    #             return True
+    #         return False
+    #
+    #     except ValueError as e:
+    #         print e
 
     speeds, oldspeeds = [0, 0, 0, 0], [0, 0, 0, 0]
+    quadcopter.takeoff()
     while True:
         # CHECK MESSAGE QUEUE FOR ARDUINO INPUTS
         reading = None
@@ -118,13 +160,13 @@ def speed_control(reader, quadcopter, message_sender, middleware_arduino, logger
             # TODO: This means that no data is being received from arduino, which means quad needs to go into hover mode/land, because of some serial error
             logger.error("ARDUINO NOT SENDING DATA..")
         else:
-            middleware_arduino.parseMessage(reading)
+            middleware.parseMessage(reading)
             while True:
                 reading = None
                 with Timeout(0.02, False) as t:
                     reading = reader.get(timeout=t)
                 if reading is not None:
-                    middleware_arduino.parseMessage(reading)
+                    middleware.parseMessage(reading)
                 else:
                     break
         oldspeeds = speeds[:]
@@ -141,9 +183,12 @@ def should_send_new_motor_speed(old_speed, new_speed):
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
+    global quadcopter,sender
     if request.method == "POST":
         if 'quad_setSpeed' in request.form:
-            quadcopter.set_speed(int(request.form["quad_setSpeed_text"]))
+            sender.put(constants.IOSMESSAGE_SETSPEED+':'+request.form["quad_setSpeed_text"])
+
+            # quadcopter.set_speed(int(request.form["quad_setSpeed_text"]))
         elif 'set_ypr' in request.form:
             print request.form
             ypr = [0.0, 0.0, 0.0]
@@ -153,35 +198,39 @@ def index():
                 ypr[1] = float(request.form['set_ypr_p'])
             if request.form['set_ypr_r'] != '':
                 ypr[2] = float(request.form['set_ypr_r'])
-            quadcopter.set_ypr_desired(ypr)
+            sender.put(constants.IOSMESSAGE_SETYPR+':'+';'.join(ypr))
+            # quadcopter.set_ypr_desired(ypr)
 
         elif 'takeoff' in request.form:
-            quadcopter.takeoff()
+            sender.put(constants.IOSMESSAGE_TAKEOFF)
+            # quadcopter.takeoff()
         elif 'land' in request.form:
-            quadcopter.land()
+            sender.put(constants.IOSMESSAGE_LAND)
+            # quadcopter.land()
         elif 'hover' in request.form:
-            quadcopter.set_mode_hover_enable()
+            sender.put(constants.IOSMESSAGE_HOVER)
+            # quadcopter.set_mode_hover_enable()
         elif 'hold_altitude' in request.form:
-            quadcopter.set_mode_altitude_hold_enable()
-        elif 'reset_baro' in request.form:
-            message_sender.toArduino_reset_baro()
-        elif 'change_pid' in request.form:
-            p, i, d = 0.0, 0.0, 0.0
-            if request.form['set_kp'] != '':
-                p = float(request.form['set_kp'])
-            if request.form['set_ki'] != '':
-                i = float(request.form['set_ki'])
-            if request.form['set_kd'] != '':
-                d = float(request.form['set_kd'])
-            quadcopter.__set_pid_test__(p, i, d)
+            sender.put(constants.IOSMESSAGE_HOLDALTITUDE)
+            # quadcopter.set_mode_altitude_hold_enable()
+
+        # elif 'change_pid' in request.form:
+        #     p, i, d = 0.0, 0.0, 0.0
+        #     if request.form['set_kp'] != '':
+        #         p = float(request.form['set_kp'])
+        #     if request.form['set_ki'] != '':
+        #         i = float(request.form['set_ki'])
+        #     if request.form['set_kd'] != '':
+        #         d = float(request.form['set_kd'])
+        #     quadcopter.__set_pid_test__(p, i, d)
     # return '%s' % queue.get()
     return render_template("index.html")
 
 
 # @app.before_first_request
 def initialSetup():
-    global quadcopter, middleware_arduino, middleware_ios, message_sender, pi_logger
-    from middleware import Middleware_IOS, Middleware_Arduino
+    global quadcopter, middleware, message_sender, pi_logger
+    from middleware import Middleware
 
     from customlogger import pi_logger
     pi_logger = pi_logger()
@@ -190,8 +239,7 @@ def initialSetup():
     from message_sender import Message_sender
     message_sender = Message_sender(socketio)
 
-    middleware_arduino = Middleware_Arduino(quadcopter)
-    middleware_ios = Middleware_IOS(quadcopter)
+    middleware = Middleware(quadcopter)
 
     # TODO Implement Logging
     if constants.ENABLE_FLASK_LOGGING:
@@ -212,6 +260,7 @@ def initialSetup():
     # from gevent import queue
     # queue = queue.Queue()
     # http://www.gevent.org/gevent.queue.html
+    global sender,reader
     reader,sender = gipc.pipe()
     global thread, thread3
 
@@ -235,9 +284,11 @@ def initialSetup():
                                  kwargs={'reader': reader,
                                          'quadcopter': quadcopter,
                                          'message_sender': message_sender,
-                                         'middleware_arduino': middleware_arduino, 'logger': pi_logger},
+                                         'middleware': middleware, 'logger': pi_logger},
 
                                  )
+    # speed_control(reader=reader,quadcopter=quadcopter,message_sender=message_sender,middleware=middleware,logger=pi_logger)
+    # message_sender.__send_msg_to_arduino__("HELLOn\n")
 
     @socketio.on('connect', namespace=constants.SOCKETIO_NAMESPACE)
     def test_connect():
@@ -253,8 +304,8 @@ def initialSetup():
     def handle_message(data):
         print data
         socketio.emit('message', 'HELLOAGAIN')
-        global middleware_ios
-        middleware_ios.parseMessage(data)
+        global middleware
+        middleware.parseMessage(data)
 
 
 if __name__ == '__main__':
