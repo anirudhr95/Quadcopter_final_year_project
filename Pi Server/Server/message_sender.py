@@ -12,7 +12,7 @@ class Message_sender:
             self.serial_port = serial.Serial(constants.ARDUINO_PORT, constants.ARDUINO_BAUDRATE)
 
     def __send_msg_to_ios__(self, msg):
-        print "SENDING '%s' To IOS " % str(msg)
+        print "\n\n\n\n\n\nSENDING '%s' To IOS " % str(msg)
         self.socketio.emit('message', msg, namespace=constants.SOCKETIO_NAMESPACE)
 
     def __send_msg_to_arduino__(self, msg):
@@ -42,5 +42,5 @@ class Message_sender:
         })
 
     def toArduino_set_speed(self, speeds):
-        msg = '%s:%s;%s;%s;%s' % (constants.PIMESSAGE_SETSPEEDS, speeds[0], speeds[1], speeds[2], speeds[3])
+        msg = '%s:%s;%s;%s;%s\n' % (constants.PIMESSAGE_SETSPEEDS, speeds[0], speeds[1], speeds[2], speeds[3])
         return self.__send_msg_to_arduino__(msg)

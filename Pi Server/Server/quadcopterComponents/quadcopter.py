@@ -112,7 +112,7 @@ class Quadcopter:
         # print "MYSTATUS : %s"%self.flight_status
         if self.flight_status != Flight_Status.off:
             if self.flight_status == Flight_Status.taking_off:
-                if abs(self.altitude.get_altitude_current() - self.altitude.get_altitude_desired()) < 3:
+                if self.altitude.get_altitude_current() > self.altitude.get_altitude_desired():
                     self.flight_status = Flight_Status.flying
             elif self.flight_status == Flight_Status.landing:
                 if filter(lambda x: x == constants.MOTOR_MIN_LANDING, self.motor.get_speed()) is None:

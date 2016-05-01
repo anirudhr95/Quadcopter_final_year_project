@@ -360,6 +360,10 @@ void gyro_Setup()
 	Serial.print(buf);
 }
 
+void resetlastupdatechange(){
+	// USED TO COMPENSATE FOR DELAY FROM SLOW PROCESSES.. THEY USE TIME BEFORE UPDATE AS THE UPDATE TIME
+	lastUpdate = micros();
+}
 float *getYPR()
 {
   // If intPin goes high, all data registers have new data

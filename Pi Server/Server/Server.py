@@ -187,15 +187,24 @@ def speed_control(reader, quadcopter, message_sender, middleware, logger, extern
                 else:
                     break
         # CALCULATE PID AND ADJUST
-        oldspeeds = speeds[:]
+
         speeds = quadcopter.refresh()
         if should_send_new_motor_speed(oldspeeds, speeds):
             # print speeds
+            print oldspeeds,speeds,should_send_new_motor_speed(oldspeeds, speeds)
             message_sender.toArduino_set_speed(speeds)
+            oldspeeds = speeds[:]
+
         time.sleep(constants.REFRESH_PID_TIME)
 
 
 def should_send_new_motor_speed(old_speed, new_speed):
+    # def gorl(a,b,lim=50):
+    #     return True if (b>a+lim or b<a-lim) else False
+    #
+    # if filter(lambda x:  gorl(x[0],x[1]),zip(old_speed,new_speed)):
+    #     return True
+    # return False
     return old_speed != new_speed
 
 

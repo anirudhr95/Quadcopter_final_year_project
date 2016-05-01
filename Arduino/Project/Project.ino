@@ -12,7 +12,7 @@
 int MotorSpeeds[3];
 String input;
 int first_position , second_position, third_position;
-
+uint32_t tempval;
 unsigned long last_sent = 0;
 void setup() {
 	Serial.begin (BAUD_RATE);
@@ -26,39 +26,55 @@ void setup() {
 //  TOO LAZY TO FORMAT FOLLOWING LINE.. NEED IT IN THIS FORMAT, for PID THREAD IN SERVER TO START
   Serial.println("SETUP COMPLETED:");
 //  motor_Set_Speed(1500);
-
+  Serial.setTimeout(50);
 }
 
 
 void sendYPR(){
-  
+//  tempval = getLastUpdateChange();
 	if(millis() - last_sent >= UPDATE_FREQUENCY_RATE){
+    
     last_sent = millis();
     SEND_MSG_GYROMAG(ypr, getHeading());
+//    refreshMotors(tempmotor);
 	}
-}
-void serialEvent(){
-  /*
-POSSIBLE INPUTS : 
-1) MOTOR_SPEEDS:A;B;C;D     -> Set Motor Speeds to Values
-*/
- input = Serial.readString();
-    
-   if(input.startsWith("MOTOR_SPEEDS")){
-//      M:50;30;20;10
-      first_position = input.indexOf(';');
-      second_position = input.indexOf(';',first_position+1);
-      third_position = input.indexOf(';',second_position+1);
-      MotorSpeeds[0] = input.substring(input.indexOf(':')+1,first_position).toInt();
-      MotorSpeeds[1] = input.substring(first_position+1,second_position).toInt();
-      MotorSpeeds[2] = input.substring(second_position+1,third_position).toInt();
-      MotorSpeeds[3] = input.substring(third_position+1).toInt();
-     refreshMotors(MotorSpeeds);
-    } 
+// setLastUpdateChange(tempval);
 }
 void loop() {
+//  tempval = lastUpdate;
+  
+  if(Serial.available()){
+      /*
+POSSIBLE INPUTS : 
+1) MOTOR_SPEEDS:A;B;C;D     -> Set Motor Speeds to Values
+*/  
+      
+      input = Serial.readString();
+      
+      
+     if(input.startsWith("MOTOR_SPEEDS")){
+  //      M:50;30;20;10
+        first_position = input.indexOf(';');
+        second_position = input.indexOf(';',first_position+1);
+        third_position = input.indexOf(';',second_position+1);
+        MotorSpeeds[0] = input.substring(input.indexOf(':')+1,first_position).toInt();
+        MotorSpeeds[1] = input.substring(first_position+1,second_position).toInt();
+        MotorSpeeds[2] = input.substring(second_position+1,third_position).toInt();
+        MotorSpeeds[3] = input.substring(third_position+1).toInt();
+//       int tempa = millis();
+
+       refreshMotors(MotorSpeeds);
+
+    }
+  }
  ultra_Compute();
+ sendYPR();
+ 
+// lastUpdate = tempval;
+//   setLastUpdateChange(tempval);
   getYPR();
-  sendYPR();
+  
+//  tempval = getLastUpdateChange();
+ 
 }
 
