@@ -61,11 +61,11 @@ def sim_ultrasound(a):
 
 
 if __name__ == '__main__':
-    import customlogger
+    import CustomLogger
 
-    a = Quadcopter(customlogger.pi_logger())
+    a = Quadcopter(CustomLogger.pi_logger())
     sim_ypr_change(a)
-    a = Quadcopter(customlogger.pi_logger())
+    a = Quadcopter(CustomLogger.pi_logger())
     sim_altitude(a)
-    a = Quadcopter(customlogger.pi_logger())
+    a = Quadcopter(CustomLogger.pi_logger())
     sim_ultrasound(a)

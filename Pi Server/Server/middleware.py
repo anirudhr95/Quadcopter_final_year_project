@@ -1,5 +1,5 @@
 import Constants
-from customlogger import arduino_logger, ios_logger
+from CustomLogger import arduino_logger, ios_logger
 
 class Middleware:
     """

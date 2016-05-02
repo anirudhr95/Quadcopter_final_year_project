@@ -43,7 +43,7 @@ import serial
 from flask import Flask, request, render_template
 from flask_socketio import SocketIO
 
-import constants
+import Constants
 from quadcopterComponents.quadcopter import Quadcopter
 
 # Socket-io server example
@@ -93,7 +93,7 @@ def read_from_port(port, baud_rate, sender, logger):
             except Exception as e:
                 logger.error(e)
 
-        # time.sleep(constants.ARDUINO_MESSAGE_REFRESHTIME - 0.1)
+        # time.sleep(Constants.ARDUINO_MESSAGE_REFRESHTIME - 0.1)
 
 def speed_control(reader, quadcopter, message_sender, middleware, logger, reader2):
     """
@@ -130,7 +130,7 @@ def speed_control(reader, quadcopter, message_sender, middleware, logger, reader
         # CHECK MESSAGE QUEUE FOR ARDUINO INPUTS
         for val in [reader,reader2]:
             reading = None
-            with Timeout(constants.ARDUINO_MESSAGE_REFRESHTIME,False) as t:
+            with Timeout(Constants.ARDUINO_MESSAGE_REFRESHTIME,False) as t:
                 reading = val.get(timeout=t)
                 if reading is None:
                     # TODO: This means that no data is being received from arduino, which means quad needs to go into hover mode/land, because of some serial error
@@ -155,7 +155,7 @@ def speed_control(reader, quadcopter, message_sender, middleware, logger, reader
             message_sender.toArduino_set_speed(speeds)
             oldspeeds = speeds[:]
 
-        time.sleep(constants.REFRESH_PID_TIME)
+        time.sleep(Constants.REFRESH_PID_TIME)
 
 
 def should_send_new_motor_speed(old_speed, new_speed):
@@ -173,7 +173,7 @@ def index():
     global queue
     if request.method == "POST":
         if 'quad_setSpeed' in request.form:
-            queue.put(constants.IOSMESSAGE_SETSPEED+':'+request.form["quad_setSpeed_text"])
+            queue.put(Constants.IOSMESSAGE_SETSPEED+':'+request.form["quad_setSpeed_text"])
 
             # quadcopter.set_speed(int(request.form["quad_setSpeed_text"]))
         elif 'set_ypr' in request.form:
@@ -185,22 +185,22 @@ def index():
                 ypr[1] = float(request.form['set_ypr_p'])
             if request.form['set_ypr_r'] != '':
                 ypr[2] = float(request.form['set_ypr_r'])
-            queue.put('%s:%s'%(constants.IOSMESSAGE_SETYPR,';'.join(str(val) for val in ypr)))
+            queue.put('%s:%s'%(Constants.IOSMESSAGE_SETYPR,';'.join(str(val) for val in ypr)))
             # quadcopter.set_ypr_desired(ypr)
 
         elif 'takeoff' in request.form:
-            # queue.put(constants.IOSMESSAGE_TAKEOFF)
+            # queue.put(Constants.IOSMESSAGE_TAKEOFF)
             from gevent import Greenlet
             Greenlet.spawn(passmessagetoproc, senderexternal)
             # quadcopter.takeoff()
         elif 'land' in request.form:
-            queue.put(constants.IOSMESSAGE_LAND)
+            queue.put(Constants.IOSMESSAGE_LAND)
             # quadcopter.land()
         elif 'hover' in request.form:
-            queue.put(constants.IOSMESSAGE_HOVER)
+            queue.put(Constants.IOSMESSAGE_HOVER)
             # quadcopter.set_mode_hover_enable()
         elif 'hold_altitude' in request.form:
-            queue.put(constants.IOSMESSAGE_HOLDALTITUDE)
+            queue.put(Constants.IOSMESSAGE_HOLDALTITUDE)
             # quadcopter.set_mode_altitude_hold_enable()
 
     return render_template("index.html")
@@ -208,8 +208,8 @@ def index():
 def passmessagetoproc(sender):
 
 
-    print "\n\n\nGOT VAL : %s"%constants.IOSMESSAGE_TAKEOFF
-    sender.put(constants.IOSMESSAGE_TAKEOFF)
+    print "\n\n\nGOT VAL : %s"%Constants.IOSMESSAGE_TAKEOFF
+    sender.put(Constants.IOSMESSAGE_TAKEOFF)
 
 
 # @app.before_first_request
@@ -217,7 +217,7 @@ def initialSetup():
     global quadcopter, middleware, message_sender, pi_logger
     from middleware import Middleware
 
-    from customlogger import pi_logger
+    from CustomLogger import pi_logger
     pi_logger = pi_logger()
     quadcopter = Quadcopter(pi_logger)
 
@@ -227,10 +227,10 @@ def initialSetup():
     middleware = Middleware(quadcopter)
 
     # TODO Implement Logging
-    if constants.ENABLE_FLASK_LOGGING:
+    if Constants.ENABLE_FLASK_LOGGING:
         formatter = logging.Formatter(
-            constants.LOG_FORMAT_FLASK)
-        handler = RotatingFileHandler(os.path.join(constants.LOG_LOCATION_FLASK, constants.LOG_FILENAME_FLASK),
+            Constants.LOG_FORMAT_FLASK)
+        handler = RotatingFileHandler(os.path.join(Constants.LOG_LOCATION_FLASK, Constants.LOG_FILENAME_FLASK),
                                       maxBytes=10000000, backupCount=5)
         handler.setLevel(logging.DEBUG)
         handler.setFormatter(formatter)
@@ -252,15 +252,15 @@ def initialSetup():
     global thread, thread3
 
 
-    if constants.ENABLE_SERIAL:
+    if Constants.ENABLE_SERIAL:
         # thread = threading.Thread(name="Serial Thread",
 
         thread = gipc.start_process(name="Serial Thread",
                                     daemon=True,
 
                                     target=read_from_port,
-                                    kwargs={'port': constants.ARDUINO_PORT,
-                                            'baud_rate': constants.ARDUINO_BAUDRATE,
+                                    kwargs={'port': Constants.ARDUINO_PORT,
+                                            'baud_rate': Constants.ARDUINO_BAUDRATE,
                                             'sender': sender,
                                             'logger': pi_logger,
                                             }
@@ -279,17 +279,17 @@ def initialSetup():
     # speed_control(reader=reader,quadcopter=quadcopter,message_sender=message_sender,middleware=middleware,logger=pi_logger)
     # message_sender.__send_msg_to_arduino__("HELLOn\n")
 
-    @socketio.on('connect', namespace=constants.SOCKETIO_NAMESPACE)
+    @socketio.on('connect', namespace=Constants.SOCKETIO_NAMESPACE)
     def test_connect():
         print 'Client connected : %s' % request
         return True
 
-    @socketio.on('disconnect', namespace=constants.SOCKETIO_NAMESPACE)
+    @socketio.on('disconnect', namespace=Constants.SOCKETIO_NAMESPACE)
     def test_disconnect():
         print 'Client disconnected : %s' % request
         return True
 
-    @socketio.on('message', namespace=constants.SOCKETIO_NAMESPACE)
+    @socketio.on('message', namespace=Constants.SOCKETIO_NAMESPACE)
     def handle_message(data):
         print data
         socketio.emit('message', 'HELLOAGAIN')
@@ -300,7 +300,7 @@ def initialSetup():
 if __name__ == '__main__':
     initialSetup()
     socketio.run(app,
-                 debug=constants.ENABLE_FLASK_DEBUG_MODE,
-                 host=constants.SERVER_IP,
-                 port=constants.SERVER_PORT,
+                 debug=Constants.ENABLE_FLASK_DEBUG_MODE,
+                 host=Constants.SERVER_IP,
+                 port=Constants.SERVER_PORT,
                  use_reloader=False)
