@@ -1,4 +1,4 @@
-import constants
+import Constants
 from customlogger import arduino_logger, ios_logger
 
 class Middleware:
@@ -34,14 +34,14 @@ class Middleware:
             # self.quadcopter = Quadcopter()
             if ':' in msg:
                 functionName, params = msg.split(':')
-                if functionName == constants.IOSMESSAGE_SETSPEED:
+                if functionName == Constants.IOSMESSAGE_SETSPEED:
                     self.ioslogger.set_Speed(params)
                     self.quadcopter.motor.set_speed(float(params))
-                elif functionName == constants.IOSMESSAGE_SETYPR:
+                elif functionName == Constants.IOSMESSAGE_SETYPR:
                     self.ioslogger.set_ypr(params)
                     params = map(lambda x: float(x), params.split(";"))
                     self.quadcopter.gyro.set_ypr_desired(params)
-                elif functionName == constants.IOSMESSAGE_HOLDALTITUDE:
+                elif functionName == Constants.IOSMESSAGE_HOLDALTITUDE:
 
                     if int(params) == 1:
                         self.ioslogger.altitude_hold(1)
@@ -50,32 +50,32 @@ class Middleware:
                         self.ioslogger.altitude_hold(0)
                         self.quadcopter.set_mode_altitude_hold_disable()
 
-                elif functionName == constants.IOSMESSAGE_ERROR:
+                elif functionName == Constants.IOSMESSAGE_ERROR:
                     self.ioslogger.error(params)
-                elif functionName == constants.ARDUINOMESSAGE_GYRO:
+                elif functionName == Constants.ARDUINOMESSAGE_GYRO:
                     # DATA:Y;P;R;Mx;My;Mz;Mh
                     y, p, r, heading = map(lambda x: float(x), params.split(';'))
                     self.arduinologger.data_gyromag(gyro=[y, p, r], heading=heading)
                     self.quadcopter.gyro.set_ypr_current([y, p, r])
 
-                elif functionName == constants.ARDUINOSTATUS_ULTRA:
+                elif functionName == Constants.ARDUINOSTATUS_ULTRA:
                     self.arduinologger.data_ultrasound(params.split(';'))
                     # ORDER: BOTTOM, TOP, FRONT, RIGHT, LEFT
                     bottom, top, front, right, left = map(lambda x: float(x), params.split(';'))
                     self.quadcopter.altitude.set_sensor_altitude_current(bottom)
                     self.quadcopter.ultra.set_sensor_ultra_values(front=front, left=left, right=right, top=top)
 
-                elif functionName == constants.ARDUINOMESSAGE_MOTOR:
+                elif functionName == Constants.ARDUINOMESSAGE_MOTOR:
                     self.arduinologger.data_motor_speeds(params.split(';'))
-                elif functionName == constants.ARDUINOSTATUS_SETUP_INITIALIZING:
+                elif functionName == Constants.ARDUINOSTATUS_SETUP_INITIALIZING:
                     self.arduinologger.setup_init(params)
-                elif functionName == constants.ARDUINOSTATUS_SETUP_SUCCESS:
+                elif functionName == Constants.ARDUINOSTATUS_SETUP_SUCCESS:
                     self.arduinologger.setup_success(params)
-                elif functionName == constants.ARDUINOSTATUS_SETUP_FAILURE:
+                elif functionName == Constants.ARDUINOSTATUS_SETUP_FAILURE:
                     self.arduinologger.setup_failure(params)
-                elif functionName == constants.ARDUINOSTATUS_SETUP_ERRORCODE:
+                elif functionName == Constants.ARDUINOSTATUS_SETUP_ERRORCODE:
                     self.arduinologger.setup_errorcode(params)
-                elif functionName == constants.ARDUINOSTATUS_SETUP_MESSAGE:
+                elif functionName == Constants.ARDUINOSTATUS_SETUP_MESSAGE:
                     self.arduinologger.setup_message(params)
                 elif functionName == "SETUP COMPLETED":
                     self.flag = True
@@ -84,13 +84,13 @@ class Middleware:
             else:
                 # Message is a single line command
 
-                if msg == constants.IOSMESSAGE_HOVER:
+                if msg == Constants.IOSMESSAGE_HOVER:
                     self.ioslogger.hover()
                     self.quadcopter.set_mode_hover_enable()
-                elif msg == constants.IOSMESSAGE_LAND:
+                elif msg == Constants.IOSMESSAGE_LAND:
                     self.ioslogger.land()
                     self.quadcopter.land()
-                elif msg == constants.IOSMESSAGE_TAKEOFF:
+                elif msg == Constants.IOSMESSAGE_TAKEOFF:
                     self.ioslogger.takeoff()
                     self.quadcopter.takeoff()
                 else:

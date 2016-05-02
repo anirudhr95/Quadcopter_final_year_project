@@ -1,4 +1,4 @@
-import constants
+import Constants
 from quadcopterComponents import altitude, gyro, ultrasonic, pid_handler, motor
 from quadcopterComponents.mode import Mode, Flight_Status, Altitude_Hold
 
@@ -36,7 +36,7 @@ class Quadcopter:
         self.logger.mode_Takeoff()
 
         print 'YOYO%s'%self.current_mode
-        self.set_mode_hover_enable(height=constants.TAKEOFF_PREFERED_ALTITUDE)
+        self.set_mode_hover_enable(height=Constants.TAKEOFF_PREFERED_ALTITUDE)
         self.flight_status = Flight_Status.taking_off
 
 
@@ -45,7 +45,7 @@ class Quadcopter:
         print 'CALLED LAND'
         self.logger.mode_Land()
 
-        self.set_mode_hover_enable(height=constants.ULTRASOUND_TOGROUND_OFFSET)
+        self.set_mode_hover_enable(height=Constants.ULTRASOUND_TOGROUND_OFFSET)
         self.flight_status = Flight_Status.landing
 
     def set_mode_altitude_hold_enable(self, height=None):
@@ -110,12 +110,13 @@ class Quadcopter:
 
     def update_flight_status(self):
         # print "MYSTATUS : %s"%self.flight_status
+
         if self.flight_status != Flight_Status.off:
             if self.flight_status == Flight_Status.taking_off:
                 if self.altitude.get_altitude_current() > self.altitude.get_altitude_desired():
                     self.flight_status = Flight_Status.flying
             elif self.flight_status == Flight_Status.landing:
-                if filter(lambda x: x == constants.MOTOR_MIN_LANDING, self.motor.get_speed()) is None:
+                if filter(lambda x: x == Constants.MOTOR_MIN_LANDING, self.motor.get_speed()) is None:
                     self.flight_status = Flight_Status.off
         # print "MYSTATUSAFTER : %s" % self.flight_status
 
@@ -137,7 +138,7 @@ class Quadcopter:
 
         for i, val in enumerate(self.ultra.get_ultra_values_current()):
 
-            if (val != 0) and (val < constants.ULTRASOUND_SAFE_DISTANCE):
+            if (val != 0) and (val < Constants.ULTRASOUND_SAFE_DISTANCE):
                 self.current_mode = Mode.collision_avoidance
                 self.logger.warn_collision(i, val)
                 # TODO : Uncomment this before uploading

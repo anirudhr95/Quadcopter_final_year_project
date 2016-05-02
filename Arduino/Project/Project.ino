@@ -12,7 +12,6 @@
 int MotorSpeeds[3];
 String input;
 int first_position , second_position, third_position;
-uint32_t tempval;
 unsigned long last_sent = 0;
 void setup() {
 	Serial.begin (BAUD_RATE);
@@ -31,18 +30,14 @@ void setup() {
 
 
 void sendYPR(){
-//  tempval = getLastUpdateChange();
 	if(millis() - last_sent >= UPDATE_FREQUENCY_RATE){
     
     last_sent = millis();
     SEND_MSG_GYROMAG(ypr, getHeading());
-//    refreshMotors(tempmotor);
+
 	}
-// setLastUpdateChange(tempval);
 }
 void loop() {
-//  tempval = lastUpdate;
-  
   if(Serial.available()){
       /*
 POSSIBLE INPUTS : 
@@ -69,12 +64,7 @@ POSSIBLE INPUTS :
   }
  ultra_Compute();
  sendYPR();
- 
-// lastUpdate = tempval;
-//   setLastUpdateChange(tempval);
   getYPR();
-  
-//  tempval = getLastUpdateChange();
  
 }
 

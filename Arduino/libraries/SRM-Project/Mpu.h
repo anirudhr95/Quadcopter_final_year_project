@@ -356,6 +356,7 @@ void gyro_Setup()
 			// Serial.print("Could not connect to MPU9250: 0x");
 			// Serial.println(c, HEX);
 			// while(1) ; // Loop forever if communication doesn't happen
+		gyro_Setup();
 	}
 	Serial.print(buf);
 }
@@ -440,7 +441,7 @@ float *getYPR()
 	ypr[0]   *= 180.0f / PI;
 	ypr[2]  *= 180.0f / PI;
 	
-	ypr[0]   -= declination; // Declination at Danville, California is 13 degrees 48 minutes and 47 seconds on 2014-04-04
+	// ypr[0]   -= declination; // Declination at Danville, California is 13 degrees 48 minutes and 47 seconds on 2014-04-04
 	
 	
 		// With these settings the filter is updating at a ~145 Hz rate using the Madgwick scheme and
@@ -464,10 +465,18 @@ float *getYPR()
 		ypr[1] = -ypr[2];
 		ypr[2] = -temp;
 	#endif
+	// -(360-x)
+
 	ypr[0] += YPR_OFFSET[0];
 	ypr[1]  += YPR_OFFSET[1];
 	ypr[2] += YPR_OFFSET[2];
 	
+	if (ypr[0] < -180){
+		ypr[0] += 360;
+	}
+	else if(ypr[0]>180){
+		ypr[0] -= 360;
+	}
 	return ypr;
 	last_YPR_CALL = millis();
 	

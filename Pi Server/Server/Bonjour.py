@@ -1,6 +1,6 @@
 from zeroconf import ServiceInfo, Zeroconf
 import socket
-import constants
+import Constants
 
 
 class Bonjour(object):
@@ -13,19 +13,19 @@ class Bonjour(object):
 
     def __repr__(self):
         return {'Name': self.name,
-                "type": constants.BONJOUR_TYPE,
-                "name": constants.BONJOUR_NAME + '.' + constants.BONJOUR_TYPE,
-                "addres": constants.SERVER_IP,
-                "port": constants.SERVER_PORT,
-                "weight": constants.BONJOUR_WEIGHT,
-                "priority": constants.BONJOUR_PRIORITY,
-                "properties": constants.BONJOUR_DESC,
-                "server": constants.BONJOUR_SERVICE_NAME
+                "type": Constants.BONJOUR_TYPE,
+                "name": Constants.BONJOUR_NAME + '.' + Constants.BONJOUR_TYPE,
+                "addres": Constants.SERVER_IP,
+                "port": Constants.SERVER_PORT,
+                "weight": Constants.BONJOUR_WEIGHT,
+                "priority": Constants.BONJOUR_PRIORITY,
+                "properties": Constants.BONJOUR_DESC,
+                "server": Constants.BONJOUR_SERVICE_NAME
                 }
 
     def __init__(self, logger):
         """
-        Construct a new Bonjour/Zeroconf server. This server takes values supplied in the constants.py file.
+        Construct a new Bonjour/Zeroconf server. This server takes values supplied in the Constants.py file.
         """
 
 
@@ -33,14 +33,14 @@ class Bonjour(object):
         self.name = "Bonjour"
 
         self.zeroconf = Zeroconf()
-        self.info = ServiceInfo(type=constants.BONJOUR_TYPE,
-                                name=constants.BONJOUR_NAME + '.' + constants.BONJOUR_TYPE,
-                                address=constants.SERVER_IP,
-                                port=constants.SERVER_PORT,
-                                weight=constants.BONJOUR_WEIGHT,
-                                priority=constants.BONJOUR_PRIORITY,
-                                properties=constants.BONJOUR_DESC,
-                                server=constants.BONJOUR_SERVICE_NAME
+        self.info = ServiceInfo(type=Constants.BONJOUR_TYPE,
+                                name=Constants.BONJOUR_NAME + '.' + Constants.BONJOUR_TYPE,
+                                address=Constants.SERVER_IP,
+                                port=Constants.SERVER_PORT,
+                                weight=Constants.BONJOUR_WEIGHT,
+                                priority=Constants.BONJOUR_PRIORITY,
+                                properties=Constants.BONJOUR_DESC,
+                                server=Constants.BONJOUR_SERVICE_NAME
                                 )
 
     def publish(self):
@@ -49,7 +49,7 @@ class Bonjour(object):
         """
 
         self.logger.setup_init(self.name)
-        if constants.ENABLE_BONJOUR_REGISTER:
+        if Constants.ENABLE_BONJOUR_REGISTER:
 
             # info = ServiceInfo(type=Constants.BONJOUR_TYPE,
             #                    name=Constants.BONJOUR_NAME + '.' +             Constants.BONJOUR_TYPE,
