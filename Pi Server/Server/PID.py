@@ -1,5 +1,5 @@
 import copy
-
+import numpy
 import Constants
 import time as time_
 
@@ -29,21 +29,20 @@ class PID:
         self.output = output
         self.reference_index = reference_index_to_use
         self.output_index = output_index_to_use
-        self.I_value = min
-        self.P_value = 0
-        self.D_value = 0
-        self.max = max
-        self.min = min
-        self.error = 0.0
+        
+        self.PID = numpy.array([min,0,0],dtype = 'float16')
+        self.max = numpy.int16(max)
+        self.min = numpy.int16(min)
+        self.error = numpy.float16(0)
         self.previous_output_update = previous_output_update
 
         self.samplingTime = samplingTime
         # self.samplingTime = 0.0003
         self.reverse_direction = reverse_direction
 
-        self.Kp = Kp
-        self.Kd = Kd
-        self.Ki = Ki
+        self.Kp = numpy.float16(Kp)
+        self.Kd = numpy.float16(Kd)
+        self.Ki = numpy.float16(Ki)
         if self.reverse_direction:
             self.Kp *= -1
             self.Ki *= -1
@@ -68,29 +67,28 @@ class PID:
         return a
 
     def set_output(self, val):
-        self.previous_output_update[self.output_index] = val - self.I_value
+        self.previous_output_update[self.output_index] = val - self.PID[1]
 
         self.output[self.output_index] = val
 
-    def get_current_output(self):
-        return self.output[self.output_index]
+    
 
     def compute(self):
-        if millis() - self.lastTime >= self.samplingTime:
+        if millis() - self.lastTime >= self.samplingTime*1000:
             self.error = self.get_desired_reference() - self.get_current_reference()
             if self.error == 0:
                 return True
-            self.P_value = self.Kp * self.error
+            self.PID[0] = self.Kp * self.error
 
-            self.D_value = self.Kd * (self.get_current_reference() - self.lastinput)
+            self.PID[2] = self.Kd * (self.get_current_reference() - self.lastinput)
 
-            self.I_value += self.error * self.Ki
-            if self.I_value < self.min:
-                self.I_value = self.min
-            elif self.I_value > self.max:
-                self.I_value = self.max
+            self.PID[1] += self.error * self.Ki
+            if self.PID[1] < self.min:
+                self.PID[1] = self.min
+            elif self.PID[1] > self.max:
+                self.PID[1] = self.max
 
-            PID = self.P_value + self.I_value - self.D_value
+            PID = self.PID[0] + self.PID[1] - self.PID[2]
 
             PID += self.previous_output_update[self.output_index]
 

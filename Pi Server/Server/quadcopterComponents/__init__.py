@@ -10,6 +10,7 @@ def sim_ypr_change(a, ypr=None):
 
     # a.set_sensor_altitude_current(20.0)
     # a.self.altitude.set_altitude_desired(20.0)
+
     a.takeoff()
     a.set_mode_altitude_hold_disable()
     if ypr:
@@ -17,7 +18,9 @@ def sim_ypr_change(a, ypr=None):
     else:
         a.gyro.set_ypr_desired([0, 20.0, 10.0])
         # a.set_mode_hover_enable(height=0)
+    import timeit
     for i in range(20):
+
         print a.gyro.get_ypr_current(), a.refresh()
         # INCREASE YPR BY [0,2,1]
         a.gyro.set_ypr_current([x + y for x, y in zip(a.gyro.get_ypr_current(), [0, 2, 1])])

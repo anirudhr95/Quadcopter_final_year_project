@@ -1,9 +1,10 @@
+import numpy
 class Altitude:
     def __init__(self, logger):
         self.logger = logger
 
-        self.altitudes = {'current': 0.0,
-                          'desired': 0.0}
+        self.altitudes = {'current': numpy.float16(0),
+                          'desired': numpy.float16(0)}
 
     def set_sensor_altitude_current(self, altitude):
         """
@@ -18,7 +19,7 @@ class Altitude:
             # self.set_mode_altitude_hold_disable()
             pass
         else:
-            self.altitudes['current'] = altitude
+            self.altitudes['current'] = numpy.float16(altitude)
 
     def set_altitude_desired(self, altitude):
         """
@@ -27,8 +28,7 @@ class Altitude:
         :return:
         """
         self.logger.data_set_altitude(altitude)
-        self.altitudes['desired'] = altitude
-        print 'YOYO:%s' % self.altitudes
+        self.altitudes['desired'] = numpy.float16(altitude)
 
     def get_altitude_current(self):
         return self.altitudes['current']

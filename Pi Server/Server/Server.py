@@ -1,3 +1,5 @@
+from quadcopterComponents.gestures import Gesture
+
 async_mode = None
 
 if async_mode is None:
@@ -60,9 +62,10 @@ thread3 = None
 middleware = None
 message_sender = None
 pi_logger = None
-sender, reader = None,None
+sender, reader = None, None
 queue = None
-senderexternal,readerexternal = None,None
+senderexternal, readerexternal = None, None
+
 
 def read_from_port(port, baud_rate, sender, logger):
     """
@@ -93,12 +96,44 @@ def read_from_port(port, baud_rate, sender, logger):
             except Exception as e:
                 logger.error(e)
 
-        # time.sleep(Constants.ARDUINO_MESSAGE_REFRESHTIME - 0.1)
+                # time.sleep(Constants.ARDUINO_MESSAGE_REFRESHTIME - 0.1)
+
 
 def speed_control(reader, quadcopter, message_sender, middleware, logger, reader2):
     """
         Requires middleware, Quadcopter, Message_sender params
     """
+    mygesture = Gesture.notRecognized
+    def detectGesture():
+        global mygesture
+        a = open(Constants.GESTURE_FILE_LOCATION, 'rw')
+        b = a.readlines()
+        if b:
+            if len(b)>5:
+                b = b[-5:]
+            count = {}
+            for val in set(b):
+                count[val] = b.count(val)
+            gesture = None
+            for key, val in count.iteritems():
+                if not gesture:
+                    gesture = key
+                if val > count[gesture]:
+                    gesture = key
+
+            print count, gesture
+
+            if gesture == '1' and not quadcopter.flight_status.taking_off:
+                mygesture = Gesture.takeoff
+            elif gesture == '2' and not quadcopter.flight_status.landing:
+                mygesture = Gesture.land
+            return True
+
+        else:
+
+            a.close()
+            return False
+
     import time
     # Wait for Serial Setup to complete (Marked by "SETUP COMPLETED:" MESSAGE)
 
@@ -125,33 +160,19 @@ def speed_control(reader, quadcopter, message_sender, middleware, logger, reader
         # middleware.parseMessage(reading)
     logger.setup_success(name)
     speeds, oldspeeds = [0, 0, 0, 0], [0, 0, 0, 0]
-    print 'WAITING FOR GESTURE'
-    while True:
-        a= open('/Users/Shyam/Desktop/input.txt','r')
-        b = a.readlines()
-        if b:
-            if b[0]=='1':
-                break
-        else:
-            a.close()
-            time.sleep(2)
-    print 'DETECTED GESTURE'
-    quadcopter.takeoff()
-    while True:
-        a = open('/Users/Shyam/Desktop/input.txt', 'r')
-        b = a.readlines()
-        if b:
 
-            if b[0] == '1':
-                quadcopter.takeoff()
-            if b[0] == '2':
-                quadcopter.land()
-        else:
-            a.close()
+    print 'WAITING FOR GESTURE'
+    while mygesture != Gesture.takeoff:
+        detectGesture()
+        time.sleep(2)
+    print 'DETECTED GESTURE'
+
+    while True:
+        detectGesture()
         # CHECK MESSAGE QUEUE FOR ARDUINO INPUTS
-        for val in [reader,reader2]:
+        for val in [reader, reader2]:
             reading = None
-            with Timeout(Constants.ARDUINO_MESSAGE_REFRESHTIME,False) as t:
+            with Timeout(Constants.ARDUINO_MESSAGE_REFRESHTIME, False) as t:
                 reading = val.get(timeout=t)
                 if reading is None:
                     # TODO: This means that no data is being received from arduino, which means quad needs to go into hover mode/land, because of some serial error
@@ -176,7 +197,7 @@ def speed_control(reader, quadcopter, message_sender, middleware, logger, reader
             message_sender.toArduino_set_speed(speeds)
             oldspeeds = speeds[:]
 
-        # time.sleep(Constants.REFRESH_PID_TIME)
+            # time.sleep(Constants.REFRESH_PID_TIME)
 
 
 def should_send_new_motor_speed(old_speed, new_speed):
@@ -194,7 +215,7 @@ def index():
     global queue
     if request.method == "POST":
         if 'quad_setSpeed' in request.form:
-            queue.put(Constants.IOSMESSAGE_SETSPEED+':'+request.form["quad_setSpeed_text"])
+            queue.put(Constants.IOSMESSAGE_SETSPEED + ':' + request.form["quad_setSpeed_text"])
 
             # quadcopter.set_speed(int(request.form["quad_setSpeed_text"]))
         elif 'set_ypr' in request.form:
@@ -206,7 +227,7 @@ def index():
                 ypr[1] = float(request.form['set_ypr_p'])
             if request.form['set_ypr_r'] != '':
                 ypr[2] = float(request.form['set_ypr_r'])
-            queue.put('%s:%s'%(Constants.IOSMESSAGE_SETYPR,';'.join(str(val) for val in ypr)))
+            queue.put('%s:%s' % (Constants.IOSMESSAGE_SETYPR, ';'.join(str(val) for val in ypr)))
             # quadcopter.set_ypr_desired(ypr)
 
         elif 'takeoff' in request.form:
@@ -226,10 +247,9 @@ def index():
 
     return render_template("index.html")
 
+
 def passmessagetoproc(sender):
-
-
-    print "\n\n\nGOT VAL : %s"%Constants.IOSMESSAGE_TAKEOFF
+    print "\n\n\nGOT VAL : %s" % Constants.IOSMESSAGE_TAKEOFF
     sender.put(Constants.IOSMESSAGE_TAKEOFF)
 
 
@@ -261,17 +281,15 @@ def initialSetup():
     service = bonjour.Bonjour(pi_logger)
     service.publish()
 
-
     global queue
-    from gevent import queue,Greenlet
+    from gevent import queue, Greenlet
     queue = queue.Queue()
     # http://www.gevent.org/gevent.queue.html
 
-    global sender,reader,senderexternal,readerexternal
-    reader,sender = gipc.pipe()
-    readerexternal,senderexternal = gipc.pipe()
+    global sender, reader, senderexternal, readerexternal
+    reader, sender = gipc.pipe()
+    readerexternal, senderexternal = gipc.pipe()
     global thread, thread3
-
 
     if Constants.ENABLE_SERIAL:
         # thread = threading.Thread(name="Serial Thread",
@@ -294,9 +312,10 @@ def initialSetup():
                                          'quadcopter': quadcopter,
                                          'message_sender': message_sender,
                                          'middleware': middleware, 'logger': pi_logger,
-                                         'reader2':readerexternal}
+                                         'reader2': readerexternal}
 
                                  )
+
     # speed_control(reader=reader,quadcopter=quadcopter,message_sender=message_sender,middleware=middleware,logger=pi_logger)
     # message_sender.__send_msg_to_arduino__("HELLOn\n")
 

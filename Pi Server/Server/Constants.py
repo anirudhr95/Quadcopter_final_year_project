@@ -16,6 +16,8 @@ SOCKETIO_NAMESPACE = '/test'
 SERVER_IP = socket.gethostbyname(socket.gethostname())
 SERVER_PORT = 5000
 
+GESTURE_FILE_LOCATION = '/Users/Shyam/Desktop/input.txt'
+
 # LOGGING CONSTANTS
 LOG_LOCATION_FLASK = "~/Desktop"
 LOG_FILENAME_FLASK = "FlaskLog.log"
@@ -85,8 +87,8 @@ WING_FR_ANTICLOCKWISE = True
 
 REFRESH_PID_TIME = 0.5
 
-KP_NORMAL = 0.5
-KD_NORMAL = 0
+KP_NORMAL = 1
+KD_NORMAL = 0.2
 KI_NORMAL = 0.5
 
 KP_ALTITUDE = KP_NORMAL

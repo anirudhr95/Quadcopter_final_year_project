@@ -42,9 +42,7 @@ class Quadcopter:
 
 
     def land(self):
-        # print 'CALLED LAND'
         self.logger.mode_Land()
-
         self.set_mode_hover_enable(height=Constants.ULTRASOUND_TOGROUND_OFFSET)
         self.flight_status = Flight_Status.landing
 

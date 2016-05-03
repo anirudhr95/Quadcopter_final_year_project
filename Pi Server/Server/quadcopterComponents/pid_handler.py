@@ -13,7 +13,7 @@ class pid_handler:
         self.PID_YAW_FR = PID(reference=self.ypr,
                               output=self.motor_Speeds,
                               reference_index_to_use=0,
-                              previous_output_update = self.previous_motorupdate,
+                              previous_output_update=self.previous_motorupdate,
                               output_index_to_use=0,
                               Kp=Constants.KP_NORMAL,
                               Kd=Constants.KD_NORMAL,
@@ -413,7 +413,8 @@ class pid_handler:
         self.motor_Speeds = motor_speeds
         self.altitudes = altitude
         self.ypr = ypr
-        self.previous_motorupdate = [0,0,0,0]
+        from numpy import array
+        self.previous_motorupdate = array([0, 0, 0, 0], dtype='int16')
 
         self.__init_pid__()
         self.PIDS_Pitch = [self.PID_PITCH_FR,
@@ -457,7 +458,7 @@ class pid_handler:
                            self.PIDS_ULTRA_Top]
         for pid_class in self.PIDS_YPRA:
             for pid in pid_class:
-                print pid.reverse_direction,pid.reference_index,pid.output_index,pid.Kp
+                print pid.reverse_direction, pid.reference_index, pid.output_index, pid.Kp
 
     def compute_yaw(self):
         for pid in self.PIDS_Yaw:
