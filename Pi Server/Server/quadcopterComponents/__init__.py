@@ -16,6 +16,7 @@ def sim_ypr_change(a, ypr=None):
         a.gyro.set_ypr_desired(ypr)
     else:
         a.gyro.set_ypr_desired([0, 20.0, 10.0])
+        # a.set_mode_hover_enable(height=0)
     for i in range(20):
         print a.gyro.get_ypr_current(), a.refresh()
         # INCREASE YPR BY [0,2,1]
@@ -67,5 +68,5 @@ if __name__ == '__main__':
     sim_ypr_change(a)
     a = Quadcopter(CustomLogger.pi_logger())
     sim_altitude(a)
-    a = Quadcopter(CustomLogger.pi_logger())
-    sim_ultrasound(a)
+    # a = Quadcopter(CustomLogger.pi_logger())
+    # sim_ultrasound(a)

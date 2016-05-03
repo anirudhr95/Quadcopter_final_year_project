@@ -125,8 +125,29 @@ def speed_control(reader, quadcopter, message_sender, middleware, logger, reader
         # middleware.parseMessage(reading)
     logger.setup_success(name)
     speeds, oldspeeds = [0, 0, 0, 0], [0, 0, 0, 0]
+    print 'WAITING FOR GESTURE'
+    while True:
+        a= open('/Users/Shyam/Desktop/input.txt','r')
+        b = a.readlines()
+        if b:
+            if b[0]=='1':
+                break
+        else:
+            a.close()
+            time.sleep(2)
+    print 'DETECTED GESTURE'
     quadcopter.takeoff()
     while True:
+        a = open('/Users/Shyam/Desktop/input.txt', 'r')
+        b = a.readlines()
+        if b:
+
+            if b[0] == '1':
+                quadcopter.takeoff()
+            if b[0] == '2':
+                quadcopter.land()
+        else:
+            a.close()
         # CHECK MESSAGE QUEUE FOR ARDUINO INPUTS
         for val in [reader,reader2]:
             reading = None
@@ -155,7 +176,7 @@ def speed_control(reader, quadcopter, message_sender, middleware, logger, reader
             message_sender.toArduino_set_speed(speeds)
             oldspeeds = speeds[:]
 
-        time.sleep(Constants.REFRESH_PID_TIME)
+        # time.sleep(Constants.REFRESH_PID_TIME)
 
 
 def should_send_new_motor_speed(old_speed, new_speed):
@@ -265,7 +286,7 @@ def initialSetup():
                                             'logger': pi_logger,
                                             }
                                     )
-    Greenlet.spawn(passmessagetoproc,senderexternal)
+    # Greenlet.spawn(passmessagetoproc,senderexternal)
     thread3 = gipc.start_process(name="PID Thread",
                                  daemon=True,
                                  target=speed_control,
