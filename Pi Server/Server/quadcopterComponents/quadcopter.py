@@ -98,6 +98,7 @@ class Quadcopter:
     def __str__(self):
         return str({
             "Altitudes": self.altitude.get_altitudes(),
+            "Ultra" : self.ultra.get_ultra_values_current(),
             "YPR": self.gyro.get_ypr(),
             "Mode": self.current_mode,
             "Flight_Status": self.flight_status,
@@ -123,7 +124,7 @@ class Quadcopter:
         :returns Motorspeeds: The new motor speeds to set
         """
         # Return existing speed if takeoff command has not been given
-        # print self
+        print self
         if self.flight_status == Flight_Status.off:
             return self.motor.get_speed()
         # print 'YOYOaa%s' % self.current_mode
@@ -136,7 +137,8 @@ class Quadcopter:
 
         for i, val in enumerate(self.ultra.get_ultra_values_current()):
 
-            if (val != 0) and (val < Constants.ULTRASOUND_SAFE_DISTANCE):
+            if (val != 0) and (val < Constants.ULTRASOUND_SAFE_DISTANCE) and (val>0):
+                # TODO CHANGE THIS ASAP
                 self.current_mode = Mode.collision_avoidance
                 self.logger.warn_collision(i, val)
                 # TODO : Uncomment this before uploading

@@ -104,13 +104,19 @@ def speed_control(reader, quadcopter, message_sender, middleware, logger, reader
         Requires middleware, Quadcopter, Message_sender params
     """
     mygesture = Gesture.notRecognized
+    from quadcopterComponents.mode import Flight_Status
     def detectGesture():
         global mygesture
         a = open(Constants.GESTURE_FILE_LOCATION, 'rw')
         b = a.readlines()
+
+        a.close()
+        open(Constants.GESTURE_FILE_LOCATION, 'w').close()
         if b:
-            if len(b)>5:
-                b = b[-5:]
+            b = b[0]
+            if len(b)<10:
+                return False
+            b = list(b[0][-10:])
             count = {}
             for val in set(b):
                 count[val] = b.count(val)
@@ -121,54 +127,48 @@ def speed_control(reader, quadcopter, message_sender, middleware, logger, reader
                 if val > count[gesture]:
                     gesture = key
 
-            print count, gesture
+            print count, gesture, type(gesture)
+            print quadcopter.flight_status,gesture =='2'
 
-            if gesture == '1' and not quadcopter.flight_status.taking_off:
+            if gesture == '2' and not (quadcopter.flight_status == Flight_Status.taking_off):
+                print 'TAKING OFF'
                 mygesture = Gesture.takeoff
-            elif gesture == '2' and not quadcopter.flight_status.landing:
+                quadcopter.takeoff()
+                return True
+            elif gesture == '3' and not (quadcopter.flight_status == Flight_Status.landing):
+                print 'LANDING'
                 mygesture = Gesture.land
-            return True
-
-        else:
-
-            a.close()
+                quadcopter.land()
+                return True
             return False
 
-    import time
-    # Wait for Serial Setup to complete (Marked by "SETUP COMPLETED:" MESSAGE)
+        else:
+            return False
 
-    # logger.setup_init(name)
-    #
-    # logger.setup_message("Waiting for first reading")
-    # reading = reader.get()
-    # while not middleware.parseMessage(reading):
-    #     # parseMessage returns true, when setup is completed
-    #     reading = reader.get()
-    #     # middleware.parseMessage(reading)
-    # logger.setup_success(name)
+
+    # Wait for Serial Setup to complete (Marked by "SETUP COMPLETED:" MESSAGE)
     name = "QuadController"
 
     logger.setup_init(name)
 
     logger.setup_message("Waiting for first reading")
-
     reading = reader.get()
     while not middleware.parseMessage(reading):
         # parseMessage returns true, when setup is completed
-        # print externalreceiver
         reading = reader.get()
-        # middleware.parseMessage(reading)
     logger.setup_success(name)
     speeds, oldspeeds = [0, 0, 0, 0], [0, 0, 0, 0]
 
     print 'WAITING FOR GESTURE'
-    while mygesture != Gesture.takeoff:
-        detectGesture()
-        time.sleep(2)
+    import time
+    while not detectGesture():
+        time.sleep(3)
     print 'DETECTED GESTURE'
-
+    # quadcopter.takeoff()
     while True:
+        mygesture = Gesture.notRecognized
         detectGesture()
+
         # CHECK MESSAGE QUEUE FOR ARDUINO INPUTS
         for val in [reader, reader2]:
             reading = None
@@ -199,7 +199,7 @@ def speed_control(reader, quadcopter, message_sender, middleware, logger, reader
 
             # time.sleep(Constants.REFRESH_PID_TIME)
 
-
+import numpy
 def should_send_new_motor_speed(old_speed, new_speed):
     # def gorl(a,b,lim=50):
     #     return True if (b>a+lim or b<a-lim) else False
@@ -207,7 +207,7 @@ def should_send_new_motor_speed(old_speed, new_speed):
     # if filter(lambda x:  gorl(x[0],x[1]),zip(old_speed,new_speed)):
     #     return True
     # return False
-    return old_speed != new_speed
+    return numpy.any(old_speed != new_speed)
 
 
 @app.route("/", methods=['GET', 'POST'])

@@ -339,7 +339,7 @@ void gyro_Setup()
 		Serial.print("Z-Axis sensitivity adjustment value "); Serial.println(magCalibration[2], 2);
 		
 #endif
-		for(int i=0;i<1000;i++){
+		for(int i=0;i<500;i++){
 			getYPR();
 			delay(7);
 		}

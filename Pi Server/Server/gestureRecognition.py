@@ -1,7 +1,12 @@
 import cv2
 import numpy as np
 import math
+import Constants
 cap = cv2.VideoCapture(0)
+def writetofile(num):
+    f = open(Constants.GESTURE_FILE_LOCATION,'a')
+    f.write(num.__str__())
+    f.close()
 while(cap.isOpened()):
     ret, img = cap.read()
     cv2.rectangle(img,(300,300),(100,100),(0,255,0),0)
@@ -47,19 +52,20 @@ while(cap.isOpened()):
         #dist = cv2.pointPolygonTest(cnt,far,True)
         cv2.line(crop_img,start,end,[0,255,0],2)
         #cv2.circle(crop_img,far,5,[0,0,255],-1)
-    if count_defects ==0:
-        cv2.putText(img,"1", (50,50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
+
     if count_defects == 1:
-        cv2.putText(img,"I am Vipul", (50,50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
+        writetofile(2)
+        cv2.putText(img,"2 : Takeoff Command", (50,50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
     elif count_defects == 2:
-        str = "This is a basic hand gesture recognizer"
+        str = "3 : Land Command"
+        writetofile(3)
         cv2.putText(img, str, (5,50), cv2.FONT_HERSHEY_SIMPLEX, 1, 2)
-    elif count_defects == 3:
-        cv2.putText(img,"This is 4 :P", (50,50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
-    elif count_defects == 4:
-        cv2.putText(img,"Hi!!!", (50,50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
+    # elif count_defects == 3:
+    #     cv2.putText(img,"This is 4 :P", (50,50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
+    # elif count_defects == 4:
+    #     cv2.putText(img,"Hi!!!", (50,50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
     else:
-        cv2.putText(img,"Hello World!!!", (50,50),\
+        cv2.putText(img,"Please provide an input gesture", (50,50),\
                     cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
     #cv2.imshow('drawing', drawing)
     #cv2.imshow('end', crop_img)

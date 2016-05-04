@@ -456,9 +456,9 @@ class pid_handler:
                            self.PIDS_ULTRA_Right,
                            self.PIDS_ULTRA_Left,
                            self.PIDS_ULTRA_Top]
-        for pid_class in self.PIDS_YPRA:
-            for pid in pid_class:
-                print pid.reverse_direction, pid.reference_index, pid.output_index, pid.Kp
+        # for pid_class in self.PIDS_YPRA:
+        #     for pid in pid_class:
+        #         print pid.reverse_direction, pid.reference_index, pid.output_index, pid.Kp
 
     def compute_yaw(self):
         for pid in self.PIDS_Yaw:
