@@ -4,7 +4,7 @@ Flask-SocketIO==1.0
 Flask-WTF==0.9.5
 greenlet==0.4.2
 itsdangerous==0.24
-Jinja2==2.8
+Jinja2==2.11.3
 MarkupSafe==0.23
 python-engineio==0.7.1
 python-socketio==0.6.1
