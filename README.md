@@ -1,1 +1,1 @@
-SRM 3rd year Mini Project - Quadcopter
+Codebase for the project me and my team built for my last year demo. 
