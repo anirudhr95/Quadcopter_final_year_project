@@ -35,7 +35,7 @@ inflect==0.2.5
 ipython==4.0.0
 ipython-genutils==0.1.0
 itsdangerous==0.24
-Jinja2==2.8
+Jinja2==2.11.3
 jsonschema==2.5.1
 logilab-common==1.0.2
 lxml==3.4.4
