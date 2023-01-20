@@ -41,7 +41,7 @@ logilab-common==1.0.2
 lxml==3.4.4
 MarkupSafe==0.23
 matplotlib==1.4.3
-mechanize==0.2.5
+mechanize==0.4.6
 mock==1.3.0
 mongoengine==0.10.0
 netifaces==0.10.4
